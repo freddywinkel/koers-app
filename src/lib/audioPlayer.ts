@@ -32,7 +32,22 @@ export interface PlayerState {
 }
 
 const LANG = 'nl-NL';
-const RATE = 0.9;
+const RATE = 0.85;
+
+/**
+ * Voorkeursstemmen voor een rustiger geluid, op volgorde van voorkeur.
+ * iOS levert 'Claire'/'Xander' mee (de Enhanced-downloads deelt Apple
+ * helaas NIET met webapps); Chrome/Android heeft 'Google Nederlands';
+ * Edge/Windows heeft neurale Microsoft-stemmen.
+ */
+const PREFERRED_VOICES = [
+  'Claire',
+  'Xander',
+  'Google Nederlands',
+  'Microsoft Fenna',
+  'Microsoft Colette',
+  'Microsoft Maarten'
+];
 
 /** Ondersteunt deze browser/context speechSynthesis? */
 export function speechSupported(): boolean {
@@ -147,12 +162,13 @@ export class GuidedAudioPlayer {
     this.onChange({ ...this.state });
   }
 
-  /** Kies bij voorkeur een nl-NL stem, anders eender welke Nederlandse. */
+  /** Kies eerst een voorkeursstem op naam, dan een nl-NL stem, dan eender welke Nederlandse. */
   private pickVoice(): void {
     if (!this.state.supported) return;
     const voices = window.speechSynthesis.getVoices();
     if (voices.length === 0) return;
     this.voice =
+      PREFERRED_VOICES.map((name) => voices.find((v) => v.name.includes(name))).find((v) => v !== undefined) ??
       voices.find((v) => v.lang.toLowerCase() === LANG) ??
       voices.find((v) => v.lang.toLowerCase().startsWith('nl')) ??
       null;
