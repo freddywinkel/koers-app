@@ -127,7 +127,7 @@ export default function Profiel() {
         <h2 className="card-title">Instellingen</h2>
 
         <p className="sub mt-3">Uiterlijk</p>
-        <div className="mt-1.5 flex gap-2" role="radiogroup" aria-label="Kleurmodus">
+        <div className="mt-1.5 flex flex-wrap gap-2" role="radiogroup" aria-label="Kleurmodus">
           {THEMES.map((t) => {
             const active = theme === t.value;
             return (
@@ -138,7 +138,7 @@ export default function Profiel() {
                 aria-checked={active}
                 onClick={() => void set('theme', t.value)}
                 className={[
-                  'min-h-[44px] flex-1 rounded-2xl border text-sm font-extrabold',
+                  'min-h-[44px] min-w-0 flex-1 rounded-2xl border text-sm font-extrabold',
                   active ? 'border-euca-deep bg-eucatint text-euca-deep' : 'border-line bg-dune text-ink'
                 ].join(' ')}
               >
@@ -148,16 +148,20 @@ export default function Profiel() {
           })}
         </div>
 
-        {/* Herinnering: tijd + tweestaps meldingsflow */}
-        <label className="mt-4 block">
-          <span className="sub">Herinneringstijd voor je check-in</span>
-          <input
-            className="input-soft mt-1.5"
-            type="time"
-            value={get('herinnering-tijd', '19:00')}
-            onChange={(e) => void set('herinnering-tijd', e.target.value)}
-          />
-        </label>
+        {/* Herinnering: tijd + tweestaps meldingsflow.
+            Blok is expliciet min-w-0/max-begrensd: iOS geeft een tijdveld een
+            eigen minimumbreedte waardoor het uit de kaart kon lopen. */}
+        <div className="mt-4 min-w-0">
+          <label className="block min-w-0">
+            <span className="sub">Herinneringstijd voor je check-in</span>
+            <input
+              className="input-soft mt-1.5 min-w-0 max-w-full"
+              type="time"
+              value={get('herinnering-tijd', '19:00')}
+              onChange={(e) => void set('herinnering-tijd', e.target.value)}
+            />
+          </label>
+        </div>
 
         {permission === 'default' && (
           <div className="mt-3 rounded-2xl bg-dune p-4">
@@ -196,7 +200,7 @@ export default function Profiel() {
         {/* Pincode */}
         <div className="mt-4 rounded-2xl bg-dune px-4 py-3">
           <div className="flex items-center justify-between gap-3">
-            <div>
+            <div className="min-w-0">
               <p className="text-sm font-extrabold text-ink">App-vergrendeling (pincode)</p>
               <p className="sub">
                 Extra privacy voor gedeelde telefoons. Een pincode houdt meekijkers tegen; het versleutelt je gegevens
@@ -217,7 +221,7 @@ export default function Profiel() {
           )}
 
           {hasPin && (
-            <div className="mt-3 flex gap-2">
+            <div className="mt-3 flex flex-wrap gap-2">
               <button type="button" className="btn-secondary flex-1" onClick={() => setTestingGate(true)}>
                 Test de vergrendeling
               </button>

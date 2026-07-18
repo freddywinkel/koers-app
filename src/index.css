@@ -59,9 +59,27 @@ html {
   text-rendering: optimizeLegibility;
 }
 
+/* Vangnet tegen horizontaal scrollen: de app mag alleen verticaal scrollen.
+   `clip` (niet `hidden`) zodat position:sticky gewoon blijft werken. */
+html,
+body,
+#root {
+  overflow-x: clip;
+}
+
 body {
   @apply bg-mist font-sans text-ink;
   line-height: 1.5; /* dyslexievriendelijk, nooit cursief in body */
+  /* Lange samenstellingen mogen afbreken in plaats van de layout op te rekken */
+  overflow-wrap: break-word;
+}
+
+/* iOS geeft tijd-/datumvelden een eigen minimale breedte waardoor ze uit een
+   smalle kaart kunnen lopen — forceer ze binnen hun container. */
+input[type='time'],
+input[type='date'] {
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* ---------- Herbruikbare Noordzeemist-componenten ---------- */

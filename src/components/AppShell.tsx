@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import SupportBar from './SupportBar';
 import TabBar from './TabBar';
 
 /** Scrollt bij elke routewissel terug naar boven. */
@@ -14,7 +13,8 @@ function ScrollToTop() {
 
 /**
  * App-shell: mobiele kolom (max ~448px), content scrollt,
- * "Steun nu" + tab bar blijven onderaan zichtbaar op elk scherm.
+ * de tab bar blijft onderaan zichtbaar op elk scherm.
+ * "Steun nu" zit alleen op het homescherm (Vandaag), niet app-breed.
  */
 export default function AppShell() {
   return (
@@ -24,7 +24,6 @@ export default function AppShell() {
         <Outlet />
       </main>
       <div className="sticky bottom-0 mt-auto">
-        <SupportBar />
         <TabBar />
       </div>
     </div>

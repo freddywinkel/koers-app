@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PanSelector from '../components/PanSelector';
+import SupportBar from '../components/SupportBar';
 import { PAN_LABELS } from '../components/PanIcon';
 import StreakRing from '../components/StreakRing';
 import { useTodayCheckin, saveCheckin, useStreak, useSettings } from '../db/hooks';
@@ -133,7 +134,7 @@ export default function Vandaag() {
       {/* Streak — vergevend */}
       <section className="card flex items-center gap-[15px]" aria-label="Dagen op rij">
         <StreakRing count={streak.count} />
-        <div>
+        <div className="min-w-0 flex-1">
           {streak.count > 0 ? (
             <>
               <h2 className="card-title">
@@ -153,6 +154,16 @@ export default function Vandaag() {
           )}
         </div>
       </section>
+
+      {/* Ruimte reserveren zodat de onderaan gepinde "Steun nu"-balk
+          nooit over de laatste content heen ligt (balk = 62px + marge). */}
+      <div className="h-[84px] flex-none" aria-hidden="true" />
+
+      {/* "Steun nu" — alleen op dit homescherm, vastgepind onderaan,
+          direct boven de tab bar (76px hoog, incl. safe-area). */}
+      <div className="fixed inset-x-0 bottom-[76px] z-40 mx-auto w-full max-w-md">
+        <SupportBar />
+      </div>
     </div>
   );
 }

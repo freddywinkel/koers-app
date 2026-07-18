@@ -79,7 +79,7 @@ export default function AudioPlayer() {
       {/* Voortgang + huidige stap */}
       <section className="card" aria-label="Voortgang">
         <div className="flex items-baseline justify-between gap-3">
-          <p className="text-sm font-extrabold text-ink">{statusLine}</p>
+          <p className="min-w-0 text-sm font-extrabold text-ink">{statusLine}</p>
           <p className="sub flex-none">± {session.minutes} min</p>
         </div>
         <div
