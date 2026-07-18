@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   Noordzeemist — CSS-variabelen (bron van waarheid voor kleur)
+   Licht = :root · Donker = .dark (class-based toggle op <html>)
+   Mapping volgt design/direction-2-noordzeemist/spec.md §1 en §4.
+   ============================================================ */
+
+:root {
+  --mist: #f2f4f1;
+  --dune: #e6eae5;
+  --sand: #fcfcfa;
+  --raised: #ffffff;
+  --ink: #2f4340;
+  --ink-soft: #63746f;
+  --euca: #5e8577;
+  --euca-deep: #496b5f;
+  --euca-tint: rgba(94, 133, 119, 0.15);
+  --apricot: #d9a88b;
+  --apricot-soft: #f5e7db;
+  --ap-deep: #a9714c;
+  --apricot-border: rgba(217, 168, 139, 0.45);
+  --line: rgba(47, 67, 64, 0.08);
+  --pan-tile: #edf1ec;
+  --steam-warm: #a9714c;
+  --btn-bg: #496b5f;
+  --btn-ink: #ffffff;
+  --shadow: 0 1px 2px rgba(47, 67, 64, 0.04), 0 12px 28px -10px rgba(47, 67, 64, 0.08);
+  --lift-shadow: 0 5px 12px -4px rgba(47, 67, 64, 0.18);
+}
+
+.dark {
+  --mist: #202826;
+  --dune: #29322e;
+  --sand: #2a332f;
+  --raised: #333d38;
+  --ink: #edf1ed;
+  --ink-soft: #a9b7b0;
+  --euca: #8fb4a3;
+  --euca-deep: #9dbfb0;
+  --euca-tint: rgba(143, 180, 163, 0.18);
+  --apricot: #d9a88b;
+  --apricot-soft: rgba(217, 168, 139, 0.15);
+  --ap-deep: #e0b79c;
+  --apricot-border: rgba(217, 168, 139, 0.35);
+  --line: rgba(255, 255, 255, 0.09);
+  --pan-tile: #2e3833;
+  --steam-warm: #d9a88b;
+  --btn-bg: #8fb4a3;
+  --btn-ink: #20302a;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.28), 0 12px 28px -10px rgba(0, 0, 0, 0.3);
+  --lift-shadow: 0 5px 12px -4px rgba(0, 0, 0, 0.4);
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  @apply bg-mist font-sans text-ink;
+  line-height: 1.5; /* dyslexievriendelijk, nooit cursief in body */
+}
+
+/* ---------- Herbruikbare Noordzeemist-componenten ---------- */
+
+@layer components {
+  .card {
+    @apply rounded-card border border-line bg-sand p-[18px] shadow-card;
+  }
+  .card-title {
+    @apply font-display text-xl font-semibold tracking-[-0.01em] text-ink;
+  }
+  .eyebrow {
+    @apply text-[11.5px] font-extrabold uppercase tracking-[0.13em] text-euca-deep;
+  }
+  .sub {
+    @apply text-[13.5px] leading-body text-ink-soft;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-dune px-3 py-[7px] text-xs font-extrabold text-ink;
+  }
+  .chip-warm {
+    @apply bg-apricot-soft text-ap-deep;
+  }
+  .btn-primary {
+    @apply flex min-h-[50px] w-full items-center justify-center gap-2 rounded-2xl bg-btn px-[18px] py-[14px] text-[15px] font-extrabold text-btn-ink shadow-btn transition-transform active:scale-[0.99];
+  }
+  .btn-secondary {
+    @apply flex min-h-[44px] items-center justify-center gap-2 rounded-2xl bg-dune px-4 py-2.5 text-sm font-extrabold text-ink transition-transform active:scale-[0.99];
+  }
+  .screen-stack {
+    @apply flex flex-col gap-3.5 px-[18px] pb-6 pt-5;
+  }
+  .input-soft {
+    @apply min-h-[44px] w-full rounded-2xl border border-line bg-raised px-4 py-2.5 text-[15px] text-ink placeholder:text-ink-soft placeholder:opacity-60;
+  }
+}
