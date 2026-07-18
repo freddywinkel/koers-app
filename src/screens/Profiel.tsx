@@ -7,6 +7,7 @@ import { getPermissionState, requestNotificationPermission, type PermissionState
 import { PIN_HASH_KEY } from '../lib/pin';
 import { PinLockScreen, PinSetup } from '../components/PinLock';
 import { isIOS, isStandalone, promptInstall, useCanInstall } from '../lib/install';
+import VersionCard from '../components/VersionCard';
 
 type ThemeChoice = 'systeem' | 'licht' | 'donker';
 const THEMES: { value: ThemeChoice; label: string }[] = [
@@ -294,6 +295,9 @@ export default function Profiel() {
           </>
         )}
       </section>
+
+      {/* Versie & update-check */}
+      <VersionCard />
 
       {/* Data */}
       <section className="card" aria-label="Jouw gegevens">

@@ -7,6 +7,10 @@ import { VitePWA } from 'vite-plugin-pwa';
 // base '/koers-app/' alleen voor de GitHub Pages-build (mode gh-pages); lokaal blijft '/'.
 export default defineConfig(({ mode }) => ({
   base: mode === 'gh-pages' ? '/koers-app/' : '/',
+  define: {
+    // Build-tijdstip als versielabel (zichtbaar in Profiel → Versie & updates).
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString())
+  },
   plugins: [
     react(),
     VitePWA({

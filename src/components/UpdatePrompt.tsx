@@ -6,11 +6,32 @@ import { useRegisterSW } from 'virtual:pwa-register/react';
  * 'Vernieuwen' activeert de nieuwe versie en herlaadt; 'Later' sluit de kaart
  * (de melding komt bij een volgend bezoek vanzelf terug).
  */
+const CHECK_INTERVAL_MS = 60 * 60 * 1000; // elk uur opnieuw kijken
+let updateChecksArmed = false; // module-niveau: listeners maximaal 1x opzetten
+
 export default function UpdatePrompt() {
   const {
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker
-  } = useRegisterSW();
+  } = useRegisterSW({
+    onRegisteredSW(_swUrl, registration) {
+      // Een geïnstalleerde iOS-PWA blijft na "sluiten" gesuspendeerd in het
+      // geheugen — heropenen is géén nieuwe pageload, dus de browser checkt
+      // dan niet op updates. Daarom zelf actief controleren: direct, bij
+      // terugkeer in de app (visibility/focus) én elk uur.
+      if (!registration || updateChecksArmed) return;
+      updateChecksArmed = true;
+      const check = (): void => {
+        registration.update().catch(() => undefined);
+      };
+      window.setInterval(check, CHECK_INTERVAL_MS);
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') check();
+      });
+      window.addEventListener('focus', check);
+      check();
+    }
+  });
 
   if (!needRefresh) return null;
 
