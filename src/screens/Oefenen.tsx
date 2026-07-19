@@ -171,31 +171,33 @@ export default function Oefenen() {
       {/* Flashcards */}
       <section className="flex flex-col gap-3">
         <p className="eyebrow px-0.5">Flashcards ({flashcards.length})</p>
-        <div className="card flex items-center gap-3.5">
-          <span className="grid h-11 w-11 flex-none place-items-center rounded-[14px] bg-eucatint font-display text-lg font-semibold text-euca-deep" aria-hidden="true">
-            {dueCount ?? '·'}
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block text-[15px] font-bold text-ink">
-              {dueCount === undefined
-                ? 'Herhaling wordt geladen…'
-                : dueCount > 0
-                  ? `${dueCount} ${dueCount === 1 ? 'kaart' : 'kaarten'} aan de beurt`
-                  : 'Alles herhaald'}
+        <div className="card flex flex-col gap-3.5">
+          <div className="flex items-start gap-3.5">
+            <span className="grid h-11 w-11 flex-none place-items-center rounded-[14px] bg-eucatint font-display text-lg font-semibold text-euca-deep" aria-hidden="true">
+              {dueCount ?? '·'}
             </span>
-            <span className="sub mt-0.5 block">
-              {dueCount === undefined
-                ? 'Even geduld.'
-                : dueCount > 0
-                  ? 'Kort herhalen houdt het vers.'
-                  : nextDue
-                    ? `De volgende kaart komt ${formatDueHint(nextDue)} terug.`
-                    : 'Nieuwe lessen brengen nieuwe kaarten.'}
+            <span className="min-w-0 flex-1">
+              <span className="block text-[15px] font-bold text-ink">
+                {dueCount === undefined
+                  ? 'Herhaling wordt geladen…'
+                  : dueCount > 0
+                    ? `${dueCount} ${dueCount === 1 ? 'kaart' : 'kaarten'} aan de beurt`
+                    : 'Alles herhaald'}
+              </span>
+              <span className="sub mt-0.5 block">
+                {dueCount === undefined
+                  ? 'Even geduld.'
+                  : dueCount > 0
+                    ? 'Kort herhalen houdt het vers.'
+                    : nextDue
+                      ? `De volgende kaart komt ${formatDueHint(nextDue)} terug.`
+                      : 'Nieuwe lessen brengen nieuwe kaarten.'}
+              </span>
             </span>
-          </span>
+          </div>
           <Link
             to="/oefenen/flashcards"
-            className={dueCount && dueCount > 0 ? 'btn-primary !min-h-[44px] !w-auto flex-none !px-4' : 'btn-secondary flex-none'}
+            className={dueCount && dueCount > 0 ? 'btn-primary !min-h-[44px]' : 'btn-secondary w-full'}
           >
             Start herhaling
           </Link>

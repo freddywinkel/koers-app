@@ -57,10 +57,10 @@ export default function Les() {
             <path d="M11 3.5 5.5 9 11 14.5" />
           </svg>
         </button>
-        <span className="eyebrow !text-ink-soft">{lessonCrumb(lesson)}</span>
+        <span className="eyebrow min-w-0 truncate !text-ink-soft">{lessonCrumb(lesson)}</span>
       </div>
 
-      <h1 className="px-0.5 font-display text-[30px] font-semibold leading-[1.15] tracking-[-0.015em]">{lesson.title}</h1>
+      <h1 className="hyphens-auto px-0.5 font-display text-[30px] font-semibold leading-[1.15] tracking-[-0.015em]">{lesson.title}</h1>
 
       {!hasBody && (
         <section className="card">
@@ -171,7 +171,7 @@ export default function Les() {
       {isDone ? (
         <div className="flex flex-col gap-2.5">
           <p className="card flex items-center gap-2 text-[15px] font-bold text-ink">
-            <span className="grid h-7 w-7 place-items-center rounded-full bg-eucatint text-euca-deep" aria-hidden="true">
+            <span className="grid h-7 w-7 flex-none place-items-center rounded-full bg-eucatint text-euca-deep" aria-hidden="true">
               <svg width="15" height="15" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="m3.5 9.5 3.5 3.5 7.5-8" />
               </svg>
@@ -180,15 +180,15 @@ export default function Les() {
           </p>
           {nextInWeek ? (
             <Link to={`/les/${nextInWeek.id}`} className="btn-primary">
-              Volgende les: {nextInWeek.title}
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <span className="min-w-0">Volgende les: {nextInWeek.title}</span>
+              <svg className="flex-none" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M3 9h12m-5-5 5 5-5 5" />
               </svg>
             </Link>
           ) : (
             <Link to={`/cursus/week/${lesson.weekId}`} state={{ weekComplete: true }} className="btn-primary">
-              Dit was de laatste les van deze week
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <span className="min-w-0">Dit was de laatste les van deze week</span>
+              <svg className="flex-none" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M3 9h12m-5-5 5 5-5 5" />
               </svg>
             </Link>
@@ -196,8 +196,8 @@ export default function Les() {
         </div>
       ) : (
         <button type="button" className="btn-primary min-h-[54px] rounded-[18px] text-base" onClick={completeLesson}>
-          Markeer als voltooid
-          <svg width="19" height="19" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <span className="min-w-0">Markeer als voltooid</span>
+          <svg className="flex-none" width="19" height="19" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M3 9h12m-5-5 5 5-5 5" />
           </svg>
         </button>

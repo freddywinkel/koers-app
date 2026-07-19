@@ -220,7 +220,7 @@ function GroundingStepper({ steps }: { steps: GroundingStep[] }) {
             <span
               key={i}
               className={[
-                'h-2 w-7 rounded-full transition-colors',
+                'h-2 w-5 rounded-full transition-colors',
                 i < stepIdx ? 'bg-euca' : i === stepIdx ? 'bg-euca-deep' : 'bg-dune'
               ].join(' ')}
             />

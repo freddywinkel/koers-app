@@ -37,7 +37,7 @@ export default function UpdatePrompt() {
 
   return (
     <div
-      className="fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-md px-[18px] pb-5"
+      className="fixed inset-x-0 bottom-[calc(76px+env(safe-area-inset-bottom)+12px)] z-50 mx-auto w-full max-w-md px-[18px] pb-[max(1.25rem,env(safe-area-inset-bottom))]"
       role="alert"
       aria-live="polite"
     >

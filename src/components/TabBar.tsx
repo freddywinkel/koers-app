@@ -70,7 +70,7 @@ export default function TabBar() {
   const { pathname } = useLocation();
   return (
     <nav
-      className="grid h-[76px] grid-cols-4 border-t border-line bg-sand px-2.5 pt-2"
+      className="grid min-h-[76px] grid-cols-4 border-t border-line bg-sand px-2.5 pt-2"
       style={{ paddingBottom: 'max(15px, env(safe-area-inset-bottom))' }}
       aria-label="Hoofdnavigatie"
     >
@@ -82,7 +82,7 @@ export default function TabBar() {
             to={tab.to}
             aria-current={active ? 'page' : undefined}
             className={[
-              'flex flex-col items-center gap-[3px] text-[11px] font-extrabold',
+              'min-w-0 flex flex-col items-center gap-[3px] text-[11px] font-extrabold',
               active ? 'text-euca-deep' : 'text-ink-soft'
             ].join(' ')}
           >

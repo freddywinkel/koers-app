@@ -181,13 +181,13 @@ function Deck({ initial }: { initial: Flashcard[] }) {
           ].join(' ')}
         >
           {/* Voorkant: vraag */}
-          <div className="absolute inset-0 flex flex-col rounded-card border border-line bg-sand p-6 text-left shadow-card [backface-visibility:hidden]">
+          <div className="absolute inset-0 flex flex-col overflow-y-auto overscroll-contain rounded-card border border-line bg-sand p-6 text-left shadow-card [backface-visibility:hidden]">
             <p className="eyebrow">Vraag</p>
             <p className="mt-3 flex-1 font-display text-[21px] font-medium leading-[1.35] text-ink">{card.front}</p>
             <p className="sub mt-3">Tik om de kaart om te draaien</p>
           </div>
           {/* Achterkant: antwoord */}
-          <div className="absolute inset-0 flex flex-col rounded-card border border-euca/25 bg-eucatint p-6 text-left shadow-card [backface-visibility:hidden] [transform:rotateY(180deg)]">
+          <div className="absolute inset-0 flex flex-col overflow-y-auto overscroll-contain rounded-card border border-euca/25 bg-eucatint p-6 text-left shadow-card [backface-visibility:hidden] [transform:rotateY(180deg)]">
             <p className="eyebrow">Antwoord</p>
             <p className="mt-3 flex-1 text-[15.5px] leading-[1.6] text-ink">{card.back}</p>
             {lesson && (
