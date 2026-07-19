@@ -9,6 +9,7 @@ import Les from './screens/Les';
 import Oefenen from './screens/Oefenen';
 import AudioList from './screens/AudioList';
 import AudioPlayer from './screens/AudioPlayer';
+import HumanVoices from './screens/HumanVoices';
 import FlashcardDeck from './components/FlashcardDeck';
 import Profiel from './screens/Profiel';
 import Crisis from './screens/Crisis';
@@ -63,6 +64,7 @@ export default function App() {
             <Route path="/oefenen" element={<Oefenen />} />
             <Route path="/oefenen/audio" element={<AudioList />} />
             <Route path="/oefenen/audio/:id" element={<AudioPlayer />} />
+            <Route path="/oefenen/echte-stemmen" element={<HumanVoices />} />
             <Route path="/oefenen/flashcards" element={<FlashcardDeck />} />
             <Route path="/profiel" element={<Profiel />} />
             <Route path="/crisis" element={<Crisis />} />
