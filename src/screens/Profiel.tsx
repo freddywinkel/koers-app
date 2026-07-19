@@ -157,10 +157,10 @@ export default function Profiel() {
             Blok is expliciet min-w-0/max-begrensd: iOS geeft een tijdveld een
             eigen minimumbreedte waardoor het uit de kaart kon lopen. */}
         <div className="mt-4 min-w-0">
-          <label className="block min-w-0">
-            <span className="sub">Herinneringstijd voor je check-in</span>
+          <label className="flex min-w-0 items-center justify-between gap-3">
+            <span className="sub min-w-0 flex-1">Herinneringstijd voor je check-in</span>
             <input
-              className="input-soft mt-1.5 min-w-0 max-w-full"
+              className="input-soft min-w-0 w-[132px] max-w-full flex-none"
               type="time"
               value={get('herinnering-tijd', '19:00')}
               onChange={(e) => void set('herinnering-tijd', e.target.value)}

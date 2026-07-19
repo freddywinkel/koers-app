@@ -4,26 +4,18 @@ import Ehp from '../components/Ehp';
 import { EHP_SECTIONS, useEhpFilledCount } from '../lib/ehp';
 
 /**
- * Steun nu (/crisis) — kalm, compleet crisis-oppervlak.
- * Volgorde: eerst gronden (5-4-3-2-1), dan mensen bereiken (113 in warm
- * abrikoos — nooit rood), dan je eigen Emotiehanteringsplan.
- * Copy komt uit content/crisis.ts, maar elke import heeft een ingebouwde
- * fallback zodat dit scherm altijd blijft werken.
+ * Steun nu (/crisis) — kalm, compleet oppervlak voor moeilijke momenten.
+ * Volgorde: eerst gronden (5-4-3-2-1), daarna een kleine aanvullende
+ * methode kiezen en tenslotte het eigen Emotiehanteringsplan.
  */
 
 /* ------------------------- Defensieve contentlaag ------------------------- */
 
-interface CrisisActionView {
-  label: string;
-  href: string;
-  kind: 'tel' | 'link';
-}
-
-interface CrisisContactView {
+interface CalmingMethod {
   id: string;
   title: string;
   text: string;
-  actions: CrisisActionView[];
+  steps: string[];
 }
 
 interface GroundingStep {
@@ -34,30 +26,44 @@ interface GroundingStep {
 
 const FALLBACK_TITLE = 'Je hoeft dit niet alleen te dragen';
 const FALLBACK_INTRO =
-  'Soms wordt het te veel. Dat is menselijk. Hier vind je rust en mensen die er nu voor je zijn.';
+  'Soms wordt het te veel. Dat is menselijk. Hier vind je rust en concrete stappen voor dit moment.';
 
-const FALLBACK_CONTACTS: CrisisContactView[] = [
+const CALMING_METHODS: CalmingMethod[] = [
   {
-    id: '113',
-    title: '113 Zelfmoordpreventie',
-    text: 'Dag en nacht bereikbaar, gratis en anoniem. Ook als je je zorgen maakt om iemand anders.',
-    actions: [
-      { label: 'Bel 113', href: 'tel:113', kind: 'tel' },
-      { label: 'Bel 0800-0113', href: 'tel:08000113', kind: 'tel' },
-      { label: 'Chat op 113.nl', href: 'https://www.113.nl', kind: 'link' }
+    id: 'adem',
+    title: 'Adem langer uit',
+    text: 'Een rustige, langere uitademing kan je lichaam helpen vertragen.',
+    steps: ['Adem zacht in en tel tot 4.', 'Adem langzaam uit en tel tot 6.', 'Herhaal dit 6 keer, zonder te forceren.']
+  },
+  {
+    id: 'koel',
+    title: 'Gebruik iets koels',
+    text: 'Een koele prikkel kan je aandacht terugbrengen naar je lichaam.',
+    steps: [
+      'Maak een washand koel met water, of pak een koel flesje.',
+      'Houd het 15 tot 30 seconden tegen je wangen.',
+      'Leg ijs nooit rechtstreeks op je huid en stop als het onprettig voelt.'
     ]
   },
   {
-    id: 'huisarts',
-    title: 'Huisarts of huisartsenpost',
-    text: 'Voor zorgen die niet kunnen wachten. Bel overdag je eigen huisarts; ’s avonds en in het weekend de huisartsenpost in je regio.',
-    actions: []
+    id: 'ontladen',
+    title: 'Ontlaad de spanning',
+    text: 'Geef de energie in je lijf een kleine, veilige uitweg.',
+    steps: [
+      'Duw je voeten 10 seconden stevig in de vloer.',
+      'Laat los en merk het verschil op.',
+      'Herhaal dit 3 keer, of loop rustig een minuut als dat goed voelt.'
+    ]
   },
   {
-    id: '112',
-    title: 'Bij direct gevaar',
-    text: 'Ben jij of is iemand anders in direct levensgevaar? Bel dan 112.',
-    actions: [{ label: 'Bel 112', href: 'tel:112', kind: 'tel' }]
+    id: 'klein',
+    title: 'Maak de volgende minuut klein',
+    text: 'Je hoeft nu niet alles op te lossen. Kies alleen één haalbare stap.',
+    steps: [
+      'Ga zitten op een plek die iets rustiger voelt.',
+      'Neem een slok water of pak iets zachts vast.',
+      'Vraag jezelf: wat heb ik alleen voor de komende minuut nodig?'
+    ]
   }
 ];
 
@@ -72,37 +78,14 @@ const FALLBACK_GROUNDING: GroundingStep[] = [
 const cm = crisisRaw as unknown as {
   header?: { title?: unknown; text?: unknown };
   intro?: { title?: unknown; text?: unknown };
-  crisisContent?: { header?: { title?: unknown; text?: unknown }; contacts?: unknown; sections?: unknown; grounding?: unknown };
-  contacts?: unknown;
-  crisisContacts?: unknown;
-  sections?: unknown;
+  crisisIntro?: unknown;
+  crisisContent?: { header?: { title?: unknown; text?: unknown }; grounding?: unknown };
   grounding?: unknown;
   grounding54321?: unknown;
 };
 
 function asText(value: unknown, fallback: string): string {
   return typeof value === 'string' && value.trim().length > 0 ? value : fallback;
-}
-
-function asContacts(value: unknown): CrisisContactView[] | null {
-  if (!Array.isArray(value)) return null;
-  const out: CrisisContactView[] = [];
-  for (const item of value) {
-    if (!item || typeof item !== 'object') continue;
-    const o = item as Record<string, unknown>;
-    const rawActions = Array.isArray(o.actions) ? o.actions : [];
-    const actions: CrisisActionView[] = rawActions
-      .filter((a): a is Record<string, unknown> => !!a && typeof a === 'object')
-      .map((a) => ({
-        label: asText(a.label, 'Bellen'),
-        href: asText(a.href, '#'),
-        kind: a.kind === 'link' ? 'link' : 'tel'
-      }));
-    const title = asText(o.title, '');
-    if (!title) continue;
-    out.push({ id: asText(o.id, title), title, text: asText(o.text, ''), actions });
-  }
-  return out.length > 0 ? out : null;
 }
 
 function asGrounding(value: unknown): GroundingStep[] | null {
@@ -121,22 +104,9 @@ function asGrounding(value: unknown): GroundingStep[] | null {
 
 const headerSource = cm.header ?? cm.intro ?? cm.crisisContent?.header;
 const TITLE = asText(headerSource?.title, FALLBACK_TITLE);
-const INTRO = asText(headerSource?.text, FALLBACK_INTRO);
-const CONTACTS: CrisisContactView[] =
-  asContacts(cm.crisisContacts) ??
-  asContacts(cm.contacts) ??
-  asContacts(cm.sections) ??
-  asContacts(cm.crisisContent?.contacts) ??
-  asContacts(cm.crisisContent?.sections) ??
-  FALLBACK_CONTACTS;
+const INTRO = asText(cm.crisisIntro ?? headerSource?.text, FALLBACK_INTRO);
 const GROUNDING: GroundingStep[] =
   asGrounding(cm.grounding54321) ?? asGrounding(cm.grounding) ?? asGrounding(cm.crisisContent?.grounding) ?? FALLBACK_GROUNDING;
-
-/** 113-blok herkennen: titel of een van de nummers bevat 113. */
-function is113(contact: CrisisContactView): boolean {
-  if (/113/.test(contact.title)) return true;
-  return contact.actions.some((a) => a.href.replace(/\D/g, '').includes('113'));
-}
 
 /* --------------------------------- Scherm --------------------------------- */
 
@@ -159,10 +129,7 @@ export default function Crisis() {
         <GroundingStepper steps={GROUNDING} />
       </section>
 
-      {/* Hulplijnen — 113 in kalm abrikoos */}
-      {CONTACTS.map((contact) => (
-        <ContactCard key={contact.id} contact={contact} warm={is113(contact)} />
-      ))}
+      <CalmingMethods />
 
       {/* Emotiehanteringsplan */}
       <EhpSection />
@@ -205,7 +172,7 @@ function GroundingStepper({ steps }: { steps: GroundingStep[] }) {
           Je aandacht is even terug bij het hier en nu. Dit gevoel is hevig — en het gaat weer voorbij.
         </p>
         <button type="button" className="btn-secondary mx-auto mt-3.5 w-full" onClick={restart}>
-          Opnieuw beginnen
+          Reset oefening
         </button>
       </div>
     );
@@ -254,64 +221,86 @@ function GroundingStepper({ steps }: { steps: GroundingStep[] }) {
           {isLast ? 'Afronden' : 'Volgende stap'}
         </button>
       )}
-      <button
-        type="button"
-        className="mx-auto mt-1 flex min-h-[44px] items-center justify-center px-4 text-[13px] font-bold text-ink-soft underline decoration-line underline-offset-4"
-        onClick={goNext}
-      >
-        Sla deze stap over
-      </button>
+      <div className="mt-1 grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          className="flex min-h-[44px] items-center justify-center px-2 text-[13px] font-bold text-ink-soft underline decoration-line underline-offset-4"
+          onClick={goNext}
+        >
+          Sla stap over
+        </button>
+        <button
+          type="button"
+          className="flex min-h-[44px] items-center justify-center rounded-xl px-2 text-[13px] font-extrabold text-euca-deep"
+          onClick={restart}
+        >
+          Reset oefening
+        </button>
+      </div>
     </div>
   );
 }
 
-/* ------------------------------- Contactkaart ------------------------------ */
+/* -------------------------- Aanvullende methoden -------------------------- */
 
-function ContactCard({ contact, warm }: { contact: CrisisContactView; warm: boolean }) {
+function CalmingMethods() {
+  const [openId, setOpenId] = useState<string | null>(null);
+
   return (
-    <section
-      className={['card', warm ? '!border-ap-border !bg-apricot-soft' : ''].join(' ')}
-      aria-label={contact.title}
-    >
-      <h2 className={['card-title', warm ? '!text-ap-deep' : ''].join(' ')}>{contact.title}</h2>
-      {contact.text && <p className="sub mt-1.5">{contact.text}</p>}
-      {contact.actions.length > 0 && (
-        <div className="mt-3 flex flex-wrap gap-2">
-          {contact.actions.map((action) =>
-            action.kind === 'tel' ? (
-              warm ? (
-                <a
-                  key={action.href + action.label}
-                  href={action.href}
-                  /* Abrikoos knop met vaste donkere inkt-tekst: AA in licht én donker,
-                     warm maar nooit rood, nooit alarmistisch. */
-                  className="flex min-h-[50px] items-center justify-center gap-2 rounded-2xl bg-apricot px-5 text-[15px] font-extrabold text-apricot-ink transition-transform active:scale-[0.99]"
-                >
-                  {action.label}
-                </a>
-              ) : (
-                <a
-                  key={action.href + action.label}
-                  href={action.href}
-                  className="btn-primary !min-h-[50px] !w-auto px-5 text-sm"
-                >
-                  {action.label}
-                </a>
-              )
-            ) : (
-              <a
-                key={action.href + action.label}
-                href={action.href}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-secondary"
+    <section className="card" aria-label="Wat kan nu nog helpen">
+      <p className="eyebrow">Kies wat past</p>
+      <h2 className="card-title mt-1">Wat kan nu nog helpen?</h2>
+      <p className="sub mt-1.5">Eén methode is genoeg. Stop als iets niet prettig voelt.</p>
+
+      <div className="mt-3 flex flex-col gap-2">
+        {CALMING_METHODS.map((method) => {
+          const open = method.id === openId;
+          const panelId = `calming-method-${method.id}`;
+          return (
+            <div key={method.id} className="overflow-hidden rounded-2xl border border-line bg-dune">
+              <button
+                type="button"
+                className="flex min-h-[56px] w-full items-center gap-3 px-4 py-3 text-left"
+                aria-expanded={open}
+                aria-controls={panelId}
+                onClick={() => setOpenId(open ? null : method.id)}
               >
-                {action.label}
-              </a>
-            )
-          )}
-        </div>
-      )}
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-extrabold text-ink">{method.title}</span>
+                  <span className="sub mt-0.5 block">{method.text}</span>
+                </span>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 18 18"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className={['flex-none text-euca-deep transition-transform', open ? 'rotate-90' : ''].join(' ')}
+                  aria-hidden="true"
+                >
+                  <path d="M6.5 3.5 11 9l-4.5 5.5" />
+                </svg>
+              </button>
+
+              {open && (
+                <ol id={panelId} className="border-t border-line bg-sand px-4 py-3.5">
+                  {method.steps.map((step, index) => (
+                    <li key={step} className="flex gap-3 py-1.5 text-sm leading-body text-ink">
+                      <span className="grid h-6 w-6 flex-none place-items-center rounded-full bg-eucatint text-xs font-extrabold text-euca-deep">
+                        {index + 1}
+                      </span>
+                      <span className="pt-0.5">{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </section>
   );
 }
