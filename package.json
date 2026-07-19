@@ -13,6 +13,7 @@
     "audio:generate": "tsx scripts/generate-guided-audio.ts"
   },
   "dependencies": {
+    "@fontsource/atkinson-hyperlegible": "^5.2.5",
     "@fontsource/fraunces": "^5.2.5",
     "@fontsource/nunito-sans": "^5.2.5",
     "dexie": "^4.0.11",

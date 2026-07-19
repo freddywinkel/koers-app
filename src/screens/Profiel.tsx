@@ -8,6 +8,7 @@ import { PIN_HASH_KEY } from '../lib/pin';
 import { PinLockScreen, PinSetup } from '../components/PinLock';
 import { isIOS, isStandalone, promptInstall, useCanInstall } from '../lib/install';
 import VersionCard from '../components/VersionCard';
+import DesignPicker from '../components/DesignPicker';
 
 type ThemeChoice = 'systeem' | 'licht' | 'donker';
 const THEMES: { value: ThemeChoice; label: string }[] = [
@@ -148,6 +149,9 @@ export default function Profiel() {
             );
           })}
         </div>
+
+        <p className="sub mt-4">Ontwerp</p>
+        <DesignPicker />
 
         {/* Herinnering: tijd + tweestaps meldingsflow.
             Blok is expliciet min-w-0/max-begrensd: iOS geeft een tijdveld een

@@ -1,11 +1,11 @@
 import type { PanValue } from '../content/types';
 
 export const PAN_FILLS: Record<PanValue, string> = {
-  1: '#DCE7DF',
-  2: '#B9CFC0',
-  3: '#93B7A3',
-  4: '#E6C6AC',
-  5: '#D9A88B'
+  1: 'var(--pan1)',
+  2: 'var(--pan2)',
+  3: 'var(--pan3)',
+  4: 'var(--pan4)',
+  5: 'var(--pan5)'
 };
 
 export const PAN_LABELS: Record<PanValue, string> = {
@@ -51,9 +51,9 @@ export default function PanIcon({ pan, className = 'h-[30px] w-[30px]' }: { pan:
   return (
     <svg viewBox="0 0 32 32" fill="none" className={className} aria-hidden="true">
       <Steam pan={pan} />
-      <rect x="6.5" y="14" width="19" height="12.5" rx="4" fill={fill} stroke="rgba(47,67,64,.14)" />
-      <rect x="4.8" y="11.4" width="22.4" height="3.8" rx="1.9" fill={fill} stroke="rgba(47,67,64,.14)" />
-      <circle cx="16" cy="10.4" r="1.7" fill={fill} stroke="rgba(47,67,64,.14)" />
+      <rect x="6.5" y="14" width="19" height="12.5" rx="4" style={{ fill }} stroke="rgba(47,67,64,.14)" />
+      <rect x="4.8" y="11.4" width="22.4" height="3.8" rx="1.9" style={{ fill }} stroke="rgba(47,67,64,.14)" />
+      <circle cx="16" cy="10.4" r="1.7" style={{ fill }} stroke="rgba(47,67,64,.14)" />
     </svg>
   );
 }
