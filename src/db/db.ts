@@ -56,7 +56,7 @@ export interface EhpSectionRow {
 }
 
 /** Instellingen als key-value. Bekende keys:
- *  'theme' ('systeem'|'licht'|'donker'), 'naam', 'herinnering-tijd' ('19:00'). */
+ *  'theme' ('systeem'|'licht'|'donker'), 'design', 'naam', 'herinnering-tijd' ('19:00'). */
 export interface SettingRow {
   key: string;
   value: string;

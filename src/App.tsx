@@ -18,6 +18,7 @@ import NotFound from './screens/NotFound';
 import UpdatePrompt from './components/UpdatePrompt';
 import { db } from './db/db';
 import { useApplyTheme, useSettings } from './db/hooks';
+import { useApplyDesign } from './lib/design';
 import { startReminderScheduler } from './lib/reminders';
 
 /**
@@ -35,6 +36,7 @@ function RequireOnboarding({ children }: { children: ReactNode }) {
 
 export default function App() {
   useApplyTheme();
+  useApplyDesign();
 
   // Dagelijkse herinnerings-planner: eenmalig app-breed starten.
   // (Loopt zolang de app open is; zie lib/reminders.ts voor de eerlijke status.)

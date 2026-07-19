@@ -17,6 +17,7 @@ export default {
         'euca-deep': 'var(--euca-deep)', // knoppen, actieve tab, eyebrows
         eucatint: 'var(--euca-tint)', // actieve tab-pill, zachte tintvlakken
         apricot: 'var(--apricot)', // warm accent
+        'apricot-ink': 'var(--apricot-ink)', // leesbare tekst op warm accent
         'apricot-soft': 'var(--apricot-soft)', // warme achtergrond (Steun nu)
         'ap-deep': 'var(--ap-deep)', // tekst/iconen op apricot-soft
         'ap-border': 'var(--apricot-border)', // dunne warme rand
@@ -25,11 +26,11 @@ export default {
         'btn-ink': 'var(--btn-ink)', // tekst op primaire knop
         pantile: 'var(--pan-tile)', // pan-selector tegel
         steamwarm: 'var(--steam-warm)', // stoomlijnen pan 4-5 (nooit rood)
-        pan1: '#DCE7DF',
-        pan2: '#B9CFC0',
-        pan3: '#93B7A3',
-        pan4: '#E6C6AC',
-        pan5: '#D9A88B'
+        pan1: 'var(--pan1)',
+        pan2: 'var(--pan2)',
+        pan3: 'var(--pan3)',
+        pan4: 'var(--pan4)',
+        pan5: 'var(--pan5)'
       },
       fontFamily: {
         display: ['Fraunces', 'Georgia', 'serif'],
@@ -41,7 +42,7 @@ export default {
       boxShadow: {
         card: 'var(--shadow)',
         lift: 'var(--lift-shadow)',
-        btn: '0 6px 14px -6px rgba(73, 107, 95, .45)'
+        btn: 'var(--btn-shadow)'
       },
       lineHeight: {
         body: '1.5'

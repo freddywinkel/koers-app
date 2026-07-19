@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
 import App from './App';
 import './index.css';
+import './themes.css';
 
 // Gebundelde fonts (offline, geen CDN): Fraunces voor koppen, Nunito Sans voor body.
 import '@fontsource/fraunces/500.css';
@@ -11,6 +12,8 @@ import '@fontsource/nunito-sans/400.css';
 import '@fontsource/nunito-sans/600.css';
 import '@fontsource/nunito-sans/700.css';
 import '@fontsource/nunito-sans/800.css';
+import '@fontsource/atkinson-hyperlegible/400.css';
+import '@fontsource/atkinson-hyperlegible/700.css';
 
 // Service worker-registratie + updatemelding zit in components/UpdatePrompt.tsx
 // (useRegisterSW, registerType 'prompt'). HashRouter: GitHub Pages heeft geen

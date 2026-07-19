@@ -45,25 +45,18 @@ export default function Vandaag() {
   return (
     <div className="screen-stack">
       {/* Begroeting */}
-      <header className="flex items-start justify-between px-1 pt-2">
-        <div className="min-w-0 flex-1">
-          <p className="eyebrow">{dateLabel()}</p>
-          <h1 className="mt-1.5 font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">
-            {greeting()}
-            {naam ? `,` : ''}
-            {naam && (
-              <>
-                <br />
-                {naam}
-              </>
-            )}
-          </h1>
-        </div>
-        {naam && (
-          <span className="grid h-11 w-11 flex-none place-items-center rounded-full border border-ap-border bg-apricot-soft text-base font-extrabold text-ap-deep">
-            {naam.charAt(0).toUpperCase()}
-          </span>
-        )}
+      <header className="min-w-0 px-1 pt-2">
+        <p className="eyebrow">{dateLabel()}</p>
+        <h1 className="mt-1.5 font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">
+          {greeting()}
+          {naam ? `,` : ''}
+          {naam && (
+            <>
+              <br />
+              {naam}
+            </>
+          )}
+        </h1>
       </header>
 
       {/* Check-in · pannetjesmodel */}

@@ -1,0 +1,153 @@
+/* Wisselbare Koers-ontwerpen. Noordzeemist blijft de standaard in index.css. */
+
+[data-theme='zand-salie'] {
+  --mist: #f7f3ec;
+  --dune: #efe8dc;
+  --sand: #fdfbf7;
+  --raised: #ffffff;
+  --ink: #3e362e;
+  --ink-soft: #6e6357;
+  --euca: #7d9285;
+  --euca-deep: #576f60;
+  --euca-tint: rgba(125, 146, 133, 0.13);
+  --apricot: #c08a6d;
+  --apricot-ink: #3e362e;
+  --apricot-soft: rgba(192, 138, 109, 0.14);
+  --ap-deep: #8f5a3c;
+  --apricot-border: rgba(192, 138, 109, 0.45);
+  --line: rgba(62, 54, 46, 0.09);
+  --pan-tile: #f0e9de;
+  --steam-warm: #8f5a3c;
+  --btn-bg: #576f60;
+  --btn-ink: #fdfbf7;
+  --shadow: 0 1px 2px rgba(62, 54, 46, 0.04), 0 10px 26px rgba(62, 54, 46, 0.06);
+  --lift-shadow: 0 5px 12px -4px rgba(62, 54, 46, 0.18);
+  --btn-shadow: 0 6px 14px -6px rgba(87, 111, 96, 0.45);
+  --pan1: #7d9285;
+  --pan2: #a79f77;
+  --pan3: #c2a06f;
+  --pan4: #c08a6d;
+  --pan5: #a96f50;
+  --art-back: #ede4d6;
+  --art-mid: #e5dac8;
+  --art-front: #dbcfbb;
+  --art-line: #fdfbf7;
+  --art-accent: #7d9285;
+  --art-warm: #c08a6d;
+  --art-sun: #c08a6d;
+}
+
+[data-theme='zand-salie'].dark {
+  --mist: #26211c;
+  --dune: #3b342c;
+  --sand: #322c25;
+  --raised: #3a332b;
+  --ink: #efe8db;
+  --ink-soft: #b4a996;
+  --euca: #a7bdae;
+  --euca-deep: #a7bdae;
+  --euca-tint: rgba(167, 189, 174, 0.18);
+  --apricot: #d6a186;
+  --apricot-ink: #26211c;
+  --apricot-soft: rgba(214, 161, 134, 0.15);
+  --ap-deep: #d6a186;
+  --apricot-border: rgba(214, 161, 134, 0.35);
+  --line: rgba(239, 232, 219, 0.1);
+  --pan-tile: #363028;
+  --steam-warm: #d6a186;
+  --btn-bg: #a7bdae;
+  --btn-ink: #26211c;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.28), 0 12px 28px -10px rgba(0, 0, 0, 0.3);
+  --lift-shadow: 0 5px 12px -4px rgba(0, 0, 0, 0.4);
+  --btn-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.5);
+  --pan1: #a7bdae;
+  --pan2: #b9ae87;
+  --pan3: #cbae7e;
+  --pan4: #d6a186;
+  --pan5: #c08564;
+  --art-back: #453c31;
+  --art-mid: #3e362c;
+  --art-front: #373027;
+  --art-line: #322c25;
+  --art-accent: #a7bdae;
+  --art-warm: #d6a186;
+  --art-sun: #d6a186;
+}
+
+[data-theme='terracotta-linnen'] {
+  --mist: #faf5ee;
+  --dune: #f3eadf;
+  --sand: #fffdf8;
+  --raised: #ffffff;
+  --ink: #3a2e28;
+  --ink-soft: #7c6b5e;
+  --euca: #b96a4b;
+  --euca-deep: #9c5639;
+  --euca-tint: #ebcdbd;
+  --apricot: #d9b36a;
+  --apricot-ink: #3a2e28;
+  --apricot-soft: #f3eadf;
+  --ap-deep: #8b8b5e;
+  --apricot-border: rgba(139, 139, 94, 0.4);
+  --line: #e7dccc;
+  --pan-tile: #f3eadf;
+  --steam-warm: #9c5639;
+  --btn-bg: #b96a4b;
+  --btn-ink: #fff8f1;
+  --shadow: 0 2px 6px rgba(58, 46, 40, 0.05), 0 12px 24px -12px rgba(58, 46, 40, 0.1);
+  --lift-shadow: 0 5px 12px -4px rgba(58, 46, 40, 0.18);
+  --btn-shadow: 0 6px 14px -6px rgba(185, 106, 75, 0.45);
+  --pan1: #8b8b5e;
+  --pan2: #a79a5c;
+  --pan3: #d9b36a;
+  --pan4: #c98a5b;
+  --pan5: #b96a4b;
+  --art-back: #f7ebd6;
+  --art-mid: #f1dfc4;
+  --art-front: #e8d3ae;
+  --art-line: #fffdf8;
+  --art-accent: #b96a4b;
+  --art-warm: #d9b36a;
+  --art-sun: #d9b36a;
+}
+
+[data-theme='terracotta-linnen'].dark {
+  --mist: #2b221c;
+  --dune: #46382f;
+  --sand: #3a2e28;
+  --raised: #44362d;
+  --ink: #f1e7d8;
+  --ink-soft: #b9a896;
+  --euca: #d69170;
+  --euca-deep: #d69170;
+  --euca-tint: rgba(214, 145, 112, 0.22);
+  --apricot: #e3c284;
+  --apricot-ink: #2b221c;
+  --apricot-soft: rgba(183, 185, 138, 0.15);
+  --ap-deep: #b7b98a;
+  --apricot-border: rgba(183, 185, 138, 0.35);
+  --line: #4b3c31;
+  --pan-tile: #40332b;
+  --steam-warm: #d69170;
+  --btn-bg: #d69170;
+  --btn-ink: #2b221c;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.28), 0 12px 28px -10px rgba(0, 0, 0, 0.3);
+  --lift-shadow: 0 5px 12px -4px rgba(0, 0, 0, 0.4);
+  --btn-shadow: 0 6px 14px -6px rgba(0, 0, 0, 0.5);
+  --pan1: #b7b98a;
+  --pan2: #c2b578;
+  --pan3: #e3c284;
+  --pan4: #d9a077;
+  --pan5: #d69170;
+  --art-back: #4a3a2e;
+  --art-mid: #42342a;
+  --art-front: #3a2e26;
+  --art-line: #2b221c;
+  --art-accent: #d69170;
+  --art-warm: #e3c284;
+  --art-sun: #e3c284;
+}
+
+html[data-theme='terracotta-linnen'] body {
+  font-family: 'Atkinson Hyperlegible', system-ui, sans-serif;
+}

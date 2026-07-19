@@ -285,7 +285,7 @@ function ContactCard({ contact, warm }: { contact: CrisisContactView; warm: bool
                   href={action.href}
                   /* Abrikoos knop met vaste donkere inkt-tekst: AA in licht én donker,
                      warm maar nooit rood, nooit alarmistisch. */
-                  className="flex min-h-[50px] items-center justify-center gap-2 rounded-2xl bg-apricot px-5 text-[15px] font-extrabold text-[#2f4340] transition-transform active:scale-[0.99]"
+                  className="flex min-h-[50px] items-center justify-center gap-2 rounded-2xl bg-apricot px-5 text-[15px] font-extrabold text-apricot-ink transition-transform active:scale-[0.99]"
                 >
                   {action.label}
                 </a>
