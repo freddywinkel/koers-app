@@ -12,6 +12,8 @@ export interface AudioSession {
   title: string;
   minutes: number;
   doel: string;
+  /** Relatief pad naar de vooraf gegenereerde, doorlopende opname. */
+  audioSrc: string;
   segments: { text: string; pauze?: number }[];
 }
 
@@ -21,6 +23,7 @@ export const audioSessions: AudioSession[] = [
     title: 'Adem als anker',
     minutes: 5,
     doel: 'Een korte oefening om je aandacht bij je adem te houden. Handig als start van de dag, of als je hoofd vol zit.',
+    audioSrc: 'audio/adem-anker.mp3',
     segments: [
       { text: 'Welkom bij deze korte oefening. Zoek een plek waar je even rustig kunt zitten.', pauze: 8 },
       { text: 'Zet je voeten plat op de grond. Leg je handen losjes in je schoot.', pauze: 8 },
@@ -44,8 +47,9 @@ export const audioSessions: AudioSession[] = [
   {
     id: 'bodyscan',
     title: 'Bodyscan',
-    minutes: 12,
+    minutes: 11,
     doel: 'Met je aandacht rustig door je hele lijf gaan, van je voeten tot je hoofd. Zo leer je spanning opmerken en loslaten.',
+    audioSrc: 'audio/bodyscan.mp3',
     segments: [
       { text: 'Welkom bij deze bodyscan. Zoek een plek waar je lekker kunt liggen of zitten.', pauze: 8 },
       { text: 'Leg je armen losjes naast je lijf. Laat je ogen zacht dichtvallen.', pauze: 10 },
@@ -85,8 +89,9 @@ export const audioSessions: AudioSession[] = [
   {
     id: 'bladeren-op-de-stroom',
     title: 'Bladeren op de stroom',
-    minutes: 8,
+    minutes: 7,
     doel: 'Leren kijken naar je gedachten in plaats van erin mee te gaan. Je legt elke gedachte op een blad en kijkt hoe hij wegdrijft.',
+    audioSrc: 'audio/bladeren-op-de-stroom.mp3',
     segments: [
       { text: 'Welkom. Ga lekker zitten of liggen. Doe je ogen zacht dicht.', pauze: 10 },
       { text: 'Adem drie keer rustig in … en weer uit. Laat je lijf zwaarder worden.', pauze: 15 },
@@ -112,8 +117,9 @@ export const audioSessions: AudioSession[] = [
   {
     id: 'toestaan-van-emoties',
     title: 'Toestaan van emoties',
-    minutes: 10,
+    minutes: 6,
     doel: 'Ruimte maken voor een moeilijk gevoel, in plaats van ertegen te vechten. Je leert het gevoel zachtjes toelaten.',
+    audioSrc: 'audio/toestaan-van-emoties.mp3',
     segments: [
       { text: 'Welkom. Deze oefening helpt je ruimte te maken voor een moeilijk gevoel. Ga rustig zitten.', pauze: 10 },
       { text: 'Doe je ogen dicht als dat kan. Adem een paar keer rustig in en uit.', pauze: 12 },
@@ -137,8 +143,9 @@ export const audioSessions: AudioSession[] = [
   {
     id: 'veilige-plek',
     title: 'Je veilige plek',
-    minutes: 10,
+    minutes: 7,
     doel: 'Een veilige plek bouwen in je hoofd, met al je zintuigen. Een plek waar je altijd naartoe kunt.',
+    audioSrc: 'audio/veilige-plek.mp3',
     segments: [
       { text: 'Welkom. In deze oefening maak je in je hoofd een plek waar jij je veilig voelt. Ga lekker zitten of liggen.', pauze: 10 },
       { text: 'Doe je ogen dicht. Adem drie keer rustig in … en weer uit.', pauze: 15 },
@@ -163,8 +170,9 @@ export const audioSessions: AudioSession[] = [
   {
     id: 'compassievolle-pauze',
     title: 'Compassievolle pauze',
-    minutes: 5,
+    minutes: 3,
     doel: 'Een korte, lieve pauze voor een zwaar moment. Drie stappen: eerlijk zeggen dat het moeilijk is, weten dat je niet alleen bent, en vriendelijk zijn voor jezelf.',
+    audioSrc: 'audio/compassievolle-pauze.mp3',
     segments: [
       { text: 'Welkom bij deze korte pauze. Deze oefening is voor een moment dat het even zwaar is.', pauze: 8 },
       { text: 'Ga rustig zitten. Leg één hand op je hart, of op een plek die fijn voelt.', pauze: 10 },

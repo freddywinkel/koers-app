@@ -40,7 +40,7 @@ export default defineConfig(({ mode }) => ({
         navigateFallback: 'index.html',
         runtimeCaching: [
           {
-            // Lesaudio of andere media die stage 3 toevoegt: cache-first, maximaal 50 MB.
+            // Geleide oefeningen worden na de eerste download offline bewaard.
             urlPattern: ({ request }) => request.destination === 'audio',
             handler: 'CacheFirst',
             options: {

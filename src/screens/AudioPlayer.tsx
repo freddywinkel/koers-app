@@ -1,58 +1,106 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { audioSessions } from '../content/audio';
-import { GuidedAudioPlayer, speechSupported, type PlayerState } from '../lib/audioPlayer';
+import {
+  GuidedAudioPlayer,
+  audioSupported,
+  cacheAudio,
+  isAudioCached,
+  type PlayerState
+} from '../lib/audioPlayer';
 import NotFound from './NotFound';
 
-/**
- * Speler voor één geleide audiosessie (device SpeechSynthesis).
- * Logica zit in lib/audioPlayer.ts (GuidedAudioPlayer); dit scherm is alleen UI.
- * Start/hervat gaat altijd via een knop (user gesture — vereiste van iOS).
- * Bij unmount destroy()'t de speler en wordt spraak geannuleerd.
- */
+type OfflineState = 'checking' | 'ready' | 'downloading' | 'saved' | 'error';
+
+function formatTime(seconds: number): string {
+  if (!Number.isFinite(seconds) || seconds <= 0) return '0:00';
+  const rounded = Math.floor(seconds);
+  return `${Math.floor(rounded / 60)}:${String(rounded % 60).padStart(2, '0')}`;
+}
+
+/** Speler voor één vooraf gegenereerde mindfulness-opname. */
 export default function AudioPlayer() {
   const { id } = useParams<{ id: string }>();
-  const session = audioSessions.find((s) => s.id === id);
+  const session = audioSessions.find((item) => item.id === id);
   const navigate = useNavigate();
 
   const [state, setState] = useState<PlayerState>({
     status: 'idle',
-    segmentIndex: 0,
-    totalSegments: session?.segments.length ?? 0,
-    supported: speechSupported()
+    currentTime: 0,
+    duration: 0,
+    supported: audioSupported()
   });
+  const [offlineState, setOfflineState] = useState<OfflineState>('checking');
+  const [downloadProgress, setDownloadProgress] = useState(0);
 
-  // Eén speler per sessie; setState is stabiel dus veilig als callback.
   const player = useMemo(() => (session ? new GuidedAudioPlayer(session, setState) : null), [session]);
 
   useEffect(() => {
     if (!player) return;
     setState(player.snapshot());
-    return () => player.destroy(); // annuleert spraak + timers bij unmount
+    return () => player.destroy();
   }, [player]);
+
+  useEffect(() => {
+    let active = true;
+    if (!session) return;
+    void isAudioCached(session)
+      .then((cached) => {
+        if (active) setOfflineState(cached ? 'saved' : 'ready');
+      })
+      .catch(() => {
+        if (active) setOfflineState('ready');
+      });
+    return () => {
+      active = false;
+    };
+  }, [session]);
 
   if (!session || !player) return <NotFound />;
 
-  const total = state.totalSegments;
-  const active = state.status === 'speaking' || state.status === 'pauze';
-  const currentSegment = session.segments[Math.min(state.segmentIndex, total - 1)];
-  const progressNow = state.status === 'done' ? total : state.segmentIndex + 1;
-  const progressPct = Math.round((progressNow / total) * 100);
+  const active = state.status === 'playing' || state.status === 'loading';
+  const displayDuration = state.duration || session.minutes * 60;
+  const progressPct = state.status === 'done'
+    ? 100
+    : Math.min(100, Math.round((state.currentTime / displayDuration) * 100));
 
   const statusLine =
     state.status === 'idle'
       ? 'Klaar om te starten'
-      : state.status === 'done'
-        ? 'Oefening afgerond'
-        : state.status === 'pauze'
-          ? `Even stilte … (stap ${state.segmentIndex + 1} van ${total})`
+      : state.status === 'loading'
+        ? 'Opname laden…'
+        : state.status === 'done'
+          ? 'Oefening afgerond'
           : state.status === 'paused'
-            ? `Gepauzeerd bij stap ${state.segmentIndex + 1} van ${total}`
-            : `Stap ${state.segmentIndex + 1} van ${total}`;
+            ? 'Gepauzeerd'
+            : state.status === 'error'
+              ? 'Afspelen niet gelukt'
+              : 'Oefening speelt';
+
+  const saveOffline = async (): Promise<void> => {
+    setOfflineState('downloading');
+    setDownloadProgress(0);
+    try {
+      await cacheAudio(session, setDownloadProgress);
+      setOfflineState('saved');
+    } catch {
+      setOfflineState('error');
+    }
+  };
+
+  const offlineLabel =
+    offlineState === 'checking'
+      ? 'Offline-status controleren…'
+      : offlineState === 'downloading'
+        ? `Bewaren… ${downloadProgress}%`
+        : offlineState === 'saved'
+          ? 'Offline beschikbaar'
+          : offlineState === 'error'
+            ? 'Download opnieuw proberen'
+            : 'Bewaar voor offline';
 
   return (
     <div className="screen-stack">
-      {/* Kruimel + terug */}
       <div className="flex items-center gap-3 px-0.5 pt-1">
         <button
           type="button"
@@ -72,36 +120,34 @@ export default function AudioPlayer() {
         <p className="sub mt-1.5">{session.doel}</p>
         <div className="mt-3 flex flex-wrap gap-2">
           <span className="chip chip-warm">± {session.minutes} min</span>
-          <span className="chip">{total} stappen</span>
+          <span className="chip">Rustige begeleiding</span>
         </div>
       </header>
 
-      {/* Voortgang + huidige stap */}
       <section className="card" aria-label="Voortgang">
         <div className="flex items-baseline justify-between gap-3">
           <p className="min-w-0 text-sm font-extrabold text-ink">{statusLine}</p>
-          <p className="sub flex-none">± {session.minutes} min</p>
+          <p className="sub flex-none">{formatTime(state.currentTime)} / {formatTime(displayDuration)}</p>
         </div>
         <div
           className="mt-3 h-2 overflow-hidden rounded-full bg-dune"
           role="progressbar"
           aria-valuemin={0}
-          aria-valuemax={total}
-          aria-valuenow={progressNow}
+          aria-valuemax={100}
+          aria-valuenow={progressPct}
           aria-label="Voortgang van de oefening"
         >
           <div className="h-full rounded-full bg-euca-deep transition-[width] duration-500" style={{ width: `${progressPct}%` }} />
         </div>
-        {(active || state.status === 'paused') && currentSegment && (
-          <p className="mt-3 border-t border-line pt-3 text-[14.5px] leading-[1.6] text-ink" aria-live="polite">
-            {currentSegment.text}
+        {state.error && (
+          <p className="mt-3 border-t border-line pt-3 text-[13.5px] font-bold leading-body text-ap-deep" role="alert">
+            {state.error}
           </p>
         )}
       </section>
 
-      {/* Knoppen */}
       {state.status === 'idle' && (
-        <button type="button" className="btn-primary" disabled={!state.supported} onClick={() => player.start()}>
+        <button type="button" className="btn-primary" disabled={!state.supported} onClick={() => void player.start()}>
           Start de oefening
         </button>
       )}
@@ -117,7 +163,7 @@ export default function AudioPlayer() {
       )}
       {state.status === 'paused' && (
         <div className="flex gap-2.5">
-          <button type="button" className="btn-primary flex-1 !w-auto" onClick={() => player.resume()}>
+          <button type="button" className="btn-primary flex-1 !w-auto" onClick={() => void player.resume()}>
             Ga verder
           </button>
           <button type="button" className="btn-secondary flex-1" onClick={() => player.stop()}>
@@ -125,13 +171,18 @@ export default function AudioPlayer() {
           </button>
         </div>
       )}
+      {state.status === 'error' && (
+        <button type="button" className="btn-primary" onClick={() => void player.start()}>
+          Probeer opnieuw
+        </button>
+      )}
       {state.status === 'done' && (
         <section className="card border-euca-deep/25 bg-eucatint">
           <h2 className="card-title">Mooi gedaan</h2>
           <p className="sub mt-1.5">
             Je hebt de oefening helemaal afgerond. Neem even een rustige ademhaling voordat je verder gaat.
           </p>
-          <button type="button" className="btn-secondary mt-3.5 w-full" onClick={() => player.start()}>
+          <button type="button" className="btn-secondary mt-3.5 w-full" onClick={() => void player.start()}>
             Opnieuw beluisteren
           </button>
           <Link
@@ -143,17 +194,24 @@ export default function AudioPlayer() {
         </section>
       )}
 
+      <button
+        type="button"
+        className="btn-secondary w-full"
+        disabled={offlineState === 'checking' || offlineState === 'downloading' || offlineState === 'saved'}
+        onClick={() => void saveOffline()}
+      >
+        {offlineLabel}
+      </button>
+      <p className="sub -mt-2 px-1 text-[12.5px]">
+        De stem is met AI gegenereerd en is geen menselijke opname. Bewaar de oefening vooraf als je zonder internet wilt luisteren.
+      </p>
+
       {!state.supported && (
         <p className="rounded-2xl bg-apricot-soft px-4 py-3 text-[13.5px] font-bold leading-body text-ap-deep">
-          Je browser kan niet voorlezen. Hieronder vind je de volledige tekst — lees hem rustig in je eigen tempo.
+          Je browser kan de opname niet afspelen. Hieronder vind je de volledige tekst — lees hem rustig in je eigen tempo.
         </p>
       )}
 
-      <p className="sub px-1 text-[12.5px]">
-        Ingeluisterd door de stem van je telefoon — later vervangen door echte opnames.
-      </p>
-
-      {/* Volledige tekst (ook fijn zonder geluid) */}
       <details className="card group">
         <summary className="flex cursor-pointer list-none items-center gap-3 [&::-webkit-details-marker]:hidden">
           <span className="min-w-0 flex-1">
@@ -176,10 +234,10 @@ export default function AudioPlayer() {
           </svg>
         </summary>
         <ol className="mt-3 flex flex-col gap-2.5 border-t border-line pt-3">
-          {session.segments.map((segment, i) => (
-            <li key={i} className="flex gap-2.5 text-[14.5px] leading-[1.6] text-ink">
+          {session.segments.map((segment, index) => (
+            <li key={index} className="flex gap-2.5 text-[14.5px] leading-[1.6] text-ink">
               <span className="grid h-6 w-6 flex-none place-items-center rounded-lg bg-eucatint text-xs font-extrabold text-euca-deep">
-                {i + 1}
+                {index + 1}
               </span>
               <span>
                 {segment.text}
