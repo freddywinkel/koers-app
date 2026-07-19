@@ -57,6 +57,29 @@ export default function Oefenen() {
         </Link>
       </section>
 
+      {/* Menselijk ingesproken mindfulness via Spotify */}
+      <section className="flex flex-col gap-3">
+        <p className="eyebrow px-0.5">Echte stemmen</p>
+        <Link to="/oefenen/echte-stemmen" className="card flex items-center gap-3.5">
+          <span className="grid h-11 w-11 flex-none place-items-center rounded-[14px] bg-[#1ed760]/15 text-[#16883c] dark:text-[#55df80]" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+              <path d="M5 9.2c4.8-1.4 9.9-.9 14 1.1" />
+              <path d="M6 13c4-1 8.2-.6 11.7 1" />
+              <path d="M7 16.5c3.1-.7 6.3-.4 9 .8" />
+            </svg>
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-[15px] font-bold text-ink">Mindfulness door mensen</span>
+            <span className="sub mt-0.5 block">
+              Luister via Spotify naar Marjolein van der Aar van Mindful Minuut.
+            </span>
+          </span>
+          <svg className="flex-none text-ink-soft" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M6.5 3.5 11 9l-4.5 5.5" />
+          </svg>
+        </Link>
+      </section>
+
       {/* Vaardigheden met pan-filter */}
       <section className="flex flex-col gap-3">
         <p className="eyebrow px-0.5">Vaardigheden ({skills.length})</p>
