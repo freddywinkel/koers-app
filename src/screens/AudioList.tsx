@@ -1,15 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { audioSessions } from '../content/audio';
-import { speechSupported } from '../lib/audioPlayer';
 
 /** Overzicht van alle geleide audio-oefeningen. */
 export default function AudioList() {
   const navigate = useNavigate();
-  const supported = speechSupported();
 
   return (
     <div className="screen-stack">
-      {/* Kruimel + terug */}
       <div className="flex items-center gap-3 px-0.5 pt-1">
         <button
           type="button"
@@ -29,11 +26,6 @@ export default function AudioList() {
         <p className="sub mt-1.5">
           Rustige oefeningen om te beluisteren, stap voor stap. Ze werken ook los van de cursus — kies wat nu past.
         </p>
-        {!supported && (
-          <p className="mt-3 rounded-2xl bg-apricot-soft px-4 py-3 text-[13.5px] font-bold leading-body text-ap-deep">
-            Je browser kan helaas niet voorlezen. Je kunt elke oefening wel openen en de tekst in je eigen tempo lezen.
-          </p>
-        )}
       </header>
 
       <section className="flex flex-col gap-3" aria-label="Audiosessies">
@@ -59,7 +51,7 @@ export default function AudioList() {
       </section>
 
       <p className="sub px-1 text-[12.5px]">
-        Ingeluisterd door de stem van je telefoon — later vervangen door echte opnames.
+        De oefeningen worden voorgelezen door een rustige, met AI gegenereerde stem.
       </p>
     </div>
   );

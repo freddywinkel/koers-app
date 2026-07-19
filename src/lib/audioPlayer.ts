@@ -1,239 +1,157 @@
-/**
- * Koers — geleide audio via de device-stem (SpeechSynthesis)
- * -------------------------------------------------------------------
- * Speelt een AudioSession af: elk segment wordt als aparte utterance
- * gesproken (lang 'nl-NL', rate 0.9) en de `pauze` van een segment is
- * stilte NA dat segment. Eén utterance per segment is bewust gekozen:
- * zo ontloopt de speler de bekende Chrome-bug waarbij hele lange
- * utterances na ±15 seconden afbreken.
- *
- * Eerlijke beperkingen (platform, geen bug in deze code):
- *  - iOS/Safari eist dat de eerste speak() binnen een user gesture valt —
- *    daarom start/hervat de UI alleen vanuit een knop.
- *  - pause()/resume() van speechSynthesis is op iOS onbetrouwbaar;
- *    pauzeren tijdens een stilte (pauze-timer) werkt overal wel.
- *  - Stemmen laden asynchroon (Chrome): we luisteren naar 'voiceschanged'
- *    en kiezen dan alsnog een Nederlandse stem.
- *  - cancel() bij unmount (destroy) voorkomt doorspoken na navigatie.
- *  - Een `generation`-teller laat verlate onend/onerror-callbacks van
- *    geannuleerde utterances stilletjes verlopen.
- */
+/** Koers — speler voor vooraf gegenereerde geleide oefeningen. */
 
 import type { AudioSession } from '../content/audio';
 
-export type PlayerStatus = 'idle' | 'speaking' | 'pauze' | 'paused' | 'done';
+export type PlayerStatus = 'idle' | 'loading' | 'playing' | 'paused' | 'done' | 'error';
 
 export interface PlayerState {
   status: PlayerStatus;
-  /** 0-based index van het huidige segment. */
-  segmentIndex: number;
-  totalSegments: number;
+  currentTime: number;
+  duration: number;
   supported: boolean;
+  error?: string;
 }
 
-const LANG = 'nl-NL';
-const RATE = 0.85;
+const AUDIO_CACHE = 'koers-audio';
 
-/**
- * Voorkeursstemmen voor een rustiger geluid, op volgorde van voorkeur.
- * iOS levert 'Claire'/'Xander' mee (de Enhanced-downloads deelt Apple
- * helaas NIET met webapps); Chrome/Android heeft 'Google Nederlands';
- * Edge/Windows heeft neurale Microsoft-stemmen.
- */
-const PREFERRED_VOICES = [
-  'Claire',
-  'Xander',
-  'Google Nederlands',
-  'Microsoft Fenna',
-  'Microsoft Colette',
-  'Microsoft Maarten'
-];
+export function audioSupported(): boolean {
+  return typeof window !== 'undefined' && typeof window.Audio !== 'undefined';
+}
 
-/** Ondersteunt deze browser/context speechSynthesis? */
-export function speechSupported(): boolean {
-  return typeof window !== 'undefined' && 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+export function audioUrl(session: AudioSession): string {
+  return `${import.meta.env.BASE_URL}${session.audioSrc}`;
+}
+
+export async function isAudioCached(session: AudioSession): Promise<boolean> {
+  if (typeof window === 'undefined' || !('caches' in window)) return false;
+  const cache = await window.caches.open(AUDIO_CACHE);
+  return Boolean(await cache.match(audioUrl(session)));
+}
+
+/** Download de volledige oefening naar dezelfde cache die de service worker gebruikt. */
+export async function cacheAudio(session: AudioSession, onProgress?: (progress: number) => void): Promise<void> {
+  if (typeof window === 'undefined' || !('caches' in window)) {
+    throw new Error('Offline bewaren wordt niet ondersteund door deze browser.');
+  }
+
+  onProgress?.(10);
+  const url = audioUrl(session);
+  const response = await fetch(url, { cache: 'reload' });
+  if (!response.ok) throw new Error(`Audio downloaden is mislukt (${response.status}).`);
+  onProgress?.(80);
+  const cache = await window.caches.open(AUDIO_CACHE);
+  await cache.put(url, response);
+  onProgress?.(100);
 }
 
 export class GuidedAudioPlayer {
-  private readonly session: AudioSession;
+  private readonly audio: HTMLAudioElement | null;
   private onChange: (state: PlayerState) => void;
   private state: PlayerState;
-  /** Verhoogd bij start/stop/destroy — verlate callbacks verlopen dan stilletjes. */
-  private generation = 0;
-  private pauseTimer: number | undefined;
-  private pauseEndsAt = 0;
-  private pauseRemaining = 0;
-  private pausedFrom: 'speaking' | 'pauze' | null = null;
-  private voice: SpeechSynthesisVoice | null = null;
   private destroyed = false;
 
-  private readonly onVoicesChanged = (): void => this.pickVoice();
+  private readonly onLoadedMetadata = (): void => {
+    if (!this.audio) return;
+    this.emit({ duration: Number.isFinite(this.audio.duration) ? this.audio.duration : 0 });
+  };
+
+  private readonly onTimeUpdate = (): void => {
+    if (!this.audio) return;
+    this.emit({
+      currentTime: this.audio.currentTime,
+      duration: Number.isFinite(this.audio.duration) ? this.audio.duration : this.state.duration
+    });
+  };
+
+  private readonly onPlaying = (): void => this.emit({ status: 'playing', error: undefined });
+  private readonly onPause = (): void => {
+    if (this.state.status === 'playing' || this.state.status === 'loading') this.emit({ status: 'paused' });
+  };
+  private readonly onEnded = (): void => {
+    if (!this.audio) return;
+    this.emit({ status: 'done', currentTime: this.audio.duration, duration: this.audio.duration });
+  };
+  private readonly onError = (): void => this.emit({
+    status: 'error',
+    error: 'De opname kon niet worden geladen. Controleer je verbinding of probeer de oefening opnieuw te downloaden.'
+  });
 
   constructor(session: AudioSession, onChange: (state: PlayerState) => void) {
-    this.session = session;
+    const supported = audioSupported();
     this.onChange = onChange;
-    this.state = {
-      status: 'idle',
-      segmentIndex: 0,
-      totalSegments: session.segments.length,
-      supported: speechSupported()
-    };
-    if (this.state.supported) {
-      this.pickVoice();
-      // Chrome levert stemmen pas later; kies opnieuw zodra ze binnen zijn.
-      window.speechSynthesis.addEventListener('voiceschanged', this.onVoicesChanged);
+    this.state = { status: 'idle', currentTime: 0, duration: 0, supported };
+    this.audio = supported ? new Audio(audioUrl(session)) : null;
+
+    if (this.audio) {
+      this.audio.preload = 'metadata';
+      this.audio.addEventListener('loadedmetadata', this.onLoadedMetadata);
+      this.audio.addEventListener('durationchange', this.onLoadedMetadata);
+      this.audio.addEventListener('timeupdate', this.onTimeUpdate);
+      this.audio.addEventListener('playing', this.onPlaying);
+      this.audio.addEventListener('pause', this.onPause);
+      this.audio.addEventListener('ended', this.onEnded);
+      this.audio.addEventListener('error', this.onError);
     }
   }
 
-  /** Momentopname van de staat (voor de eerste render). */
   snapshot(): PlayerState {
     return { ...this.state };
   }
 
-  /**
-   * Start (of herstart) de sessie vanaf segment 1.
-   * Alleen aanroepen vanuit een user gesture (iOS eist dat voor spraak).
-   */
-  start(): void {
-    if (!this.state.supported || this.destroyed) return;
-    window.speechSynthesis.cancel(); // ruim hangende utterances op (iOS-quirk)
-    this.generation += 1;
-    this.clearPauseTimer();
-    this.pausedFrom = null;
-    this.pickVoice();
-    this.speakSegment(0, this.generation);
+  async start(): Promise<void> {
+    if (!this.audio || this.destroyed) return;
+    this.audio.currentTime = 0;
+    await this.play();
   }
 
-  /** Pauzeer het gesproken segment óf de lopende stilte. */
   pause(): void {
-    if (this.destroyed) return;
-    if (this.state.status === 'speaking') {
-      window.speechSynthesis.pause();
-      this.pausedFrom = 'speaking';
-      this.emit({ status: 'paused' });
-    } else if (this.state.status === 'pauze') {
-      this.pauseRemaining = Math.max(0, this.pauseEndsAt - Date.now());
-      this.clearPauseTimer();
-      this.pausedFrom = 'pauze';
-      this.emit({ status: 'paused' });
-    }
+    if (!this.audio || this.destroyed) return;
+    this.audio.pause();
   }
 
-  /** Hervat na pauze. Alleen aanroepen vanuit een user gesture (iOS). */
-  resume(): void {
-    if (this.destroyed || this.state.status !== 'paused') return;
-    if (this.pausedFrom === 'speaking') {
-      window.speechSynthesis.resume();
-      this.emit({ status: 'speaking' });
-    } else if (this.pausedFrom === 'pauze') {
-      this.emit({ status: 'pauze' });
-      this.armPauseTimer(this.pauseRemaining, this.state.segmentIndex, this.generation);
-    }
-    this.pausedFrom = null;
+  async resume(): Promise<void> {
+    if (!this.audio || this.destroyed) return;
+    await this.play();
   }
 
-  /** Stop en zet de speler terug naar het begin (blijft op het scherm). */
   stop(): void {
-    if (this.destroyed) return;
-    this.generation += 1;
-    this.clearPauseTimer();
-    this.pausedFrom = null;
-    if (this.state.supported) window.speechSynthesis.cancel();
-    this.emit({ status: 'idle', segmentIndex: 0 });
+    if (!this.audio || this.destroyed) return;
+    this.audio.pause();
+    this.audio.currentTime = 0;
+    this.emit({ status: 'idle', currentTime: 0, error: undefined });
   }
 
-  /** Ruim op bij unmount: annuleer spraak, timers en listeners. */
   destroy(): void {
     if (this.destroyed) return;
     this.destroyed = true;
-    this.generation += 1;
-    this.clearPauseTimer();
-    if (this.state.supported) {
-      window.speechSynthesis.removeEventListener('voiceschanged', this.onVoicesChanged);
-      window.speechSynthesis.cancel();
+    if (this.audio) {
+      this.audio.pause();
+      this.audio.removeEventListener('loadedmetadata', this.onLoadedMetadata);
+      this.audio.removeEventListener('durationchange', this.onLoadedMetadata);
+      this.audio.removeEventListener('timeupdate', this.onTimeUpdate);
+      this.audio.removeEventListener('playing', this.onPlaying);
+      this.audio.removeEventListener('pause', this.onPause);
+      this.audio.removeEventListener('ended', this.onEnded);
+      this.audio.removeEventListener('error', this.onError);
+      this.audio.removeAttribute('src');
+      this.audio.load();
     }
-    this.onChange = () => undefined; // geen setState meer na unmount
+    this.onChange = () => undefined;
   }
 
-  /* ------------------------------- intern ------------------------------ */
+  private async play(): Promise<void> {
+    if (!this.audio) return;
+    this.emit({ status: 'loading', error: undefined });
+    try {
+      await this.audio.play();
+    } catch {
+      this.emit({ status: 'error', error: 'Afspelen is niet gestart. Tik nogmaals op de afspeelknop.' });
+    }
+  }
 
   private emit(patch: Partial<PlayerState>): void {
+    if (this.destroyed) return;
     this.state = { ...this.state, ...patch };
     this.onChange({ ...this.state });
-  }
-
-  /** Kies eerst een voorkeursstem op naam, dan een nl-NL stem, dan eender welke Nederlandse. */
-  private pickVoice(): void {
-    if (!this.state.supported) return;
-    const voices = window.speechSynthesis.getVoices();
-    if (voices.length === 0) return;
-    this.voice =
-      PREFERRED_VOICES.map((name) => voices.find((v) => v.name.includes(name))).find((v) => v !== undefined) ??
-      voices.find((v) => v.lang.toLowerCase() === LANG) ??
-      voices.find((v) => v.lang.toLowerCase().startsWith('nl')) ??
-      null;
-  }
-
-  private speakSegment(index: number, generation: number): void {
-    if (generation !== this.generation || this.destroyed) return;
-    const segment = this.session.segments[index];
-    if (!segment) {
-      this.finish(generation);
-      return;
-    }
-    const utterance = new SpeechSynthesisUtterance(segment.text);
-    utterance.lang = LANG;
-    utterance.rate = RATE;
-    if (this.voice) utterance.voice = this.voice;
-    utterance.onend = () => {
-      if (generation === this.generation && !this.destroyed) this.afterSegment(index, generation);
-    };
-    utterance.onerror = (event) => {
-      if (generation !== this.generation || this.destroyed) return;
-      // 'canceled'/'interrupted' horen bij stop()/cancel() — geen echte fout.
-      if (event.error === 'canceled' || event.error === 'interrupted') return;
-      // Liever rustig doorschakelen dan stil blijven hangen.
-      this.afterSegment(index, generation);
-    };
-    this.emit({ status: 'speaking', segmentIndex: index });
-    window.speechSynthesis.speak(utterance);
-  }
-
-  private afterSegment(index: number, generation: number): void {
-    if (generation !== this.generation || this.destroyed) return;
-    if (index >= this.session.segments.length - 1) {
-      this.finish(generation);
-      return;
-    }
-    const pauzeSeconds = this.session.segments[index]?.pauze ?? 0;
-    if (pauzeSeconds > 0) {
-      this.emit({ status: 'pauze' });
-      this.armPauseTimer(pauzeSeconds * 1000, index, generation);
-    } else {
-      this.speakSegment(index + 1, generation);
-    }
-  }
-
-  /** Stilte van `ms` milliseconden na segment `index`; daarna het volgende segment. */
-  private armPauseTimer(ms: number, index: number, generation: number): void {
-    this.clearPauseTimer();
-    this.pauseRemaining = ms;
-    this.pauseEndsAt = Date.now() + ms;
-    this.pauseTimer = window.setTimeout(() => {
-      this.pauseTimer = undefined;
-      this.speakSegment(index + 1, generation);
-    }, ms);
-  }
-
-  private clearPauseTimer(): void {
-    if (this.pauseTimer !== undefined) {
-      window.clearTimeout(this.pauseTimer);
-      this.pauseTimer = undefined;
-    }
-  }
-
-  private finish(generation: number): void {
-    if (generation !== this.generation || this.destroyed) return;
-    this.emit({ status: 'done', segmentIndex: this.session.segments.length - 1 });
   }
 }
