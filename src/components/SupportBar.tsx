@@ -9,14 +9,14 @@ export default function SupportBar() {
   return (
     <Link
       to="/crisis"
-      className="mx-[18px] mb-2.5 flex min-h-[62px] items-center gap-3 rounded-[18px] border border-ap-border bg-apricot-soft px-3.5 py-3"
+      className="mb-2.5 flex min-h-[62px] items-center gap-3 rounded-[18px] border border-ap-border bg-apricot-soft px-3.5 py-3"
     >
       <span className="grid h-[38px] w-[38px] flex-none place-items-center rounded-[13px] bg-white/55 text-ap-deep dark:bg-apricot/15">
         <svg width="19" height="19" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M10 16.8S3.4 12.9 3.4 8.4A3.6 3.6 0 0 1 10 6.2a3.6 3.6 0 0 1 6.6 2.2c0 4.5-6.6 8.4-6.6 8.4Z" />
         </svg>
       </span>
-      <span className="text-left">
+      <span className="min-w-0 flex-1 text-left">
         <b className="block text-[14.5px] font-extrabold text-ink">Steun nu</b>
         <span className="mt-px block text-xs font-semibold text-ap-deep">Direct rust, contact of een luisterend oor</span>
       </span>

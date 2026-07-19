@@ -46,7 +46,7 @@ export default function Vandaag() {
     <div className="screen-stack">
       {/* Begroeting */}
       <header className="flex items-start justify-between px-1 pt-2">
-        <div>
+        <div className="min-w-0 flex-1">
           <p className="eyebrow">{dateLabel()}</p>
           <h1 className="mt-1.5 font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">
             {greeting()}
@@ -78,8 +78,8 @@ export default function Vandaag() {
         />
         {checkin && (
           <>
-            <p className="mt-3.5 flex items-center gap-2 text-[12.5px] font-semibold text-ink-soft">
-              <span className="h-2 w-2 flex-none rounded-full bg-euca" aria-hidden="true" />
+            <p className="mt-3.5 flex items-start gap-2 text-[12.5px] font-semibold text-ink-soft">
+              <span className="mt-[5px] h-2 w-2 flex-none rounded-full bg-euca" aria-hidden="true" />
               Gekozen: Pan {checkin.pan} · {PAN_LABELS[checkin.pan]}. {FEEDBACK[checkin.pan]}
             </p>
             <label className="mt-3 block">

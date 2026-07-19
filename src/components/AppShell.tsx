@@ -1,15 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import TabBar from './TabBar';
-
-/** Scrollt bij elke routewissel terug naar boven. */
-function ScrollToTop() {
-  const { pathname } = useLocation();
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-  return null;
-}
 
 /**
  * App-shell: mobiele kolom (max ~448px), content scrollt,
@@ -17,15 +8,22 @@ function ScrollToTop() {
  * "Steun nu" zit alleen op het homescherm (Vandaag), niet app-breed.
  */
 export default function AppShell() {
+  const mainRef = useRef<HTMLElement>(null);
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    mainRef.current?.scrollTo(0, 0);
+  }, [pathname]);
+
   return (
-    <div className="mx-auto flex min-h-dvh w-full max-w-md flex-col bg-mist">
-      <ScrollToTop />
-      <main className="flex-1">
+    <div className="mx-auto flex h-screen w-full max-w-md flex-col bg-mist supports-[height:100dvh]:h-dvh">
+      <main
+        ref={mainRef}
+        className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain pt-[env(safe-area-inset-top)]"
+      >
         <Outlet />
       </main>
-      <div className="sticky bottom-0 mt-auto">
-        <TabBar />
-      </div>
+      <TabBar />
     </div>
   );
 }

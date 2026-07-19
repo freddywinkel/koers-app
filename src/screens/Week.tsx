@@ -43,10 +43,10 @@ export default function Week() {
               <path d="M11 3.5 5.5 9 11 14.5" />
             </svg>
           </Link>
-          <span className="eyebrow !text-ink-soft">Week {week.number}</span>
+          <span className="eyebrow min-w-0 truncate !text-ink-soft">Week {week.number}</span>
         </div>
         <header className="px-1">
-          <h1 className="font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">{week.title}</h1>
+          <h1 className="hyphens-auto font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">{week.title}</h1>
           {week.tagline && <p className="sub mt-1.5">{week.tagline}</p>}
         </header>
         <section className="card">
@@ -76,11 +76,11 @@ export default function Week() {
             <path d="M11 3.5 5.5 9 11 14.5" />
           </svg>
         </Link>
-        <span className="eyebrow !text-ink-soft">Week {week.number}</span>
+        <span className="eyebrow min-w-0 truncate !text-ink-soft">Week {week.number}</span>
       </div>
 
       <header className="px-1">
-        <h1 className="font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">{week.title}</h1>
+        <h1 className="hyphens-auto font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">{week.title}</h1>
         {week.tagline && <p className="sub mt-1.5">{week.tagline}</p>}
         <p className="sub mt-1">
           {doneCount} van {week.lessons.length} lessen afgerond

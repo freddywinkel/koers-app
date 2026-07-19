@@ -122,8 +122,14 @@ export function PinLockScreen({ expectedHash, onUnlocked, onCancel, demo = false
   });
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-mist px-6" role="dialog" aria-modal="true" aria-label="App vergrendeld">
-      <div className="w-full max-w-[320px]">
+    <div
+      className="fixed inset-0 z-[60] overflow-y-auto overscroll-contain bg-mist px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1.5rem,env(safe-area-inset-top))]"
+      role="dialog"
+      aria-modal="true"
+      aria-label="App vergrendeld"
+    >
+      <div className="mx-auto flex min-h-full w-full max-w-[320px] flex-col items-center justify-center py-6">
+        <div className="w-full">
         <div className="flex flex-col items-center text-center">
           <div className="flex h-[72px] w-[72px] items-center justify-center rounded-[22px] bg-eucatint">
             <LockIcon />
@@ -159,6 +165,7 @@ export function PinLockScreen({ expectedHash, onUnlocked, onCancel, demo = false
             Terug zonder te ontgrendelen
           </button>
         )}
+        </div>
       </div>
     </div>
   );

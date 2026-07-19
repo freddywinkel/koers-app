@@ -223,12 +223,12 @@ export default function Profiel() {
 
           {hasPin && (
             <div className="mt-3 flex flex-wrap gap-2">
-              <button type="button" className="btn-secondary flex-1" onClick={() => setTestingGate(true)}>
+              <button type="button" className="btn-secondary min-w-0 flex-1" onClick={() => setTestingGate(true)}>
                 Test de vergrendeling
               </button>
               <button
                 type="button"
-                className="flex min-h-[44px] flex-1 items-center justify-center rounded-2xl bg-apricot-soft px-4 py-2.5 text-sm font-extrabold text-ap-deep transition-transform active:scale-[0.99]"
+                className="flex min-h-[44px] min-w-0 flex-1 items-center justify-center rounded-2xl bg-apricot-soft px-4 py-2.5 text-sm font-extrabold text-ap-deep transition-transform active:scale-[0.99]"
                 onClick={() => void handleRemovePin()}
               >
                 Verwijderen

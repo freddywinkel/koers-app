@@ -64,11 +64,15 @@ html {
 html,
 body,
 #root {
+  height: 100%;
+  overflow-x: hidden;
   overflow-x: clip;
 }
 
 body {
   @apply bg-mist font-sans text-ink;
+  overflow: hidden;
+  overscroll-behavior: none;
   line-height: 1.5; /* dyslexievriendelijk, nooit cursief in body */
   /* Lange samenstellingen mogen afbreken in plaats van de layout op te rekken */
   overflow-wrap: break-word;
@@ -113,6 +117,6 @@ input[type='date'] {
     @apply flex flex-col gap-3.5 px-[18px] pb-6 pt-5;
   }
   .input-soft {
-    @apply min-h-[44px] w-full rounded-2xl border border-line bg-raised px-4 py-2.5 text-[15px] text-ink placeholder:text-ink-soft placeholder:opacity-60;
+    @apply min-h-[44px] w-full rounded-2xl border border-line bg-raised px-4 py-2.5 text-base text-ink placeholder:text-ink-soft placeholder:opacity-60;
   }
 }

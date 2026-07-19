@@ -25,7 +25,7 @@ export default function PanSelector({ value, onChange }: Props) {
             aria-checked={selected}
             onClick={() => onChange(pan)}
             className={[
-              'flex min-h-[88px] flex-col items-center justify-center gap-1 rounded-2xl border-[1.5px] px-0.5 pb-2 pt-2.5 transition-all',
+              'flex min-h-[88px] flex-col items-center justify-center gap-1 rounded-2xl border-[1.5px] px-0 pb-2 pt-2.5 transition-all',
               selected
                 ? '-translate-y-0.5 border-euca-deep bg-raised shadow-lift'
                 : 'border-transparent bg-pantile hover:-translate-y-px'
@@ -35,7 +35,7 @@ export default function PanSelector({ value, onChange }: Props) {
             <span className="text-[9.5px] font-extrabold tracking-[0.06em] text-ink-soft">PAN {pan}</span>
             <span
               className={[
-                'text-center text-[10.5px] font-extrabold leading-[1.15]',
+                'text-center text-[10px] font-extrabold leading-[1.1]',
                 selected ? 'text-euca-deep' : 'text-ink'
               ].join(' ')}
             >
