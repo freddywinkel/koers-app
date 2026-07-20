@@ -53,13 +53,15 @@ const TABS: TabDef[] = [
     )
   },
   {
-    to: '/profiel',
-    label: 'Profiel',
-    prefixes: ['/profiel'],
+    to: '/steun',
+    label: 'Steun',
+    prefixes: ['/steun', '/crisis'],
     icon: (
       <svg {...ICON_PROPS} aria-hidden="true">
-        <circle cx="11" cy="7.4" r="3.4" />
-        <path d="M4.6 18.6c.8-3.3 3.3-4.9 6.4-4.9s5.6 1.6 6.4 4.9" />
+        <path
+          transform="translate(1 1)"
+          d="M10 16.8S3.4 12.9 3.4 8.4A3.6 3.6 0 0 1 10 6.2a3.6 3.6 0 0 1 6.6 2.2c0 4.5-6.6 8.4-6.6 8.4Z"
+        />
       </svg>
     )
   }

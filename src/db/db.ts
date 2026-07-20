@@ -49,10 +49,39 @@ export interface PracticeLogRow {
   note?: string;
 }
 
-/** Emotiehanteringsplan (EHP): vrije secties met sleutel, bv. 'signalen'. */
+/** Emotiehanteringsplan (EHP): vrije secties met sleutel, bv. 'signalen'.
+ *  Verouderd: vanaf db-versie 2 gemigreerd naar `signaleringsplannen`.
+ *  De tabel blijft bestaan zodat oudere exports leesbaar blijven. */
 export interface EhpSectionRow {
   key: string;
   content: string;
+}
+
+/** Signaleringsplan: een volledig ingevuld plan (pan 1–5 + professionele hulp).
+ *  Elke keer dat de gebruiker een nieuw plan start ontstaat een nieuwe rij;
+ *  oudere plannen blijven bewaard als records met aanmaakdatum. */
+export interface SignaleringsplanRow {
+  id?: number;
+  /** Aanmaakdatum (timestamp ms) — getoond in de records-lijst. */
+  createdAt: number;
+  /** Laatste wijziging (timestamp ms). */
+  updatedAt: number;
+  /** Veldinhoud per veldsleutel (zie EHP_SECTIONS in lib/ehp.ts). */
+  fields: Record<string, string>;
+}
+
+/** Ingevuld G-schema (gedachtenschema): Deel 1 (situatie) + Deel 2 (uitdagen).
+ *  Elke invulling is een record met aanmaakdatum; oude blijven terugleesbaar. */
+export interface GSchemaRow {
+  id?: number;
+  /** Aanmaakdatum (timestamp ms) — getoond in de records-lijst. */
+  createdAt: number;
+  /** Laatste wijziging (timestamp ms). */
+  updatedAt: number;
+  /** Tekstantwoorden per veldsleutel (zie GSCHEMA_VELDEN in lib/gschema.ts). */
+  fields: Record<string, string>;
+  /** Percentages 0–100 per veld dat daarom vraagt (gedachten, gevoel). */
+  percentages: Record<string, number>;
 }
 
 /** Instellingen als key-value. Bekende keys:
@@ -80,6 +109,8 @@ export class VVDatabase extends Dexie {
   ehpSections!: Table<EhpSectionRow, string>;
   settings!: Table<SettingRow, string>;
   measureResults!: Table<MeasureResultRow, number>;
+  signaleringsplannen!: Table<SignaleringsplanRow, number>;
+  gSchemas!: Table<GSchemaRow, number>;
 
   constructor() {
     super('vaardig-en-vrij');
@@ -92,6 +123,27 @@ export class VVDatabase extends Dexie {
       settings: 'key',
       measureResults: '++id, instrument, ts'
     });
+
+    // Versie 2: signaleringsplannen (met records) en G-schema's.
+    // Bestaande EHP-inhoud wordt eenmalig overgezet naar een eerste plan,
+    // zodat niemand zijn ingevulde plan verliest bij de update.
+    this.version(2)
+      .stores({
+        signaleringsplannen: '++id, createdAt',
+        gSchemas: '++id, createdAt'
+      })
+      .upgrade(async (tx) => {
+        const ehpRows = await tx.table('ehpSections').toArray();
+        const fields: Record<string, string> = {};
+        for (const row of ehpRows) {
+          if (typeof row?.key === 'string' && typeof row?.content === 'string' && row.content.trim() !== '') {
+            fields[row.key] = row.content;
+          }
+        }
+        if (Object.keys(fields).length === 0) return; // niets ingevuld → geen migratie nodig
+        const now = Date.now();
+        await tx.table('signaleringsplannen').add({ createdAt: now, updatedAt: now, fields });
+      });
   }
 }
 

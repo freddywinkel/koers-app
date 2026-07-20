@@ -13,6 +13,8 @@ import HumanVoices from './screens/HumanVoices';
 import FlashcardDeck from './components/FlashcardDeck';
 import Profiel from './screens/Profiel';
 import Crisis from './screens/Crisis';
+import Signaleringsplan from './screens/Signaleringsplan';
+import GSchema from './screens/GSchema';
 import Onboarding from './screens/Onboarding';
 import NotFound from './screens/NotFound';
 import UpdatePrompt from './components/UpdatePrompt';
@@ -69,7 +71,10 @@ export default function App() {
             <Route path="/oefenen/echte-stemmen" element={<HumanVoices />} />
             <Route path="/oefenen/flashcards" element={<FlashcardDeck />} />
             <Route path="/profiel" element={<Profiel />} />
-            <Route path="/crisis" element={<Crisis />} />
+            <Route path="/steun" element={<Crisis />} />
+            <Route path="/steun/signaleringsplan" element={<Signaleringsplan />} />
+            <Route path="/steun/g-schema" element={<GSchema />} />
+            <Route path="/crisis" element={<Navigate to="/steun" replace />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

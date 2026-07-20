@@ -1,12 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import * as crisisRaw from '../content/crisis';
-import Ehp from '../components/Ehp';
-import { EHP_SECTIONS, useEhpFilledCount } from '../lib/ehp';
+import {
+  countFilledPlanSections,
+  SIGNALERINGSPLAN_SECTIONS,
+  useHuidigSignaleringsplan
+} from '../lib/signaleringsplan';
 
 /**
- * Steun nu (/crisis) — kalm, compleet oppervlak voor moeilijke momenten.
+ * Steun (/steun) — kalm, compleet oppervlak voor moeilijke momenten.
  * Volgorde: eerst gronden (5-4-3-2-1), daarna een kleine aanvullende
- * methode kiezen en tenslotte het eigen Emotiehanteringsplan.
+ * methode kiezen en tenslotte doorverwijzen naar het eigen gereedschap
+ * (Signaleringsplan en G-Schema) op eigen pagina's.
  */
 
 /* ------------------------- Defensieve contentlaag ------------------------- */
@@ -114,7 +119,7 @@ export default function Crisis() {
   return (
     <div className="screen-stack">
       <header className="px-1 pt-2">
-        <p className="eyebrow !text-ap-deep">Steun nu</p>
+        <p className="eyebrow !text-ap-deep">Steun</p>
         <h1 className="mt-1.5 font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">{TITLE}</h1>
         <p className="sub mt-1.5">{INTRO}</p>
       </header>
@@ -131,8 +136,8 @@ export default function Crisis() {
 
       <CalmingMethods />
 
-      {/* Emotiehanteringsplan */}
-      <EhpSection />
+      {/* Gereedschap: doorverwijzing naar eigen pagina's */}
+      <GereedschapSection />
 
       <p className="px-1 pb-2 text-center text-[13px] font-semibold text-ink-soft">Je bent niet alleen. 🤍</p>
     </div>
@@ -305,40 +310,37 @@ function CalmingMethods() {
   );
 }
 
-/* --------------------------- Emotiehanteringsplan --------------------------- */
+/* ------------------------------- Gereedschap ------------------------------ */
 
-function EhpSection() {
-  const filled = useEhpFilledCount();
-  // null = nog niet besloten: open zodra er al inhoud is, anders ingeklapt beginnen.
-  const [open, setOpen] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    if (open === null && filled !== undefined) setOpen(filled > 0);
-  }, [open, filled]);
-
-  const isOpen = open ?? false;
+function GereedschapSection() {
+  const plan = useHuidigSignaleringsplan();
+  const filled = plan ? countFilledPlanSections(plan.fields) : undefined;
 
   return (
-    <>
-      <section className="card border-ap-border" aria-label="Emotiehanteringsplan">
-        <button
-          type="button"
-          className="flex min-h-[44px] w-full items-center gap-3 text-left"
-          aria-expanded={isOpen}
-          aria-controls="ehp-editor"
-          onClick={() => setOpen(!isOpen)}
+    <section className="card" aria-label="Je gereedschap">
+      <p className="eyebrow">Voor later en voor nu</p>
+      <h2 className="card-title mt-1">Je gereedschap</h2>
+      <p className="sub mt-1.5">Twee rustige oefeningen op eigen pagina's — altijd bij de hand.</p>
+
+      <div className="mt-3 flex flex-col gap-2">
+        {/* Signaleringsplan */}
+        <Link
+          to="/steun/signaleringsplan"
+          className="flex min-h-[56px] items-center gap-3 rounded-2xl border border-line bg-eucatint px-4 py-3 text-left"
         >
           <span className="min-w-0 flex-1">
-            <span className="eyebrow block !text-ap-deep">Jouw plan</span>
-            <span className="card-title mt-1 block">Emotiehanteringsplan</span>
+            <b className="block text-[15px] font-extrabold text-ink">Signaleringsplan</b>
+            <span className="sub mt-0.5 block">
+              Per pan opschrijven wat helpt — op rustige momenten ingevuld, in hevige momenten bij de hand.
+            </span>
           </span>
-          {filled !== undefined && (
-            <span className="chip chip-warm flex-none">
-              {filled} van {EHP_SECTIONS.length}
+          {plan && filled !== undefined && (
+            <span className="chip flex-none">
+              {filled} van {SIGNALERINGSPLAN_SECTIONS.length}
             </span>
           )}
           <svg
-            className={['ml-auto flex-none text-ap-deep transition-transform', isOpen ? 'rotate-90' : ''].join(' ')}
+            className="ml-auto flex-none text-euca-deep"
             width="18"
             height="18"
             viewBox="0 0 18 18"
@@ -351,23 +353,35 @@ function EhpSection() {
           >
             <path d="M6.5 3.5 11 9l-4.5 5.5" />
           </svg>
-        </button>
-        {!isOpen && (
-          <p className="sub mt-1.5">
-            Per pan schrijf je op: hoe herken ik dit, wat helpt mij, en wat kunnen anderen doen — op rustige
-            momenten ingevuld, in hevige momenten meteen bij de hand.
-          </p>
-        )}
-      </section>
+        </Link>
 
-      {isOpen && (
-        <div id="ehp-editor" className="flex flex-col gap-3.5">
-          <p className="sub px-1">
-            Vul dit plan in op een rustig moment. Er is geen goed of fout — alles wat voor jou werkt, telt.
-          </p>
-          <Ehp />
-        </div>
-      )}
-    </>
+        {/* G-Schema */}
+        <Link
+          to="/steun/g-schema"
+          className="flex min-h-[56px] items-center gap-3 rounded-2xl border border-line bg-eucatint px-4 py-3 text-left"
+        >
+          <span className="min-w-0 flex-1">
+            <b className="block text-[15px] font-extrabold text-ink">G-Schema</b>
+            <span className="sub mt-0.5 block">
+              Onderzoek een moeilijke gedachte stap voor stap en formuleer een helpender alternatief.
+            </span>
+          </span>
+          <svg
+            className="ml-auto flex-none text-euca-deep"
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M6.5 3.5 11 9l-4.5 5.5" />
+          </svg>
+        </Link>
+      </div>
+    </section>
   );
 }

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PanSelector from '../components/PanSelector';
-import SupportBar from '../components/SupportBar';
 import { PAN_LABELS } from '../components/PanIcon';
 import StreakRing from '../components/StreakRing';
 import { useTodayCheckin, saveCheckin, useStreak, useSettings } from '../db/hooks';
@@ -26,7 +25,7 @@ const FEEDBACK: Record<number, string> = {
   2: 'Fijn dat je even voelt hoe het gaat.',
   3: 'Goed dat je het merkt. Je hoeft er nu niets mee.',
   4: 'Dat is veel. Wees extra lief voor jezelf vandaag.',
-  5: 'Dat is echt veel. Kijk bij Steun nu als je direct iets nodig hebt — daar ben je nooit te veel.'
+  5: 'Dat is echt veel. Kijk bij Steun als je direct iets nodig hebt — daar ben je nooit te veel.'
 };
 
 export default function Vandaag() {
@@ -41,22 +40,57 @@ export default function Vandaag() {
   }, [checkin?.id, checkin?.note]);
 
   const naam = get('naam').trim();
+  const initialen = naam
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w.charAt(0).toUpperCase())
+    .join('')
+    .slice(0, 2);
 
   return (
     <div className="screen-stack">
-      {/* Begroeting */}
-      <header className="min-w-0 px-1 pt-2">
-        <p className="eyebrow">{dateLabel()}</p>
-        <h1 className="mt-1.5 font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">
-          {greeting()}
-          {naam ? `,` : ''}
-          {naam && (
-            <>
-              <br />
-              {naam}
-            </>
+      {/* Begroeting + profielsnelkoppeling */}
+      <header className="flex min-w-0 items-start justify-between gap-3 px-1 pt-2">
+        <div className="min-w-0 flex-1">
+          <p className="eyebrow">{dateLabel()}</p>
+          <h1 className="mt-1.5 font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">
+            {greeting()}
+            {naam ? `,` : ''}
+            {naam && (
+              <>
+                <br />
+                {naam}
+              </>
+            )}
+          </h1>
+        </div>
+        <Link
+          to="/profiel"
+          aria-label="Profiel openen"
+          className="grid h-10 w-10 flex-none place-items-center rounded-full border border-line bg-eucatint text-euca-deep"
+        >
+          {initialen ? (
+            <span className="text-[13px] font-extrabold" aria-hidden="true">
+              {initialen}
+            </span>
+          ) : (
+            <svg
+              width="21"
+              height="21"
+              viewBox="0 0 22 22"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="11" cy="7.4" r="3.4" />
+              <path d="M4.6 18.6c.8-3.3 3.3-4.9 6.4-4.9s5.6 1.6 6.4 4.9" />
+            </svg>
           )}
-        </h1>
+        </Link>
       </header>
 
       {/* Check-in · pannetjesmodel */}
@@ -147,10 +181,6 @@ export default function Vandaag() {
           )}
         </div>
       </section>
-
-      {/* "Steun nu" — statisch onderdeel van deze homepagina:
-          staat onderaan de content en scrollt gewoon mee (geen zwevende balk). */}
-      <SupportBar />
     </div>
   );
 }

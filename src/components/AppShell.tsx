@@ -5,7 +5,7 @@ import TabBar from './TabBar';
 /**
  * App-shell: mobiele kolom (max ~448px), content scrollt,
  * de tab bar blijft onderaan zichtbaar op elk scherm.
- * "Steun nu" zit alleen op het homescherm (Vandaag), niet app-breed.
+ * "Steun" zit als tab in de tab bar en is daardoor app-breed bereikbaar.
  */
 export default function AppShell() {
   const mainRef = useRef<HTMLElement>(null);
