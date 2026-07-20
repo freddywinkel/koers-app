@@ -34,9 +34,9 @@ export default function Oefenen() {
         <p className="sub mt-1.5">Alles om te oefenen, wanneer je maar wilt. Ook los van de cursus.</p>
       </header>
 
-      {/* Mindfulness - Geleide oefeningen */}
+      {/* Mindfulness: geleide audio + echte stemmen */}
       <section className="flex flex-col gap-3">
-        <p className="eyebrow px-0.5">Mindfulness - Geleide oefeningen</p>
+        <p className="eyebrow px-0.5">Mindfulness</p>
 
         <Link to="/oefenen/audio" className="card flex items-center gap-3.5">
           <span className="grid h-11 w-11 flex-none place-items-center rounded-[14px] bg-eucatint text-euca-deep" aria-hidden="true">
@@ -73,8 +73,9 @@ export default function Oefenen() {
         </Link>
       </section>
 
-      {/* Overzichten: vaardigheden, oefeningen en flashcards */}
+      {/* Gereedschap: vaardigheden, oefeningen en flashcards */}
       <section className="flex flex-col gap-3">
+        <p className="eyebrow px-0.5">Gereedschap</p>
         <Link to="/oefenen/vaardigheden" className="card flex items-center gap-3.5">
           <CardIcon>
             <path d="M12 3.5l2.1 5.4 5.4 2.1-5.4 2.1L12 18.5l-2.1-5.4-5.4-2.1 5.4-2.1L12 3.5Z" />
