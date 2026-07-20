@@ -71,7 +71,7 @@ export default function FlashcardsOverzicht() {
                 {dueCount === undefined
                   ? 'Herhaling wordt geladen…'
                   : dueCount > 0
-                    ? `${dueCount} ${dueCount === 1 ? 'kaart' : 'kaarten'} aan de beurt`
+                    ? `${dueCount} ${dueCount === 1 ? 'kaart' : 'kaarten'} om te herhalen`
                     : 'Alles herhaald'}
               </span>
               <span className="sub mt-0.5 block">
@@ -96,7 +96,7 @@ export default function FlashcardsOverzicht() {
 
       {/* Kaartenlijst, gegroepeerd per week */}
       {flashcards.length === 0 ? (
-        <p className="card sub">Nog geen kaarten — ze verschijnen zodra je lessen voltooit.</p>
+        <p className="card sub">Nog geen kaarten — ze verschijnen zodra je lessen afrondt.</p>
       ) : (
         <>
           {weken.map((groep) => (

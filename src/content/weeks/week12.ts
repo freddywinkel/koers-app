@@ -24,12 +24,12 @@ export const week12: Week = {
       intro: [
         'Twaalf weken geleden begon je bij het pannetjesmodel. Kijk eens hoeveel je sindsdien hebt geleerd.',
         'Je leerde kijken zonder te oordelen. Ruimte maken voor gevoelens. Afstand nemen van gedachten. En je ontdekte dat jij meer bent dan wat er in je hoofd gebeurt.',
-        'Ook vond je jouw kompas: wat jij belangrijk vindt en hoe je daar kleine stappen naartoe zet. Daar komt je plan voor moeilijke momenten bij. Dat is een hele gereedschapskist.'
+        'Ook vond je jouw kompas: wat jij belangrijk vindt en hoe je daar met kleine stappen naartoe komt. Daar komt je plan voor moeilijke momenten bij. Dat is een hele gereedschapskist.'
       ],
       exercise: {
         title: 'Je reis in kaart',
         steps: [
-          { n: 1, title: 'Blader door de weken', text: 'Loop de weektitels van week 1 tot en met 11 in gedachten na. Welke week blijft het meest bij je?', seconds: 60 },
+          { n: 1, title: 'Blader door de weken', text: 'Loop de weektitels van week 1 tot en met 11 in gedachten na. Welke week is je het meest bijgebleven?', seconds: 60 },
           { n: 2, title: 'Kies je drie beste vaardigheden', text: 'Welke oefeningen gebruik je echt in je leven? Dat zijn je top drie. Schrijf ze op.', seconds: 90 },
           { n: 3, title: 'Kijk naar je pannetjes', text: 'Denk aan je check-ins van de afgelopen weken. Zie je verandering sinds week 1? Elke verandering telt, ook een kleine.', seconds: 90 },
           { n: 4, title: 'Één zin voor jezelf', text: 'Maak deze zin af: "Het belangrijkste dat ik leerde, is …"', seconds: 60 }
@@ -49,8 +49,8 @@ export const week12: Week = {
       minutes: 6,
       tags: ['Terugvalpreventie'],
       intro: [
-        'Er komen weer moeilijke periodes. Dat is geen stap terug. Dat is gewoon leven. Oude patronen duiken op als je moe bent of onder druk staat.',
-        'Een dip is geen terugval naar nul. Een dip is een dip. De vaardigheden die je leerde, blijven van je. Je begint nooit meer helemaal opnieuw.',
+        'Er komen weer moeilijke periodes. Dat is geen stap terug. Zo is het leven nu eenmaal. Oude patronen duiken op als je moe bent of onder druk staat.',
+        'Een dip betekent niet dat je terug bij af bent. Een dip is een dip. De vaardigheden die je leerde, blijven van je. Je begint nooit meer helemaal opnieuw.',
         'Wie moeilijke momenten voorbereidt op een rustige dag, hoeft op een stormachtige dag minder na te denken. Dat doe je in deze les.'
       ],
       metaphorCard: {
@@ -59,16 +59,16 @@ export const week12: Week = {
         art: 'mist'
       },
       exercise: {
-        title: 'Je als-danplannen',
+        title: 'Je als-dan-plannen',
         steps: [
           { n: 1, title: 'Kies een risicomoment', text: 'Denk aan een situatie die voor jou lastig is. Bijvoorbeeld: ruzie, een eenzame zondag, of druk op je werk.', seconds: 60 },
-          { n: 2, title: 'Maak er een als-dan zin van', text: 'Bijvoorbeeld: "Als ik merk dat ik me terugtrek, dan bel ik dezelfde dag nog iemand."', seconds: 90 },
+          { n: 2, title: 'Maak er een als-dan-zin van', text: 'Bijvoorbeeld: "Als ik merk dat ik me terugtrek, dan bel ik dezelfde dag nog iemand."', seconds: 90 },
           { n: 3, title: 'Koppel je vroegste signaal', text: 'Welk signaal uit week 11 past bij dit moment? Dat wordt je alarmbel.', seconds: 60 },
-          { n: 4, title: 'Kies je eerste hulpvaardigheid', text: 'Welke oefening pak je erbij? Kies er één die past bij die pan.', seconds: 60 }
+          { n: 4, title: 'Kies de oefening die je als eerste pakt', text: 'Welke oefening pak je erbij? Kies er één die past bij die pan.', seconds: 60 }
         ]
       },
-      reflection: 'Voorbereiden is geen negativiteit. Het is juist vriendelijk voor je toekomstige zelf. Die hoeft dan alleen het plan te volgen.',
-      assignment: 'Schrijf deze week drie als-dan zinnen op en voeg ze toe aan je EHP.',
+      reflection: 'Voorbereiden is geen negativiteit. Het is juist vriendelijk voor de jij van later. Die hoeft dan alleen het plan te volgen.',
+      assignment: 'Schrijf deze week drie als-dan-zinnen op en voeg ze toe aan je EHP.',
       relatedSkillIds: ['afstand-observeren'],
       flashcardIds: ['w12-l02-f1', 'w12-l02-f2', 'w12-l02-f3']
     },
@@ -87,7 +87,7 @@ export const week12: Week = {
       exercise: {
         title: 'Je plan afronden',
         steps: [
-          { n: 1, title: 'Werk je EHP bij', text: 'Neem je plan uit week 11 erbij. Voeg je als-dan zinnen toe. En vul aan wat nog mist.', seconds: 180 },
+          { n: 1, title: 'Werk je EHP bij', text: 'Neem je plan uit week 11 erbij. Voeg je als-dan-zinnen toe. En vul aan wat nog mist.', seconds: 180 },
           { n: 2, title: 'Controleer pan 4 en 5', text: 'Staat daar wat je doet, wie je bereikt en welke professionele hulp er is? Dan is je plan compleet.', seconds: 90 },
           { n: 3, title: 'Kies je dagelijkse minuut', text: 'Kies een vast moment voor je check-in. Bijvoorbeeld bij je koffie. Of vlak voor het slapen.', seconds: 60 },
           { n: 4, title: 'Kies je weekmoment', text: 'Kies één moment per week om je pannetjes en je plan te bekijken. Tien minuten is genoeg.', seconds: 60 },
@@ -95,7 +95,7 @@ export const week12: Week = {
           { n: 6, title: 'Deel je plan opnieuw', text: 'Geef de nieuwe versie aan je steunpersoon. Zo weet die persoon hoe het er nu uitziet.', seconds: 60 }
         ]
       },
-      reflection: 'Je hebt nu iets kostbaars: een handleiding van jezelf, gemaakt door jezelf. Die mag je blijven aanpassen. Hij is van jou.',
+      reflection: 'Je hebt nu iets kostbaars: een handleiding over jezelf, gemaakt door jezelf. Die mag je blijven aanpassen. Hij is van jou.',
       assignment: 'Leg je plan op een vaste plek. En zet je dagelijkse en wekelijkse momenten echt in je agenda of telefoon.',
       relatedSkillIds: ['ademanker', 'gronden-54321'],
       flashcardIds: ['w12-l03-f1', 'w12-l03-f2', 'w12-l03-f3']
@@ -140,7 +140,7 @@ export const week12Flashcards: Flashcard[] = [
   {
     id: 'w12-l01-f1',
     lessonId: 'w12-l01',
-    front: 'Hoe heet het model met de vijf pannetjes?',
+    front: 'Hoe heet het model met de vijf pannen?',
     back: 'Het pannetjesmodel. Pan 1 Rustig, pan 2 Rimpelt, pan 3 Borrelt, pan 4 Pruttelt, pan 5 Kookt over. Het helpt je emoties in fasen te zien.'
   },
   {
@@ -161,25 +161,25 @@ export const week12Flashcards: Flashcard[] = [
     lessonId: 'w12-l01',
     skillId: 'ademanker',
     front: 'Welke vaardigheid kun je altijd en overal gebruiken?',
-    back: 'Het ademanker. Je adem is altijd bij je. Twee minuten volgen is genoeg om weer grond onder je voeten te voelen.'
+    back: 'Het Ademanker. Je adem is altijd bij je. Twee minuten volgen is genoeg om weer grond onder je voeten te voelen.'
   },
   {
     id: 'w12-l02-f1',
     lessonId: 'w12-l02',
-    front: 'Wat is het verschil tussen een dip en terugval naar nul?',
-    back: 'Een dip is een moeilijke periode, en die hoort erbij. Je vaardigheden blijven van je. Je begint dus nooit meer helemaal opnieuw.'
+    front: 'Wat is het verschil tussen een dip en terug bij af zijn?',
+    back: 'Een dip is een moeilijke periode. Die hoort erbij. Je vaardigheden blijven van je. Je begint dus nooit meer helemaal opnieuw.'
   },
   {
     id: 'w12-l02-f2',
     lessonId: 'w12-l02',
     front: 'Wat is een als-dan-plan?',
-    back: 'Een kant-en-klare zin voor moeilijke momenten. Bijvoorbeeld: "Als ik merk dat ik pieker, dan doe ik eerst twee minuten ademen met aandacht."'
+    back: 'Een kant-en-klare zin voor moeilijke momenten. Bijvoorbeeld: "Als ik merk dat ik pieker, dan doe ik eerst twee minuten met aandacht ademen."'
   },
   {
     id: 'w12-l02-f3',
     lessonId: 'w12-l02',
     front: 'Wanneer bereid je moeilijke momenten voor?',
-    back: 'Op een rustige dag. Voorbereiden is geen negativiteit. Het is vriendelijk voor je toekomstige zelf.'
+    back: 'Op een rustige dag. Voorbereiden is geen negativiteit. Het is vriendelijk voor de jij van later.'
   },
   {
     id: 'w12-l03-f1',
@@ -197,7 +197,7 @@ export const week12Flashcards: Flashcard[] = [
     id: 'w12-l03-f3',
     lessonId: 'w12-l03',
     front: 'Mag je je plan later nog aanpassen?',
-    back: 'Ja, juist wel. Je plan is van jou en groeit met je mee. Klopt iets niet meer, dan schrijf je het erbij.'
+    back: 'Ja, juist wel. Je plan is van jou en groeit met je mee. Klopt iets niet meer, dan pas je het aan.'
   },
   {
     id: 'w12-l04-f1',

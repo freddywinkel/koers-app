@@ -31,13 +31,13 @@ export async function isAudioCached(session: AudioSession): Promise<boolean> {
 /** Download de volledige oefening naar dezelfde cache die de service worker gebruikt. */
 export async function cacheAudio(session: AudioSession, onProgress?: (progress: number) => void): Promise<void> {
   if (typeof window === 'undefined' || !('caches' in window)) {
-    throw new Error('Offline bewaren wordt niet ondersteund door deze browser.');
+    throw new Error('Deze browser kan de oefening niet offline bewaren.');
   }
 
   onProgress?.(10);
   const url = audioUrl(session);
   const response = await fetch(url, { cache: 'reload' });
-  if (!response.ok) throw new Error(`Audio downloaden is mislukt (${response.status}).`);
+  if (!response.ok) throw new Error('Het downloaden van de opname is mislukt. Probeer het later opnieuw.');
   onProgress?.(80);
   const cache = await window.caches.open(AUDIO_CACHE);
   await cache.put(url, response);
@@ -145,7 +145,7 @@ export class GuidedAudioPlayer {
     try {
       await this.audio.play();
     } catch {
-      this.emit({ status: 'error', error: 'Afspelen is niet gestart. Tik nogmaals op de afspeelknop.' });
+      this.emit({ status: 'error', error: 'Afspelen lukte niet. Tik nogmaals op de afspeelknop.' });
     }
   }
 

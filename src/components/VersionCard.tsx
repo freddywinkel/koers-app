@@ -49,7 +49,7 @@ export default function VersionCard() {
   return (
     <section className="card" aria-label="Versie en updates">
       <h2 className="card-title">Versie &amp; updates</h2>
-      <p className="sub mt-1.5">Deze versie is gebouwd op {buildLabel}.</p>
+      <p className="sub mt-1.5">Deze versie is van {buildLabel}.</p>
       <button
         type="button"
         className="btn-secondary mt-3.5 w-full"

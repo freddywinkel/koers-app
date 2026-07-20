@@ -24,21 +24,21 @@ export const week10: Week = {
       minutes: 6,
       tags: ['Balans & energie'],
       intro: [
-        'Emoties zijn zwaarder om te dragen als je basis wiebelt. Slecht slapen, onregelmatig eten, geen ontspanning: dan gaat je pannetje sneller omhoog.',
+        'Emoties zijn zwaarder te dragen als je basis wiebelt. Slecht slapen, onregelmatig eten, geen ontspanning: dan gaat je pannetje sneller omhoog.',
         'Daarom kijken we deze week naar acht gebieden uit je leven: eten, slapen, bewegen, gezondheid, vrije tijd, werk of dagbesteding, financiën en relaties.',
         'Er is ook een negende gebied: zelfbeschadiging voorkomen. Dat betekent: jezelf beschermen op de moeilijkste momenten. Daar geven we in week 11 alle aandacht aan, met een eigen plan. Voor nu is het genoeg om te weten dat dit gebied er is.',
-        'Je maakt straks een kaart van die acht gebieden. Geen rapport en geen oordeel. Gewoon een foto van hoe het er nu voor staat.'
+        'Je maakt straks een kaart van die acht gebieden. Geen toets en geen oordeel. Gewoon een foto van hoe het er nu voor staat.'
       ],
       metaphorCard: {
         title: 'Acht beekjes, één rivier',
-        text: 'Je energie is een rivier, gevoed door acht beekjes. Stroomt er een tijd geen water in een beekje, dan wordt de rivier laag. Kijken welk beekje water nodig heeft: dat is deze week.',
+        text: 'Je energie is een rivier, gevoed door acht beekjes. Stroomt er een tijd geen water in een beekje, dan staat het water laag. Kijken welk beekje water nodig heeft: dat is deze week.',
         art: 'stroom'
       },
       exercise: {
         title: 'Jouw domeinenkaart',
         steps: [
           { n: 1, title: 'Lees de acht gebieden', text: 'Eten. Slapen. Bewegen. Gezondheid. Vrije tijd. Werk of dagbesteding. Financiën. Relaties. Lees ze rustig door.', seconds: 45 },
-          { n: 2, title: 'Geef elk gebied een cijfer', text: 'Van 1 tot 5: hoe vol stroomt dit beekje nu? 1 is bijna droog, 5 is stroomt goed. Je gevoel mag kiezen.', seconds: 90 },
+          { n: 2, title: 'Geef elk gebied een cijfer', text: 'Van 1 tot 5: hoe vol stroomt dit beekje nu? 1 is bijna droog, 5 stroomt goed. Je gevoel mag kiezen.', seconds: 90 },
           { n: 3, title: 'Zoek de laagste twee', text: 'Welke twee gebieden scoren het laagst? Omcirkel ze. Dit is geen oordeel. Het is gewoon je kaart van nu.', seconds: 45 },
           { n: 4, title: 'Kies er één', text: 'Kies één gebied waar je deze week aandacht aan geeft. Niet het moeilijkste. Het gebied dat jou nu roept.', seconds: 30 }
         ]
@@ -57,8 +57,8 @@ export const week10: Week = {
       minutes: 5,
       tags: ['Grenzen'],
       intro: [
-        'Balans houden betekent ook: je energie beschermen. Elke keer ja zeggen kost iets. Te vaak ja, en je emmer loopt leeg.',
-        'Een grens is geen muur. Het is meer een lijn die aangeeft: tot hier, en niet verder. En jij mag die lijn bewaken. Dat is geen onvriendelijkheid. Dat is zorg voor jezelf.',
+        'Balans houden betekent ook: je energie beschermen. Elke keer ja zeggen kost iets. Te vaak ja, en je energie raakt op.',
+        'Een grens is geen muur. Het is meer een lijn die aangeeft: tot hier, en niet verder. En jij mag die lijn bewaken. Dat is niet onvriendelijk. Dat is zorg voor jezelf.',
         'Je lijf vertelt vaak als eerste dat een grens is bereikt. Moeheid. Boosheid. Het gevoel: weer ja gezegd. Die signalen zijn geen zwakte. Het is informatie.'
       ],
       metaphorCard: {
@@ -69,9 +69,9 @@ export const week10: Week = {
       exercise: {
         title: 'Een vriendelijke nee oefenen',
         steps: [
-          { n: 1, title: 'Een ja met een nee erin', text: 'Herinner je een moment waarop je ja zei, maar van binnen nee voelde.', seconds: 45 },
+          { n: 1, title: 'Een ja met een nee erin', text: 'Denk terug aan een moment waarop je ja zei, maar van binnen nee voelde.', seconds: 45 },
           { n: 2, title: 'Wat kostte dat je?', text: 'Tijd? Rust? Slaap? Schrijf het kort op. Zo zie je wat je beschermt.', seconds: 45 },
-          { n: 3, title: 'Schrijf je nee op', text: 'Kort en vriendelijk. Bijvoorbeeld: "Dat past nu niet voor me." Een lange uitleg hoeft niet.', seconds: 60 },
+          { n: 3, title: 'Schrijf je nee op', text: 'Kort en vriendelijk. Bijvoorbeeld: "Dat past me nu niet." Een lange uitleg hoeft niet.', seconds: 60 },
           { n: 4, title: 'Oefen hem hardop', text: 'Zeg je zin een paar keer, hardop of in je hoofd. Kort is krachtig. Je stem mag zacht blijven.', seconds: 45 }
         ]
       },
@@ -90,12 +90,12 @@ export const week10: Week = {
       tags: ['Plannen', 'Balans & energie'],
       intro: [
         'Je hebt een kaart van je acht gebieden. Nu ga je ermee aan de slag. Niet met grote plannen, maar met kleine stappen.',
-        'Klein werkt beter dan groot. Elke dag tien minuten wandelen doet meer dan een sportplan dat nergens van komt.',
+        'Klein werkt beter dan groot. Elke dag tien minuten wandelen doet meer dan een sportplan waar toch niks van komt.',
         'En vergeet het fijnste deel niet: je plant ook iets dat je energie geeft. Dat is geen luxe. Dat is onderhoud.'
       ],
       metaphorCard: {
         title: 'Eb en vloed',
-        text: 'Balans is als eb en vloed: geven en nemen wisselen elkaar af. Jij plant ze allebei in je week: geven én ontvangen.',
+        text: 'Balans is als eb en vloed: geven en nemen wisselen elkaar af. Jij plant ze allebei in je week: geven én nemen.',
         art: 'golf'
       },
       exercise: {
@@ -103,14 +103,14 @@ export const week10: Week = {
         steps: [
           { n: 1, title: 'Pak je domeinenkaart', text: 'Kijk naar je kaart uit de eerste les van deze week.', seconds: 20 },
           { n: 2, title: 'Kies één gebied', text: 'Niet het moeilijkste. Kies het gebied dat je nu aandacht wilt geven.', seconds: 30 },
-          { n: 3, title: 'Bedenk een piepklein stapje', text: 'Zo klein dat hij bijna altijd lukt. Bij slapen: om elf uur de telefoon weg. Bij bewegen: tien minuten wandelen.', seconds: 60 },
-          { n: 4, title: 'Plan hem concreet', text: 'Welke dag? Welk moment van de dag? Schrijf het op. Vage plannen verdwijnen vanzelf.', seconds: 45 },
+          { n: 3, title: 'Bedenk een piepklein stapje', text: 'Zo klein dat het bijna altijd lukt. Bij slapen: om elf uur de telefoon weg. Bij bewegen: tien minuten wandelen.', seconds: 60 },
+          { n: 4, title: 'Plan je stapje concreet', text: 'Welke dag? Welk moment van de dag? Schrijf het op. Vage plannen verdwijnen vanzelf.', seconds: 45 },
           { n: 5, title: 'Plan ook iets fijns', text: 'Kies één ding dat je energie geeft. Een bad, een goed gesprek, muziek. Plan dat ook. Het is onderhoud, geen luxe.', seconds: 45 },
-          { n: 6, title: 'Kijk later vriendelijk terug', text: 'Aan het einde van de week kijk je terug. Gelukt? Fijn. Niet gelukt? Dan was de stap te groot. Maak hem kleiner en probeer opnieuw.', seconds: 45 }
+          { n: 6, title: 'Kijk later vriendelijk terug', text: 'Aan het einde van de week kijk je terug. Gelukt? Fijn. Niet gelukt? Dan was de stap te groot. Maak je stapje kleiner en probeer het opnieuw.', seconds: 45 }
         ]
       },
-      reflection: 'Balans is geen eindpunt dat je bereikt. Het is een ritme dat je elke week opnieuw stemt. Kleine stappen tellen echt.',
-      assignment: 'Voer je twee geplande stappen uit deze week: je kleine stap en je fijne moment. Vink ze af. En neem even de tijd om ze te vieren, hoe klein ook.',
+      reflection: 'Balans is geen eindpunt dat je bereikt. Het is een ritme dat je elke week opnieuw afstemt. Kleine stappen tellen echt.',
+      assignment: 'Voer deze week je twee geplande stappen uit: je kleine stap en je fijne moment. Vink ze af. En neem even de tijd om ze te vieren, hoe klein ook.',
       relatedSkillIds: [],
       flashcardIds: ['w10-l03-f1', 'w10-l03-f2', 'w10-l03-f3']
     },
@@ -123,8 +123,8 @@ export const week10: Week = {
       minutes: 4,
       tags: ['Terugblik'],
       intro: [
-        'Je keek deze week naar je acht leefgebieden. Je oefende met grenzen. En je plantte kleine stappen.',
-        'Nu kijk je terug met een zachte blik. Niet om te cijferen, maar om te zien wat jou helpt.'
+        'Je keek deze week naar je acht gebieden. Je oefende met grenzen. En je plantte kleine stappen.',
+        'Nu kijk je terug met een zachte blik. Niet om jezelf een cijfer te geven, maar om te zien wat jou helpt.'
       ],
       exercise: {
         title: 'Terugkijken met een zachte blik',
@@ -177,31 +177,31 @@ export const week10Flashcards: Flashcard[] = [
     id: 'w10-l02-f3',
     lessonId: 'w10-l02',
     front: 'Hoe klinkt een korte, vriendelijke nee?',
-    back: 'Bijvoorbeeld: "Dat past nu niet voor me." Kort en duidelijk is genoeg. Een lange uitleg of excuses hoeven niet.'
+    back: 'Bijvoorbeeld: "Dat past me nu niet." Kort en duidelijk is genoeg. Een lange uitleg of excuses hoeven niet.'
   },
   {
     id: 'w10-l03-f1',
     lessonId: 'w10-l03',
     front: 'Hoe klein mag een stap zijn?',
-    back: 'Zo klein dat hij bijna altijd lukt. Tien minuten wandelen telt. Klein en vaak werkt beter dan groot en eenmalig.'
+    back: 'Zo klein dat het bijna altijd lukt. Tien minuten wandelen telt. Klein en vaak werkt beter dan groot en eenmalig.'
   },
   {
     id: 'w10-l03-f2',
     lessonId: 'w10-l03',
-    front: 'Wat doe je als een stap niet lukte?',
+    front: 'Wat doe je als een stap niet lukt?',
     back: 'Niet oordelen, maar verkleinen. De stap was te groot voor deze week. Maak hem kleiner en probeer het opnieuw.'
   },
   {
     id: 'w10-l03-f3',
     lessonId: 'w10-l03',
     front: 'Waarom plan je ook iets leuks of fijns?',
-    back: 'Dingen die energie geven zijn onderhoud, geen luxe. Ze vullen je emmer bij, zodat jij meer aankunt.'
+    back: 'Dingen die energie geven zijn onderhoud, geen luxe. Ze geven je nieuwe energie, zodat jij meer aankunt.'
   },
   {
     id: 'w10-l04-f1',
     lessonId: 'w10-l04',
     front: 'Wat is balans eigenlijk?',
-    back: 'Geen perfecte verdeling. Wel een ritme: steeds opnieuw aandacht voor eten, slapen, bewegen, gezondheid, vrije tijd, dagbesteding, financiën en relaties.'
+    back: 'Geen perfecte verdeling. Wel een ritme: steeds opnieuw aandacht voor eten, slapen, bewegen, gezondheid, vrije tijd, werk of dagbesteding, financiën en relaties.'
   },
   {
     id: 'w10-l04-f2',

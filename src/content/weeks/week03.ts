@@ -35,12 +35,12 @@ export const week03: Week = {
         art: 'stroom'
       },
       exercise: {
-        title: 'Een minuutje toestaan',
+        title: 'Even toestaan',
         steps: [
           { n: 1, title: 'Merk iets op', text: 'Denk aan iets kleins dat je deze week bezighield. Niets groots. Gewoon een klein knagend gevoel.', seconds: 30 },
           { n: 2, title: 'Voel waar het zit', text: 'Waar voel je dat in je lichaam? In je buik, je borst of je keel? Kijk er rustig naar.', seconds: 45 },
           { n: 3, title: 'Zeg er ja tegen', text: 'Zeg in jezelf: dit gevoel mag er even zijn. Ik hoef er niets mee. Blijf zachtjes ademen.', seconds: 60 },
-          { n: 4, title: 'Laat weer los', text: 'Neem één rustige ademhaling. Kijk om je heen. Voel: je bent hier, nu.', seconds: 15 }
+          { n: 4, title: 'Laat weer los', text: 'Haal één keer rustig adem. Kijk om je heen. Voel: je bent hier, nu.', seconds: 15 }
         ]
       },
       reflection: 'Misschien voelde het vreemd om iets toe te staan. Dat is logisch. Toestaan is een vaardigheid, geen knop. Elke keer oefenen telt.',
@@ -58,8 +58,8 @@ export const week03: Week = {
       tags: ['Acceptatie'],
       intro: [
         'Denk aan een gevoel dat je liever niet voelt. Wat heb je allemaal geprobeerd om het weg te krijgen? Afleiding zoeken. Piekeren. Slapen. Tegen jezelf zeggen dat je je niet zo moet aanstellen.',
-        'En werkte het? Misschien even. Maar meestal komt het gevoel terug. Soms zelfs sterker. Dat is geen fout van jou. Je brein lost graag problemen op. Alleen: gevoelens zijn geen rekensommen.',
-        'Therapeuten noemen dit de controleagenda: het plan om moeilijke gevoelens weg te houden. Die agenda kost veel energie. En op de lange duur werkt hij zelden. Deze week kijk je of er een andere weg is.'
+        'En werkte het? Misschien even. Maar meestal komt het gevoel terug. Soms zelfs sterker. Dat is niet jouw schuld. Je brein lost graag problemen op. Alleen: gevoelens zijn geen rekensommen.',
+        'Therapeuten noemen dit de controleagenda: het plan om moeilijke gevoelens weg te houden. Die agenda kost veel energie. En op lange termijn werkt hij zelden. Deze week kijk je of er een andere weg is.'
       ],
       metaphorCard: {
         title: 'Touwtrekken met een monster',
@@ -67,15 +67,15 @@ export const week03: Week = {
         art: 'mist'
       },
       exercise: {
-        title: 'De witte-ijsbeer-test',
+        title: 'De witte-ijsbeertest',
         steps: [
-          { n: 1, title: 'Ga rustig zitten', text: 'Zit ergens comfortabel. Je ogen mogen open of dicht.', seconds: 15 },
+          { n: 1, title: 'Ga rustig zitten', text: 'Ga lekker zitten. Je ogen mogen open of dicht.', seconds: 15 },
           { n: 2, title: 'Denk aan een ijsbeer', text: 'Stel je een witte ijsbeer voor. Groot en zacht, in de sneeuw. Maak het beeld heel duidelijk.', seconds: 30 },
           { n: 3, title: 'Nu juist niet denken', text: 'Probeer één minuut níet aan de ijsbeer te denken. Helemaal niet. Let goed op wat er gebeurt.', seconds: 60 },
           { n: 4, title: 'Kijk wat er gebeurde', text: 'Lukte het niet? Bijna niemand lukt dat. Een gedachte verbieden maakt hem juist sterker.', seconds: 30 }
         ]
       },
-      reflection: 'Bijna niemand kan deze test. Dat is precies de les. Wegduwen en verbieden werken niet bij gedachten en gevoelens. Daarom oefenen we met toestaan.',
+      reflection: 'Deze test lukt bijna niemand. Dat is precies de les. Wegduwen en verbieden werken niet bij gedachten en gevoelens. Daarom oefenen we met toestaan.',
       assignment: 'Schrijf drie dingen op die jij doet om moeilijke gevoelens weg te houden. Wat kosten ze je op een dag? Alleen kijken, nog niets veranderen.',
       relatedSkillIds: [],
       flashcardIds: ['w03-l02-f1', 'w03-l02-f2', 'w03-l02-f3']
@@ -96,7 +96,7 @@ export const week03: Week = {
       exercise: {
         title: 'Ruimte maken in 6 stappen',
         steps: [
-          { n: 1, title: 'Kom aan', text: 'Ga zitten met je voeten op de grond. Adem een paar keer rustig in en uit.', seconds: 45 },
+          { n: 1, title: 'Kom tot rust', text: 'Ga zitten met je voeten op de grond. Adem een paar keer rustig in en uit.', seconds: 45 },
           { n: 2, title: 'Zoek het gevoel', text: 'Denk aan iets kleins dat je bezighoudt. Waar voel je dat in je lichaam? Buik, borst, keel of schouders?', seconds: 60 },
           { n: 3, title: 'Bekijk het als onderzoeker', text: 'Beschrijf het alsof je wetenschapper bent. Warm of koud? Groot of klein? Beweegt het of staat het stil?', seconds: 90 },
           { n: 4, title: 'Adem eromheen', text: 'Stel je voor dat je adem om het gevoel heen stroomt. Je ademt het niet weg. Je ademt er alleen omheen.', seconds: 120 },
@@ -151,8 +151,8 @@ export const week03: Week = {
       exercise: {
         title: 'Korte terugblik',
         steps: [
-          { n: 1, title: 'Herinner je de strijd', text: 'Denk aan een moment deze week waarop je tegen een gevoel vocht. Wat deed je toen? Wat kostte het je?', seconds: 60 },
-          { n: 2, title: 'Herinner je de ruimte', text: 'Was er ook een moment dat het gevoel er mocht zijn? Hoe klein ook. Wat hielp je toen?', seconds: 60 },
+          { n: 1, title: 'Denk terug aan de strijd', text: 'Denk aan een moment deze week waarop je tegen een gevoel vocht. Wat deed je toen? Wat kostte het je?', seconds: 60 },
+          { n: 2, title: 'Denk terug aan de ruimte', text: 'Was er ook een moment dat het gevoel er mocht zijn? Hoe klein ook. Wat hielp je toen?', seconds: 60 },
           { n: 3, title: 'Kies één beeld', text: 'Drijfzand of touwtrekken: welk beeld blijft hangen? Dat beeld is je anker voor als het weer spannend wordt.', seconds: 45 },
           { n: 4, title: 'Rond af', text: 'Neem een rustige ademhaling. Je hebt deze week iets nieuws geoefend. Dat telt.', seconds: 15 }
         ]
@@ -189,12 +189,12 @@ export const week03Flashcards: Flashcard[] = [
     id: 'w03-l02-f1',
     lessonId: 'w03-l02',
     front: 'Wat is de controleagenda?',
-    back: 'Het plan om moeilijke gevoelens weg te houden of te veranderen. Afleiding, wegduwen, piekeren. Het kost veel energie en werkt op de lange duur zelden.'
+    back: 'Het plan om moeilijke gevoelens weg te houden of te veranderen. Afleiding, wegduwen, piekeren. Het kost veel energie en werkt op lange termijn zelden.'
   },
   {
     id: 'w03-l02-f2',
     lessonId: 'w03-l02',
-    front: 'Wat leert de witte-ijsbeer-test?',
+    front: 'Wat leert de witte-ijsbeertest?',
     back: 'Een gedachte of gevoel verbieden werkt niet. Probeer niet aan een witte ijsbeer te denken, en daar is hij. Onderdrukken maakt het juist sterker.'
   },
   {

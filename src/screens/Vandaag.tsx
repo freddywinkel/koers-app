@@ -9,7 +9,7 @@ import { useNextCourseLesson } from '../lib/courseHooks';
 
 function greeting(): string {
   const h = new Date().getHours();
-  if (h < 6) return 'Goedenacht';
+  if (h < 6) return 'Goedenavond';
   if (h < 12) return 'Goedemorgen';
   if (h < 18) return 'Goedemiddag';
   return 'Goedenavond';
@@ -25,7 +25,7 @@ const FEEDBACK: Record<number, string> = {
   2: 'Fijn dat je even voelt hoe het gaat.',
   3: 'Goed dat je het merkt. Je hoeft er nu niets mee.',
   4: 'Dat is veel. Wees extra lief voor jezelf vandaag.',
-  5: 'Dat is echt veel. Kijk bij Steun als je direct iets nodig hebt — daar ben je nooit te veel.'
+  5: 'Dat is echt veel. Kijk bij Steun als je direct iets nodig hebt — daar ben je nooit een last.'
 };
 
 export default function Vandaag() {
@@ -170,7 +170,7 @@ export default function Vandaag() {
               <p className="sub mt-[3px]">
                 {streak.frozen
                   ? 'Vandaag nog niet ingecheckt — rustig aan, je reeks blijft staan.'
-                  : 'Rustig ritme. Een gemiste dag wist niets — je begint gewoon opnieuw.'}
+                  : 'Rustig ritme. Een gemiste dag maakt niets ongedaan — je begint gewoon opnieuw.'}
               </p>
             </>
           ) : (

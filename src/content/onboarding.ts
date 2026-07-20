@@ -8,11 +8,11 @@
 export const onboarding: { titel: string; tekst: string }[] = [
   {
     titel: 'Welkom bij Koers',
-    tekst: 'Dit is een cursus van 12 weken. Je oefent om rustiger om te gaan met moeilijke gevoelens en gedachten. De oefeningen komen uit bewezen methoden, vertaald naar gewone taal. Geen ingewikkelde woorden, wel veel oefenen.'
+    tekst: 'Dit is een cursus van 12 weken. Je leert rustiger omgaan met moeilijke gevoelens en gedachten. De oefeningen komen uit methoden waarvan bewezen is dat ze werken, vertaald naar gewone taal. Geen ingewikkelde woorden, wel veel oefenen.'
   },
   {
     titel: 'Zo werken de weken',
-    tekst: 'Elke week heeft een eigen thema, zoals adem, gedachten of waarden. Een les duurt 3 tot 7 minuten. Je oefent met korte oefeningen en een kleine opdracht voor in je week. Alles mag op je eigen tempo. Een week langer doen is helemaal goed.'
+    tekst: 'Elke week heeft een eigen thema, zoals adem, gedachten of waarden. Een les duurt 3 tot 7 minuten. Je doet korte oefeningen en een kleine opdracht om in je week te doen. Alles mag in je eigen tempo. Een week langer doen is helemaal goed.'
   },
   {
     titel: 'Het pannetjesmodel',
@@ -24,6 +24,6 @@ export const onboarding: { titel: string; tekst: string }[] = [
   },
   {
     titel: 'Goed om te weten',
-    tekst: 'Deze cursus helpt je oefenen, maar vervangt geen hulp van een arts of therapeut. Denk je aan zelfdoding, of maak je je zorgen om iemand? Bel dan 113 of 0800-0113. Dag en nacht, gratis en anoniem. Chatten kan via 113.nl. Bij direct gevaar: bel 112. Deze hulp vind je altijd onder de knop Hulp.'
+    tekst: 'Deze cursus helpt je oefenen, maar vervangt geen hulp van een arts of therapeut. Denk je aan zelfdoding, of maak je je zorgen om iemand? Bel dan 113 of 0800-0113. Dag en nacht, gratis en anoniem. Chatten kan via 113.nl. Bij direct gevaar: bel 112. Deze hulp vind je altijd onder de knop Steun.'
   }
 ];

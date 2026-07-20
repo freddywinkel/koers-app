@@ -72,7 +72,7 @@ export const GSCHEMA_DEEL2: GSchemaVeldDef[] = [
     key: 'uitdagen',
     title: 'Uitdagen',
     prompt:
-      'Klopt deze gedachte? Wat zijn bewijzen voor en tegen? Kan ik er op een andere manier naar kijken? Is dit realistisch en helpend om te denken?',
+      'Klopt deze gedachte? Wat is het bewijs voor en tegen? Kan ik er op een andere manier naar kijken? Is dit realistisch en helpend om te denken?',
     placeholder: 'Bijvoorbeeld: bewijs voor …, bewijs tegen …'
   },
   {

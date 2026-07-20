@@ -24,7 +24,7 @@ export const week08: Week = {
       intro: [
         'Vorige week vond je je kompas: wat jou belangrijk is. Nu komt de volgende stap. Er ook echt iets mee doen.',
         'Dat heet toegewijd handelen. Kleine dingen doen die passen bij jouw waarden. Niet perfect, wel echt.',
-        'Grote plannen voelen vaak te zwaar. Daarom werken we met kleine stappen. Een kleine stap vandaag is meer waard dan een groot plan voor ooit.'
+        'Grote plannen voelen vaak te zwaar. Daarom werken we met kleine stappen. Een kleine stap vandaag is meer waard dan een groot plan voor "ooit".'
       ],
       metaphorCard: {
         title: 'De wandeltocht',
@@ -35,7 +35,7 @@ export const week08: Week = {
         title: 'Klein maken',
         steps: [
           { n: 1, title: 'Kies een waarde', text: 'Pak je kompas van week 7 erbij. Kies één waarde die je nu aanspreekt.', seconds: 30 },
-          { n: 2, title: 'Denk aan iets groots', text: 'Wat zou je ooit willen doen bij deze waarde? Groot denken mag hier.', seconds: 30 },
+          { n: 2, title: 'Denk aan iets groots', text: 'Wat zou je ooit willen doen dat bij deze waarde past? Groot denken mag hier.', seconds: 30 },
           { n: 3, title: 'Maak het steeds kleiner', text: 'Deel het in twee. En nog eens in twee. Tot je iets hebt dat je deze week echt kunt doen.', seconds: 60 },
           { n: 4, title: 'Schrijf je stap op', text: 'Bijvoorbeeld: woensdag even appen met een vriendin. Dát is je stap. Klein en echt.', seconds: 30 }
         ]
@@ -65,16 +65,16 @@ export const week08: Week = {
         art: 'stroom'
       },
       exercise: {
-        title: 'Je barrière voorzien',
+        title: 'Je barrière zien aankomen',
         steps: [
           { n: 1, title: 'Kies je stap', text: 'Denk aan de kleine stap uit les 1. Die van deze week.', seconds: 20 },
           { n: 2, title: 'Wat zegt je hoofd?', text: 'Welke gedachte duikt op? "Het lukt toch niet." "Doe het morgen." Schrijf er één op.', seconds: 45 },
-          { n: 3, title: 'Wat voelt je lijf?', text: 'Wat merk je in je lichaam bij die stap? Spanning, zwaarte, onrust? Benoem het zachtjes.', seconds: 45 },
+          { n: 3, title: 'Wat voelt je lijf?', text: 'Wat merk je in je lichaam bij die stap? Spanning, een zwaar gevoel, onrust? Benoem het zachtjes.', seconds: 45 },
           { n: 4, title: 'Kies je vaardigheid', text: 'Kies één ding dat je dan helpt. Je adem volgen. De gedachte benoemen. Even gronden.', seconds: 30 }
         ]
       },
       reflection: 'Barrières zijn geen stopborden. Het zijn borden langs de weg: hier wordt het spannend. En daarom is het de moeite waard.',
-      assignment: 'Doe deze week één keer je stap mét de spanning erbij. Merk op: de gevoelens gingen mee, en het lukte toch.',
+      assignment: 'Doe deze week één keer je stap mét de spanning erbij. Merk op: je gevoelens gaan mee, en toch zet je je stap.',
       relatedSkillIds: ['afstand-observeren', 'ademanker'],
       flashcardIds: ['w08-l02-f1', 'w08-l02-f2', 'w08-l02-f3']
     },
@@ -83,9 +83,9 @@ export const week08: Week = {
       weekId: 'w08',
       order: 3,
       kind: 'oefening',
-      title: 'Je eerste stap zetten',
+      title: 'Je ACTieplan maken',
       minutes: 7,
-      tags: ['Toegewijd handelen', 'Actieplan'],
+      tags: ['Toegewijd handelen', 'ACTieplan'],
       intro: [
         'Nu maak je je eigen actieplan. In ACT heet dat een ACTieplan: een plan dat past bij jouw waarden.',
         'Een goed plan is klein, concreet en haalbaar, met een vast moment erbij. En het hoort bij iets dat jou belangrijk is.',
@@ -95,7 +95,7 @@ export const week08: Week = {
         title: 'Je ACTieplan in vijf stappen',
         steps: [
           { n: 1, title: 'Kies je waarde', text: 'Kies één waarde uit je kompas van week 7.', seconds: 20 },
-          { n: 2, title: 'Kies je stap', text: 'Kies één kleine stap die bij die waarde past. Zo klein dat je hem bijna niet kunt missen.', seconds: 45 },
+          { n: 2, title: 'Kies je stap', text: 'Kies één kleine stap die bij die waarde past. Zo klein dat het bijna niet kan mislukken.', seconds: 45 },
           { n: 3, title: 'Maak hem concreet', text: 'Wat doe je precies? Waar? Hoe lang? Schrijf het op in één zin.', seconds: 45 },
           { n: 4, title: 'Maak je als-dan-plan', text: 'Vul in: "Als het [moment] is, dan doe ik [mijn stap]." Bijvoorbeeld: "Als de afwas klaar is, dan bel ik mijn broer."', seconds: 60 },
           { n: 5, title: 'Bedenk je plan B', text: 'Wat als het niet lukt? Kies een kleinere versie van je stap. Dan heb je altijd een weg vooruit.', seconds: 30 }
@@ -127,7 +127,7 @@ export const week08: Week = {
         ]
       },
       reflection: 'Toegewijd handelen is nooit af. Elke week mag je opnieuw kiezen: dit is mijn richting, en dit is mijn stap.',
-      assignment: 'Houd je ACTieplan actief. Kies voor volgende week één stap bij één waarde. Klein is goed genoeg.',
+      assignment: 'Blijf met je ACTieplan aan de slag. Kies voor volgende week één stap bij één waarde. Klein is goed genoeg.',
       relatedSkillIds: [],
       flashcardIds: ['w08-l04-f1', 'w08-l04-f2']
     }
@@ -195,6 +195,6 @@ export const week08Flashcards: Flashcard[] = [
     id: 'w08-l04-f2',
     lessonId: 'w08-l04',
     front: 'Hoe ga je na deze week verder?',
-    back: 'Blijf elke week één kleine stap kiezen bij een waarde. Lukt het niet? Maak de stap kleiner en kijk zonder oordeel opnieuw.'
+    back: 'Blijf elke week één kleine stap kiezen bij een waarde. Lukt het niet? Maak de stap kleiner en kijk opnieuw, zonder te oordelen.'
   }
 ];

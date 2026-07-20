@@ -54,14 +54,14 @@ export const week02: Week = {
       minutes: 6,
       tags: ['Afstand & observeren'],
       intro: [
-        'Je kunt naar je gevoelens kijken zoals een verslaggever naar het nieuws kijkt. Je meldt alleen wat er is. Niet of het goed of slecht is.',
+        'Je kunt naar je gevoelens kijken zoals een verslaggever naar het nieuws kijkt. Je geeft alleen door wat er is. Niet of het goed of slecht is.',
         'Dat heet observeren. Je merkt op: dit gevoel is er. Deze gedachte komt langs. Je hoeft er niet meteen iets mee.',
         'Daarna beschrijf je het in gewone woorden. Bijvoorbeeld: "Ik merk dat ik spanning voel." Of: "Ik merk de gedachte dat ik het niet kan."',
-        'Zo maak je een beetje afstand. Je gevoel is er nog, maar je zit er niet meer middenin. Je kijkt ernaar, als naar wolken die voorbijtrekken.'
+        'Zo neem je een beetje afstand. Je gevoel is er nog, maar je zit er niet meer middenin. Je kijkt ernaar, als naar wolken die voorbijtrekken.'
       ],
       metaphorCard: {
         title: 'De verslaggever in je hoofd',
-        text: 'Een verslaggever meldt alleen wat er gebeurt. Zo kun jij ook naar binnen kijken: benoemen wat er is, zonder er een oordeel aan te hangen.',
+        text: 'Een verslaggever geeft alleen door wat er gebeurt. Zo kun jij ook naar binnen kijken: benoemen wat er is, zonder er een oordeel aan te hangen.',
         art: 'mist'
       },
       exercise: {
@@ -98,10 +98,10 @@ export const week02: Week = {
       exercise: {
         title: 'Adem volgen in 4 stappen',
         steps: [
-          { n: 1, title: 'Ga rustig zitten', text: 'Zit of sta ergens rustig. Leg één hand op je buik. Je ogen mogen open of dicht.', seconds: 20 },
+          { n: 1, title: 'Zit of sta rustig', text: 'Zit of sta ergens rustig. Leg één hand op je buik. Je ogen mogen open of dicht.', seconds: 20 },
           { n: 2, title: 'Voel je adem', text: 'Voel hoe je buik omhoog en omlaag gaat. Je hoeft niet dieper te ademen. Gewoon voelen wat er al is.', seconds: 60 },
           { n: 3, title: 'Afdwalen is oké', text: 'Je gedachten gaan vanzelf ergens anders heen. Dat hoort erbij. Merk het op en kom zachtjes terug naar je adem.', seconds: 60 },
-          { n: 4, title: 'Rond zachtjes af', text: 'Neem één rustige ademhaling. Kijk om je heen. Voel: je bent hier, nu.', seconds: 15 }
+          { n: 4, title: 'Rond zachtjes af', text: 'Haal één keer rustig adem. Kijk om je heen. Voel: je bent hier, nu.', seconds: 15 }
         ]
       },
       reflection: 'Wat viel je op? Misschien werd je rustig, misschien juist niet. Allebei is goed. Het opmerken ís de oefening.',
@@ -116,20 +116,20 @@ export const week02: Week = {
       kind: 'oefening',
       title: 'Je zintuigen als anker',
       minutes: 5,
-      tags: ['Gronden 5-4-3-2-1'],
+      tags: ['Gronden met je zintuigen (5-4-3-2-1)'],
       intro: [
         'Soms wordt het te veel in je hoofd. Dan helpt het om terug te gaan naar je zintuigen. Die zijn altijd in het nu.',
-        'Deze oefening heet 5-4-3-2-1. Je telt rustig af via je ogen, oren en lijf. Zo kom je met beide voeten op de grond.',
+        'Deze oefening heet 5-4-3-2-1. Je telt rustig af via al je zintuigen. Zo sta je weer met beide benen op de grond.',
         'Hij werkt ook als je pannetje al warm is. Zelfs bij pan 4 of 5 kun je hem proberen.'
       ],
       exercise: {
-        title: '5-4-3-2-1 gronden',
+        title: 'Gronden met je zintuigen (5-4-3-2-1)',
         steps: [
           { n: 1, title: 'Adem rustig', text: 'Ga zitten of staan. Neem één kalme ademhaling. Je hoeft niets weg te duwen.', seconds: 20 },
           { n: 2, title: 'Vijf dingen zien', text: 'Kijk om je heen. Noem vijf dingen die je ziet. Klein is prima.', seconds: 45 },
           { n: 3, title: 'Vier dingen horen', text: 'Luister. Noem vier geluiden. Dichtbij of ver weg, het maakt niet uit.', seconds: 40 },
           { n: 4, title: 'Drie dingen voelen', text: 'Voel drie dingen: de stoel, je kleding, de grond onder je voeten.', seconds: 40 },
-          { n: 5, title: 'Twee dingen ruiken', text: 'Ruik rustig. Noem twee geuren. Geen geur bij je? Ruik aan je koffie of je handen.', seconds: 30 },
+          { n: 5, title: 'Twee dingen ruiken', text: 'Ruik rustig. Noem twee geuren. Ruik je niets? Ruik dan aan je koffie of je handen.', seconds: 30 },
           { n: 6, title: 'Eén ding proeven', text: 'Proef één ding. Een slokje water, of gewoon de smaak in je mond.', seconds: 20 }
         ]
       },
@@ -149,19 +149,19 @@ export const week02: Week = {
       intro: [
         'Week twee zit er bijna op. Tijd om rustig terug te kijken. Niet om te toetsen, maar om te leren.',
         'Kijk naar je check-ins van deze week. Welke pannen kwamen voor? Zie je een patroon?',
-        'Kies één moment waarop je gevoel omhoogging. Daar maken we nu een "foto" van: een stilstaand beeld van één moment, dat je van een afstandje bekijkt.'
+        'Kies één moment waarop je gevoel steeg. Daar maken we nu een "foto" van: een stilstaand beeld van één moment, dat je van een afstandje bekijkt.'
       ],
       exercise: {
         title: 'Een foto van één moment',
         steps: [
-          { n: 1, title: 'Kies je moment', text: 'Kies één moment deze week waarop je gevoel steeg. Rustig kiezen. Het mag een klein moment zijn.', seconds: 30 },
+          { n: 1, title: 'Kies je moment', text: 'Kies één moment uit deze week waarop je gevoel steeg. Rustig kiezen. Het mag een klein moment zijn.', seconds: 30 },
           { n: 2, title: 'Wat gebeurde er?', text: 'Beschrijf kort wat er gebeurde. Alsof je een foto beschrijft: wie, wat, waar. Alleen feiten.', seconds: 45 },
           { n: 3, title: 'Wat voelde en dacht je?', text: 'In welke pan zat je? Wat voelde je in je lijf? Welke gedachten kwamen langs?', seconds: 45 },
           { n: 4, title: 'Wat hielp, wat nu?', text: 'Wat deed je toen? Hielp dat een beetje? Wat zou je een volgende keer kunnen proberen?', seconds: 45 }
         ]
       },
       reflection: 'Terugkijken is geen bekritiseren. Je bekeek jezelf met vriendelijke ogen. Daar word je wijzer van, week na week.',
-      assignment: 'Houd volgende week je dagelijkse check-ins vol. Gebruik ook eens één van je nieuwe oefeningen: adem, aandacht of 5-4-3-2-1.',
+      assignment: 'Houd volgende week je dagelijkse check-ins vol. Doe ook eens één van je nieuwe oefeningen: adem, aandacht of 5-4-3-2-1.',
       relatedSkillIds: [],
       flashcardIds: ['w02-l05-f1', 'w02-l05-f2']
     }
@@ -186,7 +186,7 @@ export const week02Flashcards: Flashcard[] = [
     lessonId: 'w02-l02',
     skillId: 'afstand-observeren',
     front: 'Wat is observeren zonder te oordelen?',
-    back: 'Je merkt op wat er is, een gevoel of een gedachte, zonder het goed of slecht te vinden. Je kijkt als een verslaggever: alleen melden wat er gebeurt.'
+    back: 'Je merkt op wat er is, een gevoel of een gedachte, zonder het goed of slecht te vinden. Je kijkt als een verslaggever: alleen doorgeven wat er gebeurt.'
   },
   {
     id: 'w02-l02-f2',
@@ -200,7 +200,7 @@ export const week02Flashcards: Flashcard[] = [
     lessonId: 'w02-l02',
     skillId: 'afstand-observeren',
     front: 'Wat doet observeren met je gevoelens?',
-    back: 'Ze blijven er, maar je zit er niet meer middenin. Je maakt een beetje afstand. Alsof je naar wolken kijkt die voorbijtrekken.'
+    back: 'Ze blijven er, maar je zit er niet meer middenin. Je neemt een beetje afstand. Alsof je naar wolken kijkt die voorbijtrekken.'
   },
   {
     id: 'w02-l04-f1',

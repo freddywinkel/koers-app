@@ -32,14 +32,14 @@ export const week05: Week = {
       exercise: {
         title: 'Even meekijken',
         steps: [
-          { n: 1, title: 'Ga rustig zitten', text: 'Zit ergens comfortabel. Je ogen mogen open of dicht.', seconds: 30 },
+          { n: 1, title: 'Ga rustig zitten', text: 'Ga lekker zitten. Je ogen mogen open of dicht.', seconds: 30 },
           { n: 2, title: 'Merk je lichaam op', text: 'Voel de stoel onder je. Voel je voeten op de grond. Wie of wat merkt dat allemaal op?', seconds: 45 },
           { n: 3, title: 'Merk een gedachte op', text: 'Er komt vast een gedachte langs. Kijk er even naar. Jij ziet de gedachte, dus jij bent meer dan die gedachte.', seconds: 60 },
           { n: 4, title: 'Merk een gevoel op', text: 'Misschien voel je rust, of juist onrust. Ook dat gevoel wordt opgemerkt. Door het deel van jou dat meekijkt.', seconds: 60 },
-          { n: 5, title: 'Kom rustig terug', text: 'Kijk om je heen. Dat deel van jou dat meekijkt, is er altijd. Ook op drukke dagen.', seconds: 20 }
+          { n: 5, title: 'Keer rustig terug', text: 'Kijk om je heen. Dat deel van jou dat meekijkt, is er altijd. Ook op drukke dagen.', seconds: 20 }
         ]
       },
-      reflection: 'Misschien voelde dit rustig, misschien vreemd of lastig. Allebei is normaal. Het idee van een meekijkend zelf went langzaam.',
+      reflection: 'Misschien voelde dit rustig, misschien vreemd of lastig. Allebei is normaal. Je went langzaam aan het idee van een meekijkend zelf.',
       assignment: 'Kies deze week één vast moment per dag. Vraag dan even: "Wie merkt dit nu op?" Meer hoeft niet.',
       relatedSkillIds: ['afstand-observeren'],
       flashcardIds: ['fc-w05-l01-a', 'fc-w05-l01-b', 'fc-w05-l01-c']
@@ -68,7 +68,7 @@ export const week05: Week = {
           { n: 1, title: 'Kies een gevoel', text: 'Denk aan een gevoel dat je de laatste tijd vaak hebt. Bijvoorbeeld boosheid of spanning.', seconds: 30 },
           { n: 2, title: 'Zeg het anders', text: 'Zeg in jezelf niet "ik ben boos", maar "ik voel boosheid". Of: "ik merk dat er boosheid is."', seconds: 45 },
           { n: 3, title: 'Kijk naar het verschil', text: 'Wat verandert er als je het zo zegt? Het gevoel wordt iets dat je hébt, niet iets dat je bént.', seconds: 60 },
-          { n: 4, title: 'Adem er ruimte omheen', text: 'Adem rustig door. Stel je voor: het gevoel is weer, en jij bent de wijde hemel eromheen.', seconds: 60 }
+          { n: 4, title: 'Geef het gevoel ruimte', text: 'Adem rustig door. Stel je voor: het gevoel is weer, en jij bent de wijde hemel eromheen.', seconds: 60 }
         ]
       },
       reflection: 'Het kan gek voelen om anders over je gevoel te praten. Dat is oké. Nieuwe woorden maken langzaam ruimte tussen jou en het gevoel.',
@@ -94,7 +94,7 @@ export const week05: Week = {
           { n: 1, title: 'Land in je stoel', text: 'Zit rustig, met je voeten op de grond. Doe je ogen dicht als dat prettig voelt. Anders kijk je zacht voor je uit.', seconds: 30 },
           { n: 2, title: 'Voel je lichaam', text: 'Voel je handen, je benen, de stoel. Je lichaam verandert door de jaren. Maar er is iets dat het nu voelt.', seconds: 60 },
           { n: 3, title: 'Volg je adem', text: 'Volg een paar ademhalingen. Je hoeft niet dieper te ademen. Merk gewoon op dat je ademt.', seconds: 60 },
-          { n: 4, title: 'Kijk naar gedachten', text: 'Er komen gedachten voorbij. Dat is prima. Stel je voor dat je ze ziet zoals auto’s langs een weg.', seconds: 90 },
+          { n: 4, title: 'Kijk naar gedachten', text: 'Er komen gedachten voorbij. Dat is prima. Stel je voor dat je ze ziet zoals auto’s die op de weg voorbijrijden.', seconds: 90 },
           { n: 5, title: 'Kijk naar gevoelens', text: 'Wat voel je nu? Rust, spanning, vermoeidheid? Benoem het zachtjes. En merk: íemand kijkt ernaar.', seconds: 90 },
           { n: 6, title: 'Vraag: wie kijkt er?', text: 'Dat deel dat alles opmerkt, is er al je hele leven. Als kind, als tiener, en nu. Dat ben jij, diep vanbinnen.', seconds: 60 }
         ]
@@ -118,7 +118,7 @@ export const week05: Week = {
       exercise: {
         title: 'Terugblik in 4 stappen',
         steps: [
-          { n: 1, title: 'Denk aan je oefeningen', text: 'Welke oefening deed je deze week? De schaakbord, de hemel, of de waarnemer?', seconds: 45 },
+          { n: 1, title: 'Denk aan je oefeningen', text: 'Welke oefening deed je deze week? Het schaakbord, de hemel of de waarnemer?', seconds: 45 },
           { n: 2, title: 'Kies één moment', text: 'Kies een moment waarop je merkte: ik ben meer dan dit gevoel. Groot of klein, alles telt.', seconds: 60 },
           { n: 3, title: 'Benoem wat hielp', text: 'Wat hielp jou het meest? De metafoor, de woorden "ik voel", of de oefening zelf?', seconds: 60 },
           { n: 4, title: 'Neem het mee', text: 'Kies één ding dat je volgende week blijft gebruiken. Klein is goed.', seconds: 30 }
@@ -173,7 +173,7 @@ export const week05Flashcards: Flashcard[] = [
   {
     id: 'fc-w05-l03-a',
     lessonId: 'w05-l03',
-    front: 'Wat doe je bij de waarnemer-oefening?',
+    front: 'Wat doe je bij de waarnemeroefening?',
     back: 'Je kijkt achter elkaar naar je lichaam, je adem, je gedachten en je gevoelens. Bij elk stukje vraag je: wie merkt dit op?'
   },
   {
@@ -186,7 +186,7 @@ export const week05Flashcards: Flashcard[] = [
     id: 'fc-w05-l04-a',
     lessonId: 'w05-l04',
     front: 'Noem de twee beelden van deze week.',
-    back: 'Het schaakbord: jij bent het bord, niet de vechtende stukken. En de hemel: jij bent de lucht, je gevoelens zijn het weer.'
+    back: 'Het schaakbord: jij bent het bord, niet de vechtende stukken. En de hemel: jij bent de hemel, je gevoelens zijn het weer.'
   },
   {
     id: 'fc-w05-l04-b',

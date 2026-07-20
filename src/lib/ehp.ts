@@ -113,7 +113,7 @@ export const EHP_SECTIONS: EhpSectionDef[] = [
   {
     key: 'pan4',
     title: 'Pan 4: Pruttelt',
-    intro: 'Nu telt alleen nog simpel. Eén grondende oefening, één persoon.',
+    intro: 'Houd het nu simpel: één grondende oefening, één persoon.',
     fields: [
       {
         key: 'pan4-herken',
@@ -123,7 +123,7 @@ export const EHP_SECTIONS: EhpSectionDef[] = [
       {
         key: 'pan4-helpt',
         prompt: 'Wat helpt mij?',
-        placeholder: 'Bijvoorbeeld: 5-4-3-2-1, het ademanker, drie minuten bewegen …'
+        placeholder: 'Bijvoorbeeld: 5-4-3-2-1, het Ademanker, drie minuten bewegen …'
       },
       {
         key: 'pan4-anderen',

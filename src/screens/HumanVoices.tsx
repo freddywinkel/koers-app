@@ -29,10 +29,10 @@ export default function HumanVoices() {
       </div>
 
       <header className="px-1 pt-2">
-        <p className="eyebrow">Mindfulness door mensen</p>
+        <p className="eyebrow">Mindfulness van echte mensen</p>
         <h1 className="mt-1.5 font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">Echte stemmen</h1>
         <p className="sub mt-1.5">
-          Menselijk ingesproken meditaties van Marjolein van der Aar, mindfulnesstrainer en maker van Mindful Minuut.
+          Meditaties van Marjolein van der Aar, mindfulnesstrainer en maker van Mindful Minuut — ingesproken door een mens, niet door AI.
         </p>
       </header>
 
@@ -104,7 +104,7 @@ export default function HumanVoices() {
                   rel="noreferrer"
                   className="btn-secondary w-full"
                 >
-                  Open in Spotify <span aria-hidden="true">↗</span>
+                  Beluister in Spotify <span aria-hidden="true">↗</span>
                 </a>
               </div>
             </article>
@@ -113,7 +113,7 @@ export default function HumanVoices() {
       </section>
 
       <p className="sub px-1 text-[12.5px]">
-        Deze externe sessies worden aangeboden en afgespeeld door Spotify. Ze hebben internet nodig en kunnen niet via Koers offline worden bewaard. Koers is niet verbonden aan Spotify of Mindful Minuut.
+        Deze externe sessies worden aangeboden en afgespeeld door Spotify. Ze hebben internet nodig en kunnen niet via Koers offline worden bewaard. Koers hoort niet bij Spotify of Mindful Minuut.
       </p>
     </div>
   );

@@ -53,7 +53,7 @@ export default function Week() {
           <span className="chip">Nog vergrendeld</span>
           <h2 className="card-title mt-3">Deze week opent vanzelf</h2>
           <p className="sub mt-1.5">
-            Rond ongeveer twee derde van week {week.number - 1} af, dan gaat deze week open. Rustig aan — het tempo
+            Rond ongeveer tweederde van week {week.number - 1} af, dan gaat deze week open. Rustig aan — het tempo
             bepaal je zelf.
           </p>
           <Link to="/cursus" className="btn-secondary mt-4 w-full">

@@ -79,7 +79,7 @@ export default function GSchema() {
       <header className="min-w-0 px-1 pt-2">
         <p className="eyebrow">Steun</p>
         <h1 className="mt-1.5 font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">
-          G-Schema
+          G-schema
         </h1>
         <p className="sub mt-2">
           Een G-schema helpt je een moeilijke gedachte rustig onder de loep te nemen, stap voor stap. Je oude
@@ -133,9 +133,9 @@ export default function GSchema() {
         </button>
         <p className="mt-2 text-[12.5px] font-semibold text-ink-soft" aria-live="polite">
           {showSaved
-            ? "✓ Opgeslagen — je vindt hem hieronder bij je eerdere G-schema's."
+            ? "✓ Opgeslagen — je vindt het hieronder terug bij je eerdere G-schema's."
             : showHint
-              ? 'Schrijf eerst iets in één van de velden — al een paar woorden is genoeg.'
+              ? 'Schrijf eerst iets in één van de velden — een paar woorden is al genoeg.'
               : 'Je hoeft niet alles in te vullen; jij bepaalt wat genoeg is.'}
         </p>
       </div>

@@ -64,7 +64,7 @@ export default function Oefenen() {
             </svg>
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block text-[15px] font-bold text-ink">Mindfulness door mensen</span>
+            <span className="block text-[15px] font-bold text-ink">Mindfulness met echte stemmen</span>
             <span className="sub mt-0.5 block">
               Luister via Spotify naar Marjolein van der Aar van Mindful Minuut.
             </span>
@@ -112,7 +112,7 @@ export default function Oefenen() {
           <span className="min-w-0 flex-1">
             <span className="block text-[15px] font-bold text-ink">Flashcards</span>
             <span className="sub mt-0.5 block">
-              {flashcards.length} kaarten — herhaal kort en houd het vers, gegroepeerd per week.
+              {flashcards.length} kaarten, gegroepeerd per week — herhaal kort en houd het vers.
             </span>
           </span>
           <Chevron />

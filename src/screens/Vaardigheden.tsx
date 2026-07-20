@@ -68,7 +68,7 @@ export default function Vaardigheden() {
         </div>
 
         {visibleSkills.length === 0 ? (
-          <p className="card sub">Geen vaardigheid gevonden bij deze pan — kies een andere pan of &lsquo;Alles&rsquo;.</p>
+          <p className="card sub">Geen vaardigheden gevonden bij deze pan — kies een andere pan of &lsquo;Alles&rsquo;.</p>
         ) : (
           visibleSkills.map((skill) => (
             <details key={skill.id} className="card group">

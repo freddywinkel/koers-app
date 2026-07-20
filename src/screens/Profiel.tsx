@@ -170,7 +170,7 @@ export default function Profiel() {
 
         {permission === 'default' && (
           <div className="mt-3 rounded-2xl bg-dune p-4">
-            <p className="text-sm font-extrabold text-ink">Wil je een zachte dagelijkse herinnering?</p>
+            <p className="text-sm font-extrabold text-ink">Wil je een vriendelijke dagelijkse herinnering?</p>
             <p className="sub mt-1">
               We sturen alleen een neutrale melding: &ldquo;Tijd voor je dagelijkse check-in&rdquo;. Niks over hoe jij je
               voelt — er verschijnt nooit iets gevoeligs op je scherm.
@@ -208,7 +208,7 @@ export default function Profiel() {
             <div className="min-w-0">
               <p className="text-sm font-extrabold text-ink">App-vergrendeling (pincode)</p>
               <p className="sub">
-                Extra privacy voor gedeelde telefoons. Een pincode houdt meekijkers tegen; het versleutelt je gegevens
+                Extra privacy voor gedeelde telefoons. Een pincode houdt mensen die meekijken tegen, maar versleutelt je gegevens
                 niet volledig.
               </p>
             </div>
@@ -310,7 +310,7 @@ export default function Profiel() {
           Alles wat je hier invult blijft op dit apparaat. Er is geen account en er wordt niets verstuurd.
         </p>
         <button type="button" className="btn-secondary mt-3.5 w-full" onClick={() => void handleExport()}>
-          Exporteer alles als JSON
+          Exporteer alles als JSON-bestand
         </button>
         <button
           type="button"
@@ -319,7 +319,7 @@ export default function Profiel() {
         >
           Verwijder alle gegevens
         </button>
-        {deleted && <p className="sub mt-2">Je gegevens zijn verwijderd. Je begint schoon — helemaal oké.</p>}
+        {deleted && <p className="sub mt-2">Je gegevens zijn verwijderd. Je begint met een schone lei — helemaal oké.</p>}
       </section>
 
       {/* Demo/test van de app-gate vanuit de pincode-instelling */}

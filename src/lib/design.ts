@@ -23,7 +23,7 @@ export const DESIGNS: DesignOption[] = [
   {
     value: 'zand-salie',
     label: 'Zand & Salie',
-    sub: 'Warm, aards, spa-kalm',
+    sub: 'Warm, aards, rustig als een spa',
     swatches: ['#f7f3ec', '#fdfbf7', '#7d9285', '#c08a6d'],
     themeColor: { light: '#F7F3EC', dark: '#26211C' }
   },

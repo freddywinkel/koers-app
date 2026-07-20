@@ -10,7 +10,7 @@ export const week11: Week = {
   id: 'w11',
   number: 11,
   title: 'Crisis & veiligheid',
-  tagline: 'Signalen herkennen en je eigen veiligheidsplan maken.',
+  tagline: 'Signalen herkennen en je eigen signaleringsplan maken.',
   lessons: [
     {
       id: 'w11-l01',
@@ -34,7 +34,7 @@ export const week11: Week = {
         title: 'Je signalen in beeld',
         steps: [
           { n: 1, title: 'Denk aan rust', text: 'Denk aan een periode in pan 1 of 2. Hoe merk je dat het goed gaat? Bijvoorbeeld: je slaapt lekker en je maakt grappen.', seconds: 60 },
-          { n: 2, title: 'Denk aan borrelen', text: 'Denk aan een moment in pan 3. Wat merkte je lichaam? Welke gedachten had je? Piekeren is ook een signaal.', seconds: 90 },
+          { n: 2, title: 'Denk aan Borrelt', text: 'Denk aan een moment in pan 3. Wat merkte je aan je lichaam? Welke gedachten had je? Piekeren is ook een signaal.', seconds: 90 },
           { n: 3, title: 'Kijk naar je gedrag', text: 'Wat doe jij als het pruttelt? Bijvoorbeeld: mijden, scrollen, nergens aan beginnen. Alles mag je opschrijven.', seconds: 90 },
           { n: 4, title: 'Kies je drie vroegste signalen', text: 'Schrijf ze op en bewaar ze goed. Je gebruikt ze straks in je eigen plan.', seconds: 60 }
         ]
@@ -53,7 +53,7 @@ export const week11: Week = {
       minutes: 12,
       tags: ['EHP', 'Veiligheid'],
       intro: [
-        'Je hebt nu veel vaardigheden geleerd. Maar in een hevig moment denk je daar niet aan. Dan helpt een plan dat je op een rustige dag maakte.',
+        'Je hebt nu veel vaardigheden geleerd. Maar op een hevig moment denk je daar niet aan. Dan helpt een plan dat je op een rustige dag maakte.',
         'Dat plan heet het Emotiehanteringsplan, kortweg EHP. Per pan schrijf je op: hoe herken ik dit? Wat helpt mij? Wat kunnen anderen doen?',
         'Vandaag maak je de eerste versie. Hij hoeft niet af te zijn. Volgende week werk je hem verder uit.'
       ],
@@ -68,14 +68,14 @@ export const week11: Week = {
           { n: 1, title: 'Verzamel je materiaal', text: 'Pak je notities van de vorige lessen erbij. Je signalen, je favoriete oefeningen en je steunpersonen.', seconds: 60 },
           { n: 2, title: 'Pan 1 en 2: Rustig en Rimpelt', text: 'Schrijf op wat je doet om zo te blijven. Bijvoorbeeld: slapen, bewegen, even ademen met aandacht.', seconds: 120 },
           { n: 3, title: 'Pan 3: Borrelt', text: 'Welke signalen horen hierbij? En welke oefening helpt jou hier? Bijvoorbeeld afstand nemen en observeren.', seconds: 120 },
-          { n: 4, title: 'Pan 4: Pruttelt', text: 'Nu telt alleen nog simpel. Kies één grondende oefening, zoals 5-4-3-2-1. En noteer wie je dan kunt bereiken.', seconds: 120 },
+          { n: 4, title: 'Pan 4: Pruttelt', text: 'Houd het nu simpel: kies één grondende oefening, zoals 5-4-3-2-1, en noteer wie je dan kunt bereiken.', seconds: 120 },
           { n: 5, title: 'Pan 5: Kookt over', text: 'Schrijf op: stop alles, grond je en bereik iemand. Leg scherpe of gevaarlijke dingen uit je buurt.', seconds: 120 },
-          { n: 6, title: 'Professionele hulp erbij', text: 'Noteer waar je professionele hulp vindt. De app heeft een crisisscherm met de juiste nummers.', seconds: 60 },
+          { n: 6, title: 'Professionele hulp erbij', text: 'Noteer waar je professionele hulp vindt. In de app vind je onder Steun de juiste nummers.', seconds: 60 },
           { n: 7, title: 'Deel je plan', text: 'Laat je plan zien aan iemand die je vertrouwt. Dan weet die persoon wat helpt, als jij het even niet meer weet.', seconds: 60 }
         ]
       },
       reflection: 'Een plan maken terwijl het rustig is, is de beste zorg voor moeilijke momenten. Je plan groeit met je mee. Het hoeft nooit perfect te zijn.',
-      assignment: 'Bewaar je EHP op een plek die je snel vindt. Vertel deze week aan minstens één vertrouwd persoon dat je dit plan hebt.',
+      assignment: 'Bewaar je EHP op een plek die je snel vindt. Vertel deze week aan minstens één persoon die je vertrouwt dat je dit plan hebt.',
       relatedSkillIds: ['gronden-54321', 'ademanker'],
       flashcardIds: ['w11-l02-f1', 'w11-l02-f2', 'w11-l02-f3']
     },
@@ -90,14 +90,14 @@ export const week11: Week = {
       intro: [
         'Veel mensen vinden hulp vragen moeilijk. Alsof je dan tekortschiet of tot last bent. Maar steun vragen is een vaardigheid. En jij hebt die al geoefend.',
         'Soms is een vriend of familielid genoeg. Soms is professionele hulp nodig. Allebei is oké. Zware gevoelens hoef je niet alleen te dragen.',
-        'Denk je weleens aan zelfbeschadiging, of aan de dood? Ook dan geldt: je hoeft er niet alleen mee te zitten. Er zijn mensen die je willen helpen. Dag en nacht.'
+        'Denk je weleens aan zelfbeschadiging of aan de dood? Ook dan geldt: je hoeft er niet alleen mee te zitten. Er zijn mensen die je willen helpen. Dag en nacht.'
       ],
       exercise: {
         title: 'Je steunnetwerk in beeld',
         steps: [
-          { n: 1, title: 'Wie is er voor je?', text: 'Denk aan één of twee mensen bij wie je terechtkunt. Groot of klein, dat maakt niet uit.', seconds: 60 },
+          { n: 1, title: 'Wie is er voor je?', text: 'Denk aan één of twee mensen bij wie je terechtkunt. Een groot of klein netwerk, dat maakt niet uit.', seconds: 60 },
           { n: 2, title: 'Oefen een eerste zin', text: 'Bijvoorbeeld: "Het gaat niet zo goed. Mag ik even met je praten?" Meer hoeft het niet te zijn.', seconds: 60 },
-          { n: 3, title: 'Ken de professionele route', text: 'Je huisarts helpt bij zorgen die niet kunnen wachten. Bij gedachten aan zelfdoding is er 113 Zelfmoordpreventie. Bel 113 of 0800-0113, of chat op 113.nl. Gratis en anoniem.', seconds: 60 },
+          { n: 3, title: 'Weet waar je professionele hulp vindt', text: 'Je huisarts helpt bij klachten die niet kunnen wachten. Bij gedachten aan zelfdoding is er 113 Zelfmoordpreventie. Bel 113 of 0800-0113, of chat op 113.nl. Gratis en anoniem.', seconds: 60 },
           { n: 4, title: 'Bij direct gevaar', text: 'Is er direct gevaar voor jou of iemand anders? Bel dan 112. Dat nummer is er voor noodgevallen.', seconds: 30 }
         ]
       },
@@ -115,7 +115,7 @@ export const week11: Week = {
       minutes: 4,
       tags: ['Terugblik'],
       intro: [
-        'Dit was een belangrijke week. Je verkende je signalen, je begon aan je veiligheidsplan en je keek naar steun. Dat is serieus werk.',
+        'Dit was een belangrijke week. Je verkende je signalen, je begon aan je signaleringsplan en je keek naar steun. Dat is serieus werk.',
         'Misschien voelde deze week zwaar. Dat is logisch. Je keek naar moeilijke dingen. Wees vandaag extra zacht voor jezelf.'
       ],
       exercise: {
@@ -128,7 +128,7 @@ export const week11: Week = {
         ]
       },
       reflection: 'Je bent niet te veel en niet te gevoelig. Je leert gewoon een nieuwe taal: de taal van je eigen gevoelens.',
-      assignment: 'Doe iets ontspannends dit weekend. En leg je EHP klaar voor volgende week. Dan maak je hem af.',
+      assignment: 'Doe iets ontspannends dit weekend. En leg je EHP klaar voor volgende week. Dan maak je je plan af.',
       relatedSkillIds: [],
       flashcardIds: ['w11-l04-f1', 'w11-l04-f2']
     }
@@ -147,7 +147,7 @@ export const week11Flashcards: Flashcard[] = [
     id: 'w11-l01-f2',
     lessonId: 'w11-l01',
     front: 'Op welke drie plekken kun je signalen opmerken?',
-    back: 'In je lichaam (slapen, spanning), in je gedachten (piekeren, somber) en in je gedrag (terugtrekken, kortaf).'
+    back: 'In je lichaam (slapen, spanning), in je gedachten (piekeren, somber zijn) en in je gedrag (je terugtrekken, kortaf zijn).'
   },
   {
     id: 'w11-l01-f3',
@@ -165,14 +165,14 @@ export const week11Flashcards: Flashcard[] = [
     id: 'w11-l02-f2',
     lessonId: 'w11-l02',
     front: 'Wanneer maak je een EHP?',
-    back: 'Op een rustige dag. In een hevig moment denk je niet helder. Dan pak je gewoon het plan erbij dat je eerder maakte.'
+    back: 'Op een rustige dag. Op een hevig moment denk je niet helder. Dan pak je gewoon het plan erbij dat je eerder maakte.'
   },
   {
     id: 'w11-l02-f3',
     lessonId: 'w11-l02',
     skillId: 'gronden-54321',
     front: 'Wat hoort er bij pan 5 in je plan?',
-    back: 'Stop alles en grond je, bijvoorbeeld met 5-4-3-2-1. Bereik iemand. En weet waar je professionele hulp vindt, zoals het crisisscherm van de app.'
+    back: 'Stop alles en grond je, bijvoorbeeld met 5-4-3-2-1. Bereik iemand. En weet waar je professionele hulp vindt, zoals onder Steun in de app.'
   },
   {
     id: 'w11-l03-f1',

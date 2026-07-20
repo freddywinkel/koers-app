@@ -6,7 +6,7 @@
 
 /** Korte, kalme inleiding bovenaan het scherm. */
 export const crisisIntro: string =
-  'Je bent hier omdat het nu te veel is. Dat is oké. Dit scherm helpt je stap voor stap. Ga rustig, op je eigen tempo.';
+  'Je bent hier omdat het nu te veel is. Dat is oké. Dit scherm helpt je stap voor stap. Ga rustig, in je eigen tempo.';
 
 /** Zachte grondingsstappen voor bovenaan het scherm. */
 export const groundingSteps: string[] = [
@@ -30,10 +30,10 @@ export const watHelptNu: PanHulp[] = [
     pan: 4,
     label: 'Pruttelt',
     tips: [
-      'Maak je uitademing langer dan je inademing. Dat helpt je lijf om te vertragen.',
-      'Doe een korte oefening uit de toolbox, zoals het Ademanker.',
-      'Zeg hardop of in je hoofd wat je voelt: ik merk boosheid, of ik merk angst.',
-      'Beweeg drie minuten. Loop even naar buiten, of rek je uit. Je lijf mag de spanning kwijt.',
+      'Maak je uitademing langer dan je inademing. Dat helpt je lijf rustiger te worden.',
+      'Doe een korte oefening uit Oefenen, zoals het Ademanker.',
+      'Zeg hardop of in je hoofd wat je voelt: ik voel boosheid, of ik voel angst.',
+      'Beweeg drie minuten. Loop even naar buiten, of rek je uit. Je lijf mag de spanning loslaten.',
       'Bel of app iemand die je vertrouwt. Je hoeft het niet alleen te dragen.'
     ]
   },
@@ -42,7 +42,7 @@ export const watHelptNu: PanHulp[] = [
     label: 'Kookt over',
     tips: [
       'Doe eerst de grondingsstappen hierboven. Langzaam, stap voor stap.',
-      'Maak je handen nat met koud water, of houd iets kouds vast. Dat helpt je lijf om te landen.',
+      'Maak je handen nat met koud water, of houd iets kouds vast. Dat helpt je om weer te landen.',
       'Zet je voeten stevig op de grond en duw zachtjes. Voel: de grond draagt je.',
       'Stuur niets weg. Zeg: dit is hevig, en het gaat weer voorbij.',
       'Voelt het onveilig of te groot? Bel 113. Zij zijn er dag en nacht.'
@@ -77,7 +77,7 @@ export const crisisContacts: CrisisContact[] = [
   {
     id: 'huisarts',
     title: 'Huisarts of huisartsenpost',
-    text: 'Voor zorgen die niet kunnen wachten. Bel overdag je eigen huisarts; ’s avonds en in het weekend de huisartsenpost in je regio.',
+    text: 'Voor klachten die niet kunnen wachten. Bel overdag je eigen huisarts; ’s avonds en in het weekend de huisartsenpost in je regio.',
     actions: []
   },
   {

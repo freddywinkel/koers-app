@@ -36,7 +36,7 @@ export const audioSessions: AudioSession[] = [
       { text: 'Je gedachten komen en gaan. Dat is normaal. Je hoeft ze niet weg te duwen.', pauze: 10 },
       { text: 'Merk het op als je afdwaalt. Zeg zachtjes in je hoofd: denken. En kom terug naar je adem.', pauze: 12 },
       { text: 'Vind je het fijn om te tellen? Tel dan zacht mee. In één, uit één. In twee, uit twee. Tot tien, en dan weer opnieuw.', pauze: 15 },
-      { text: 'Wees niet streng als het niet meteen lukt. Terugkomen ís juist de oefening.', pauze: 12 },
+      { text: 'Wees niet streng als het niet meteen lukt. Juist terugkomen is de oefening.', pauze: 12 },
       { text: 'Laat elke adem komen zoals hij komt. Kort of lang, diep of ondiep. Alles mag.', pauze: 12 },
       { text: 'Misschien merk je wat rust. Misschien niet. Allebei is goed.', pauze: 12 },
       { text: 'Neem nu één bewuste, rustige ademhaling. Helemaal in … en helemaal uit.', pauze: 8 },
@@ -69,10 +69,10 @@ export const audioSessions: AudioSession[] = [
       { text: 'Naar je rug. De onderkant van je rug, het midden, de bovenkant.', pauze: 12 },
       { text: 'Veel spanning zit hier. Merk het op, zonder er iets aan te veranderen.', pauze: 15 },
       { text: 'Voel nu je borstkas. Hoe hij ruimer wordt als je inademt. En weer smaller als je uitademt.', pauze: 15 },
-      { text: 'Nu naar je handen. Je vingers, je handpalmen, de rug van je handen.', pauze: 15 },
+      { text: 'Nu naar je handen. Je vingers, je handpalmen, de bovenkant van je handen.', pauze: 15 },
       { text: 'Misschien voel je je vingers tintelen. Of je voelt de lucht eromheen.', pauze: 15 },
       { text: 'Verder via je polsen naar je onderarmen en je bovenarmen.', pauze: 15 },
-      { text: 'Naar je schouders. Hier bewaren we vaak spanning.', pauze: 12 },
+      { text: 'Naar je schouders. Hier houden we vaak spanning vast.', pauze: 12 },
       { text: 'Laat je schouders bij de uitademing een beetje zakken. Een klein beetje is genoeg.', pauze: 15 },
       { text: 'Naar je nek en je keel. Laat ze zacht worden.', pauze: 12 },
       { text: 'En je gezicht. Ontspan je kaak. Laat ruimte tussen je tanden.', pauze: 12 },
@@ -95,23 +95,23 @@ export const audioSessions: AudioSession[] = [
     segments: [
       { text: 'Welkom. Ga lekker zitten of liggen. Doe je ogen zacht dicht.', pauze: 10 },
       { text: 'Adem drie keer rustig in … en weer uit. Laat je lijf zwaarder worden.', pauze: 15 },
-      { text: 'Stel je voor: je zit op de kant van een stille stroom. Het is een zachte dag. De zon schijnt.', pauze: 15 },
+      { text: 'Stel je voor: je zit aan de kant van een rustig riviertje. Het is een zachte dag. De zon schijnt.', pauze: 15 },
       { text: 'Het water stroomt langzaam voor je langs. Je kijkt ernaar. Verder hoef je niets.', pauze: 15 },
       { text: 'Er drijven bladeren op het water. Grote en kleine. Ze komen dichterbij en drijven weer weg.', pauze: 15 },
-      { text: 'Nu komt er een gedachte op. Wat je ook denkt, dat is oké. Leg die gedachte op een blad.', pauze: 12 },
+      { text: 'Nu komt er een gedachte bij je op. Wat je ook denkt, dat is oké. Leg die gedachte op een blad.', pauze: 12 },
       { text: 'Kijk hoe het blad met je gedachte langzaam wegdrijft. Verder en verder, tot hij uit beeld is.', pauze: 18 },
       { text: 'Dan komt het volgende blad. Leg daar je volgende gedachte op. En kijk weer toe.', pauze: 18 },
       { text: 'Je gedachten mogen alles zijn. Zorgen, plannen, herinneringen. Elk mag op een blad.', pauze: 18 },
       { text: 'Is er even geen blad? Dan kijk je gewoon naar het water. Dat is ook goed.', pauze: 15 },
       { text: 'Soms blijft een blad hangen. Dat is niet erg. Merk het op en laat het water zijn werk doen.', pauze: 15 },
-      { text: 'Merk je dat je met een gedachte meedrijft? Stap dan zachtjes weer op de kant.', pauze: 15 },
+      { text: 'Merk je dat je met een gedachte meedrijft? Ga dan zachtjes weer aan de kant zitten.', pauze: 15 },
       { text: 'Je hoeft niets weg te duwen. Je hoeft ook niets vast te houden. De stroom doet het werk.', pauze: 18 },
       { text: 'Jij zit aan de kant. Je kijkt. Je gedachten drijven voorbij, en jij blijft hier.', pauze: 25 },
       { text: 'Blijf zo nog even kijken. Blad voor blad, in je eigen tempo.', pauze: 35 },
       { text: 'Merk op hoe het nu met je gaat. Misschien rustiger, misschien niet. Allebei is goed.', pauze: 15 },
-      { text: 'Neem één rustige ademhaling. Laat het beeld van de stroom langzaam wegglippen.', pauze: 10 },
+      { text: 'Haal één keer rustig adem. Laat het beeld van de stroom langzaam wegglippen.', pauze: 10 },
       { text: 'Beweeg zachtjes je handen en voeten. Doe je ogen open als je er klaar voor bent.', pauze: 8 },
-      { text: 'Onthoud dit beeld: je gedachten zijn bladeren op het water. Jij bent de kant van de stroom.' }
+      { text: 'Onthoud dit beeld: je gedachten zijn bladeren op het water. Jij blijft rustig aan de kant.' }
     ]
   },
   {
@@ -163,7 +163,7 @@ export const audioSessions: AudioSession[] = [
       { text: 'Blijf hier nog even. Geniet van je plek, in je eigen tempo.', pauze: 30 },
       { text: 'Voordat je weggaat: bewaar één detail goed in je hoofd. Een kleur, een geluid, een gevoel.', pauze: 15 },
       { text: 'Dat detail is je sleutel. Daarmee kom je later snel terug naar deze plek.', pauze: 12 },
-      { text: 'Neem één rustige ademhaling. Zeg gedag tegen je plek. Je komt gauw terug.', pauze: 10 },
+      { text: 'Haal één keer rustig adem. Zeg gedag tegen je plek. Je komt gauw terug.', pauze: 10 },
       { text: 'Beweeg zachtjes je handen en voeten. Doe je ogen open. Je veilige plek gaat met je mee.' }
     ]
   },
@@ -177,14 +177,14 @@ export const audioSessions: AudioSession[] = [
       { text: 'Welkom bij deze korte pauze. Deze oefening is voor een moment dat het even zwaar is.', pauze: 8 },
       { text: 'Ga rustig zitten. Leg één hand op je hart, of op een plek die fijn voelt.', pauze: 10 },
       { text: 'Voel de warmte van je hand. Adem rustig in … en weer uit.', pauze: 12 },
-      { text: 'Zeg eerlijk tegen jezelf: dit is een moeilijk moment. Het doet pijn, of het is spannend.', pauze: 12 },
+      { text: 'Zeg eerlijk tegen jezelf: dit is een moeilijk moment. Het doet pijn, of het is eng.', pauze: 12 },
       { text: 'Dat mag je gewoon zeggen. Je hoeft niet stoer te doen tegen jezelf.', pauze: 12 },
       { text: 'Denk dan: ik ben niet de enige. Zoveel mensen voelen dit, ergens op de wereld, juist nu.', pauze: 15 },
       { text: 'Moeilijke momenten horen bij het leven. Bij jou, bij mij, bij iedereen.', pauze: 12 },
       { text: 'Zeg nu iets liefs tegen jezelf. Bijvoorbeeld: ik mag hier zijn. Ik doe mijn best.', pauze: 15 },
       { text: 'Of kies je eigen woorden. Woorden die je ook tegen een goede vriend zou zeggen.', pauze: 15 },
       { text: 'Voel je hand op je lijf. De warmte blijft. Jij bent er voor jezelf.', pauze: 15 },
-      { text: 'Neem één rustige ademhaling. De pauze is klaar. Je mag zacht verder met je dag.' }
+      { text: 'Haal één keer rustig adem. De pauze is klaar. Je mag zacht verder met je dag.' }
     ]
   }
 ];

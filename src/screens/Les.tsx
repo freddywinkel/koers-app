@@ -140,7 +140,7 @@ export default function Les() {
       {/* Huiswerk */}
       {lesson.assignment && (
         <section className="card border-ap-border">
-          <p className="eyebrow !text-ap-deep">Neem je mee deze week</p>
+          <p className="eyebrow !text-ap-deep">Dit neem je mee deze week</p>
           <p className="mt-1.5 text-[15px] leading-[1.55] text-ink">{lesson.assignment}</p>
         </section>
       )}
@@ -196,7 +196,7 @@ export default function Les() {
         </div>
       ) : (
         <button type="button" className="btn-primary min-h-[54px] rounded-[18px] text-base" onClick={completeLesson}>
-          <span className="min-w-0">Markeer als voltooid</span>
+          <span className="min-w-0">Rond deze les af</span>
           <svg className="flex-none" width="19" height="19" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M3 9h12m-5-5 5 5-5 5" />
           </svg>

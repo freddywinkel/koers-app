@@ -28,7 +28,7 @@ export const week04: Week = {
       tags: ['Defusie'],
       intro: [
         'Stel: je denkt "dit gaat niet lukken". Die zin voelt als een feit. Als een muur. Maar het is een zin in je hoofd. Woorden, geen werkelijkheid.',
-        'Je brein maakt de hele dag gedachten. Commentaar, waarschuwingen, oordelen. Dat is zijn werk. Vaak handig. Maar soms raak je erin verstrikt. In ACT heet dat verstrengeling: je neemt elke gedachte voor waar aan.',
+        'Je brein bedenkt de hele dag gedachten. Commentaar, waarschuwingen, oordelen. Dat is zijn werk. Vaak handig. Maar soms raak je erin verstrikt. In ACT heet dat verstrengeling: je neemt elke gedachte voor waar aan.',
         'Deze week leer je defusie. Dat is gewoon: afstand nemen van gedachten. Niet weg ermee. Je leert kijken náár een gedachte, in plaats van vánuit een gedachte.'
       ],
       metaphorCard: {
@@ -39,9 +39,9 @@ export const week04: Week = {
       exercise: {
         title: 'Eén gedachte bekijken',
         steps: [
-          { n: 1, title: 'Pak een gedachte', text: 'Denk aan een zin die vaak in je hoofd opduikt. Bijvoorbeeld: ik ben niet goed genoeg.', seconds: 30 },
-          { n: 2, title: 'Zie het als tekst', text: 'Stel je voor dat de zin op een scherm staat. Welke letters? Welke kleur? Het is tekst, verder niets.', seconds: 45 },
-          { n: 3, title: 'Zet er een zin voor', text: 'Zeg nu: ik heb de gedachte dat ik niet goed genoeg ben. Voel je het verschil? De zin staat iets verder weg.', seconds: 45 },
+          { n: 1, title: 'Kies een gedachte', text: 'Denk aan een zin die vaak in je hoofd opduikt. Bijvoorbeeld: ik ben niet goed genoeg.', seconds: 30 },
+          { n: 2, title: 'Zie hem als tekst', text: 'Stel je voor dat de zin op een scherm staat. Welke letters? Welke kleur? Het is tekst, verder niets.', seconds: 45 },
+          { n: 3, title: 'Zet er een zin voor', text: 'Zeg nu: ik merk de gedachte dat ik niet goed genoeg ben. Voel je het verschil? De zin voelt iets verder weg.', seconds: 45 },
           { n: 4, title: 'Laat hem meereizen', text: 'Je hoeft de gedachte niet weg te halen. Hij mag gewoon meereizen, als passagier achterin je bus.', seconds: 15 }
         ]
       },
@@ -61,7 +61,7 @@ export const week04: Week = {
       intro: [
         'In de vorige les zag je: een gedachte is een zin, geen feit. Nu leer je drie snelle manieren om afstand te nemen. Ze duren elk maar een paar seconden.',
         'Eén: zet er een zin voor. "Ik merk de gedachte dat..." Twee: bedank je brein. "Bedankt, brein, voor die melding." Drie: geef het verhaal een naam. "Ah, het niet-goed-genoeg-verhaal is weer op visite."',
-        'Soms wil je meer dan alleen afstand. Dan is er een tweede vaardigheid, uit VERS: gedachten uitdagen. Daarbij kijk je als een detective na of een gedachte klopt. Wat zijn de feiten vóór en tegen? Wat zou je tegen een vriendin zeggen?',
+        'Soms wil je meer dan alleen afstand. Dan is er een tweede vaardigheid, uit VERS: gedachten uitdagen. Daarbij kijk je als een detective na of een gedachte klopt. Wat zijn de feiten voor en tegen? Wat zou je tegen een lieve vriend of vriendin zeggen?',
         'De volgorde is belangrijk. Eerst afstand nemen, dan eventueel nakijken. Ga je meteen discussiëren met een gedachte, dan wordt het al snel weer touwtrekken. Defusie is je eerste stap. Uitdagen is een extra gereedschap, voor gedachten over feiten die je kunt controleren.'
       ],
       exercise: {
@@ -70,7 +70,7 @@ export const week04: Week = {
           { n: 1, title: 'Kies een woord', text: 'Neem het woord "melk". Zeg het één keer rustig, hardop of in je hoofd. Denk aan koud, wit, een glas.', seconds: 20 },
           { n: 2, title: 'Herhaal het snel', text: 'Zeg het woord nu 45 seconden snel achter elkaar: melk, melk, melk. Let op wat er met de betekenis gebeurt.', seconds: 45 },
           { n: 3, title: 'Kijk wat er over is', text: 'Meestal blijft er alleen een klank over. Het woord verliest zijn verhaal. Dat gevoel is afstand.', seconds: 30 },
-          { n: 4, title: 'Probeer een lastig woord', text: 'Neem nu één woord uit een moeilijke gedachte, bijvoorbeeld "zwak". Herhaal ook dat 30 seconden. Ook dit is maar een klank.', seconds: 30 }
+          { n: 4, title: 'Probeer een lastig woord', text: 'Neem nu één woord uit een moeilijke gedachte, bijvoorbeeld "zwak". Herhaal dat ook 30 seconden. Ook dit is maar een klank.', seconds: 30 }
         ]
       },
       reflection: 'Voelde het gek? Dat hoort erbij. Woorden zijn klanken tot wij er verhalen van maken. Daar zit je vrijheid.',
@@ -119,7 +119,7 @@ export const week04: Week = {
       ],
       metaphorCard: {
         title: 'Bladeren op de stroom',
-        text: 'Je zit op de oever van een stroompje. Gedachten zijn bladeren op het water. Ze komen aan en drijven voorbij. Jij blijft op de oever en kijkt.',
+        text: 'Je zit op de oever van een stroompje. Gedachten zijn bladeren op het water. Ze komen aangedreven en drijven voorbij. Jij blijft op de oever en kijkt.',
         art: 'stroom'
       },
       exercise: {
@@ -153,10 +153,10 @@ export const week04: Week = {
         steps: [
           { n: 1, title: 'Herinner je een gedachte', text: 'Welke gedachte kwam deze week vaak terug? Hoe ging je ermee om?', seconds: 60 },
           { n: 2, title: 'Kies je favoriete stap', text: 'Wat hielp het meest: benoemen, bedanken, bladeren of de detective? Kies er één om te bewaren.', seconds: 60 },
-          { n: 3, title: 'Rond af', text: 'Neem een rustige ademhaling. Je hebt nu twee weken gereedschap: ruimte voor gevoelens, afstand van gedachten.', seconds: 20 }
+          { n: 3, title: 'Rond af', text: 'Haal één keer rustig adem. Je hebt nu gereedschap uit twee weken: ruimte voor gevoelens, afstand van gedachten.', seconds: 20 }
         ]
       },
-      reflection: 'Afstand nemen is geen trucje dat meteen altijd werkt. Het is een richting. Elke keer dat je een gedachte zag als gedachte, was je al onderweg.',
+      reflection: 'Afstand nemen is geen trucje dat altijd meteen werkt. Het is een richting. Elke keer dat je een gedachte zag als gedachte, was je al onderweg.',
       assignment: 'Blijf komende week elke dag drie gedachten benoemen. Week 5 gaat over het deel van jou dat alles kan waarnemen. Rustig kijken helpt daarbij.',
       relatedSkillIds: [],
       flashcardIds: ['w04-l05-f1', 'w04-l05-f2']
@@ -170,7 +170,7 @@ export const week04Flashcards: Flashcard[] = [
     id: 'w04-l01-f1',
     lessonId: 'w04-l01',
     front: 'Zijn gedachten feiten?',
-    back: 'Nee. Gedachten zijn woorden en beelden die je brein maakt. Sommige kloppen, veel niet. Je mag ze horen zonder ze meteen te geloven of te volgen.'
+    back: 'Nee. Gedachten zijn woorden en beelden die je brein bedenkt. Sommige kloppen, veel niet. Je mag ze horen zonder ze meteen te geloven of te volgen.'
   },
   {
     id: 'w04-l01-f2',
@@ -230,7 +230,7 @@ export const week04Flashcards: Flashcard[] = [
     id: 'w04-l05-f1',
     lessonId: 'w04-l05',
     front: 'Wat was de kern van week 4?',
-    back: 'Gedachten zijn geen feiten, maar gebeurtenissen in je hoofd. Defusie is je eerste stap: benoemen, bedanken, bladeren op de stroom. Gedachten uitdagen kan daarna, bij controleerbare feiten.'
+    back: 'Gedachten zijn geen feiten, maar dingen die in je hoofd gebeuren. Defusie is je eerste stap: benoemen, bedanken, bladeren op de stroom. Gedachten uitdagen kan daarna, bij controleerbare feiten.'
   },
   {
     id: 'w04-l05-f2',

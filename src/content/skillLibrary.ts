@@ -44,7 +44,7 @@ export const skillLibrary: SkillCard[] = [
     summary:
       'Geef je gevoel een nauwkeurig woord. Hoe preciezer je benoemt wat er is, hoe beter je weet wat je nodig hebt.',
     steps: [
-      'Vraag jezelf: wat voel ik nu precies?',
+      'Vraag jezelf af: wat voel ik nu precies?',
       'Kies een woord: boos, bang, verdrietig, blij, beschaamd, teleurgesteld.',
       'Zeg het hardop of schrijf het op: "Ik voel me …"',
       'Klopt het woord niet helemaal? Zoek verder tot het past.',
@@ -77,7 +77,7 @@ export const skillLibrary: SkillCard[] = [
       'Merk op: mijn aandacht zit vast aan het nare gevoel.',
       'Kies iets actiefs: opruimen, wandelen, muziek, puzzelen, bellen.',
       'Doe het met volle aandacht, minstens tien minuten.',
-      'Keert je aandacht terug naar het gevoel? Dat is normaal. Stuur opnieuw.',
+      'Keert je aandacht terug naar het gevoel? Dat is normaal. Stuur je aandacht opnieuw.',
       'Kijk daarna: in welke pan zit je nu?'
     ]
   },
@@ -123,7 +123,7 @@ export const skillLibrary: SkillCard[] = [
     summary:
       'Een gedachte is een verhaaltje in je hoofd, geen feit en geen bevel. Je kunt ernaar kijken zonder erin mee te gaan.',
     steps: [
-      'Vang de gedachte, bijvoorbeeld: "Niemand vindt mij aardig."',
+      'Merk de gedachte op, bijvoorbeeld: "Niemand vindt mij aardig."',
       'Zet ervoor: "Ik heb de gedachte dat niemand mij aardig vindt."',
       'Bedank je hoofd: "Dank je wel, hoofd, voor dit verhaal."',
       'Geef het verhaal een naam: "O, het niet-goed-genoeg-verhaal."',
@@ -151,7 +151,7 @@ export const skillLibrary: SkillCard[] = [
     panMin: 1,
     panMax: 3,
     summary:
-      'Gedachten en gevoelens komen en gaan als weer. Jij bent de lucht waar het weer in gebeurt: er is een deel van je dat rustig meekijkt.',
+      'Gedachten en gevoelens komen en gaan als het weer. Jij bent de lucht waar het weer in gebeurt: er is een deel van je dat rustig meekijkt.',
     steps: [
       'Ga rustig zitten en haal een paar keer adem.',
       'Merk een gedachte op. Vraag: wie merkt deze gedachte op?',
@@ -168,7 +168,7 @@ export const skillLibrary: SkillCard[] = [
     summary:
       'Waarden zijn je kompas: hoe wil jij zijn in je leven en voor anderen? Ze geven richting, ook op moeilijke dagen.',
     steps: [
-      'Kies een stukje leven: vriendschap, gezondheid, werk, vrije tijd.',
+      'Kies een deel van je leven: vriendschap, gezondheid, werk, vrije tijd.',
       'Vraag: wat vind ik hier echt belangrijk?',
       'Vraag: hoe wil ik zijn voor de mensen om me heen?',
       'Schrijf het op in gewone woorden: "Ik wil een vriendin zijn die …"',
@@ -187,7 +187,7 @@ export const skillLibrary: SkillCard[] = [
       'Bedenk een stap die vandaag of morgen kan. Klein is prima.',
       'Maak hem concreet: wat doe je, wanneer, waar?',
       'Voorspel de weerstand: wat zal je hoofd tegen je zeggen?',
-      'Doe de stap met die gedachten mee, als passagiers op je bus.'
+      'Zet de stap en neem die gedachten mee, als passagiers op je bus.'
     ]
   },
 
@@ -215,10 +215,10 @@ export const skillLibrary: SkillCard[] = [
     panMin: 4,
     panMax: 5,
     summary:
-      'Koud op je gezicht geeft je lichaam een stevige schok. Daardoor kan je hartslag zakken en de storm iets minderen.',
+      'Iets kouds op je gezicht geeft je lichaam een stevige schok. Daardoor kan je hartslag zakken en de storm iets minderen.',
     steps: [
       'Pak iets kouds: een bak koud water, een ijsklontje of een koud pakje.',
-      'Houd het tegen je wangen en rond je ogen, of duik je gezicht kort in het water.',
+      'Houd het tegen je wangen en rond je ogen, of houd je gezicht kort in het water.',
       'Houd het 15 tot 30 seconden vast. Adem rustig door.',
       'Herhaal het een paar keer als dat nodig is.',
       'Merk op: zakt de intensiteit een klein beetje?'
@@ -256,14 +256,14 @@ export const skillLibrary: SkillCard[] = [
   },
   {
     id: 'veilige-plek',
-    name: 'Je veilige plek opzoeken',
+    name: 'Je veilige plek',
     panMin: 2,
     panMax: 4,
     summary:
       'Roep een plek op waar je je veilig voelt, echt of verzonnen. Die plek in je hoofd helpt je lijf tot rust komen.',
     steps: [
       'Doe je ogen dicht of kijk zacht naar beneden.',
-      'Kies je plek: een strand, een bos, een kamer, ergens geborgen.',
+      'Kies je plek: een strand, een bos, een kamer — ergens waar je je geborgen voelt.',
       'Kijk rond in je hoofd: welke kleuren, hoe valt het licht?',
       'Wat hoor je daar? Wat ruik je? Hoe voelt de lucht?',
       'Blijf een minuut of twee en neem dat gevoel mee terug.'
@@ -285,7 +285,7 @@ export const skillLibrary: SkillCard[] = [
       'Doe het laatste uur iets rustigs: lezen, luisteren, een warme douche.',
       'Leg je telefoon weg van je bed, scherm uit.',
       'Is je hoofd druk? Schrijf je gedachten op een briefje voor morgen.',
-      'Word je niet slaperig? Sta even op, doe iets rustigs en probeer opnieuw.'
+      'Word je niet slaperig? Sta even op, doe iets rustigs en probeer het opnieuw.'
     ]
   },
   {
@@ -326,7 +326,7 @@ export const skillLibrary: SkillCard[] = [
     summary:
       'Je hoeft het niet alleen te dragen. Vroeg om hulp vragen is een vaardigheid, geen zwakte.',
     steps: [
-      'Merk op: dit wordt te groot voor alleen.',
+      'Merk op: dit wordt te groot om alleen te dragen.',
       'Kies iemand die je vertrouwt: vriend, familie, behandelaar.',
       'Zeg het simpel: "Het gaat niet goed. Kun je even bij me zijn?"',
       'Zeg wat je nodig hebt: luisteren, meedenken of afleiding.',
@@ -339,13 +339,13 @@ export const skillLibrary: SkillCard[] = [
     panMin: 1,
     panMax: 3,
     summary:
-      'Nee zeggen beschermt je energie en je grenzen. Een vriendelijk, kort ‘nee’ is een volledig antwoord.',
+      'Nee zeggen beschermt je energie en je grenzen. Een vriendelijk, kort "nee" is een volledig antwoord.',
     steps: [
       'Adem even uit voordat je antwoordt. Je mag bedenktijd nemen.',
       'Zeg nee in één zin: "Nee, dat past nu niet voor mij."',
       'Je hoeft geen lang verhaal of smoes te geven.',
       'Blijf vriendelijk bij je antwoord, ook als de ander dringt.',
-      'Complimenteer jezelf daarna: dit was goed voor jou gedaan.'
+      'Complimenteer jezelf daarna: dit was goed voor jou.'
     ]
   },
   {
@@ -386,7 +386,7 @@ export const skillLibrary: SkillCard[] = [
     summary:
       'Iets liefs voor jezelf doen laat je pannetje niet meteen zakken, maar het zegt tegen je lijf: ik zorg voor je.',
     steps: [
-      'Vraag jezelf: wat doet mij normaal gesproken goed?',
+      'Vraag jezelf af: wat doet mij normaal gesproken goed?',
       'Kies iets kleins: warme thee, een dekentje, muziek, een lekkere geur.',
       'Doe het met aandacht, alsof je het voor een goede vriend doet.',
       'Blijf er even bij. Je hoeft er niets voor terug te doen.',

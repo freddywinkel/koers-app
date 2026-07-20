@@ -38,14 +38,14 @@ const CALMING_METHODS: CalmingMethod[] = [
     id: 'adem',
     title: 'Adem langer uit',
     text: 'Een rustige, langere uitademing kan je lichaam helpen vertragen.',
-    steps: ['Adem zacht in en tel tot 4.', 'Adem langzaam uit en tel tot 6.', 'Herhaal dit 6 keer, zonder te forceren.']
+    steps: ['Adem zacht in en tel tot 4.', 'Adem langzaam uit en tel tot 6.', 'Herhaal dit 6 keer — rustig aan, het hoeft niet perfect.']
   },
   {
     id: 'koel',
     title: 'Gebruik iets koels',
     text: 'Een koele prikkel kan je aandacht terugbrengen naar je lichaam.',
     steps: [
-      'Maak een washand koel met water, of pak een koel flesje.',
+      'Maak een washandje nat met koud water, of pak een koud flesje.',
       'Houd het 15 tot 30 seconden tegen je wangen.',
       'Leg ijs nooit rechtstreeks op je huid en stop als het onprettig voelt.'
     ]
@@ -55,19 +55,19 @@ const CALMING_METHODS: CalmingMethod[] = [
     title: 'Ontlaad de spanning',
     text: 'Geef de energie in je lijf een kleine, veilige uitweg.',
     steps: [
-      'Duw je voeten 10 seconden stevig in de vloer.',
+      'Druk je voeten 10 seconden stevig op de vloer.',
       'Laat los en merk het verschil op.',
       'Herhaal dit 3 keer, of loop rustig een minuut als dat goed voelt.'
     ]
   },
   {
     id: 'klein',
-    title: 'Maak de volgende minuut klein',
+    title: 'Houd de volgende minuut klein',
     text: 'Je hoeft nu niet alles op te lossen. Kies alleen één haalbare stap.',
     steps: [
       'Ga zitten op een plek die iets rustiger voelt.',
       'Neem een slok water of pak iets zachts vast.',
-      'Vraag jezelf: wat heb ik alleen voor de komende minuut nodig?'
+      'Vraag jezelf af: wat heb ik alleen voor de komende minuut nodig?'
     ]
   }
 ];
@@ -76,7 +76,7 @@ const FALLBACK_GROUNDING: GroundingStep[] = [
   { count: 5, label: 'dingen die je kunt zien', hint: 'Kijk langzaam om je heen. Benoem ze één voor één in je hoofd.' },
   { count: 4, label: 'dingen die je kunt voelen', hint: 'Je voeten op de grond, de stof van je kleding, de temperatuur van de lucht.' },
   { count: 3, label: 'dingen die je kunt horen', hint: 'Dichtbij of ver weg. Je hoeft ze niet mooi te vinden.' },
-  { count: 2, label: 'dingen die je kunt ruiken', hint: 'Adem rustig in door je neus. Subtiel is ook goed.' },
+  { count: 2, label: 'dingen die je kunt ruiken', hint: 'Adem rustig in door je neus. Een klein beetje ruiken is ook goed.' },
   { count: 1, label: 'ding dat je kunt proeven', hint: 'Neem een slokje water, of merk de smaak in je mond op.' }
 ];
 
@@ -177,7 +177,7 @@ function GroundingStepper({ steps }: { steps: GroundingStep[] }) {
           Je aandacht is even terug bij het hier en nu. Dit gevoel is hevig — en het gaat weer voorbij.
         </p>
         <button type="button" className="btn-secondary mx-auto mt-3.5 w-full" onClick={restart}>
-          Reset oefening
+          Oefening opnieuw beginnen
         </button>
       </div>
     );
@@ -239,7 +239,7 @@ function GroundingStepper({ steps }: { steps: GroundingStep[] }) {
           className="flex min-h-[44px] items-center justify-center rounded-xl px-2 text-[13px] font-extrabold text-euca-deep"
           onClick={restart}
         >
-          Reset oefening
+          Oefening opnieuw beginnen
         </button>
       </div>
     </div>
@@ -320,7 +320,7 @@ function GereedschapSection() {
     <section className="card" aria-label="Je gereedschap">
       <p className="eyebrow">Voor later en voor nu</p>
       <h2 className="card-title mt-1">Je gereedschap</h2>
-      <p className="sub mt-1.5">Twee rustige oefeningen op eigen pagina's — altijd bij de hand.</p>
+      <p className="sub mt-1.5">Twee rustige oefeningen, elk op een eigen pagina — altijd bij de hand.</p>
 
       <div className="mt-3 flex flex-col gap-2">
         {/* Signaleringsplan */}
@@ -361,9 +361,9 @@ function GereedschapSection() {
           className="flex min-h-[56px] items-center gap-3 rounded-2xl border border-line bg-eucatint px-4 py-3 text-left"
         >
           <span className="min-w-0 flex-1">
-            <b className="block text-[15px] font-extrabold text-ink">G-Schema</b>
+            <b className="block text-[15px] font-extrabold text-ink">G-schema</b>
             <span className="sub mt-0.5 block">
-              Onderzoek een moeilijke gedachte stap voor stap en formuleer een helpender alternatief.
+              Onderzoek een moeilijke gedachte stap voor stap en bedenk een alternatief dat beter helpt.
             </span>
           </span>
           <svg

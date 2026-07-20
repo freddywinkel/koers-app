@@ -21,12 +21,12 @@ export const week01: Week = {
       minutes: 5,
       intro: [
         'Welkom. Fijn dat je er bent. Deze cursus helpt je om beter om te gaan met sterke gevoelens.',
-        'Iedereen kent een gevoel dat te groot lijkt. Boosheid die oplaait. Verdriet dat blijft hangen. Als dat vaak gebeurt, kost het veel energie.',
+        'Iedereen kent het gevoel dat te groot lijkt. Boosheid die oplaait. Verdriet dat blijft hangen. Als dat vaak gebeurt, kost het veel energie.',
         'Je leert hier twee dingen. Met ACT oefen je om gevoelens en gedachten ruimte te geven, in plaats van ertegen te vechten. Met VERS leer je vaardigheden om je emoties stap voor stap rustiger te maken.',
         'Je oefent elke dag een beetje, ongeveer 10 tot 20 minuten. Elke dag een klein beetje werkt beter dan af en toe veel.'
       ],
       reflection: 'Je hoeft nu nog niets te kunnen. Nieuwsgierig beginnen is genoeg voor vandaag.',
-      assignment: 'Kijk vandaag rustig rond in de app, in je eigen tempo. Er is geen haast.',
+      assignment: 'Kijk vandaag rustig rond in de app, in je eigen tempo. Geen haast.',
       relatedSkillIds: [],
       flashcardIds: ['w01-l01-f1', 'w01-l01-f2']
     },
@@ -39,14 +39,14 @@ export const week01: Week = {
       minutes: 6,
       tags: ['Pannetjesmodel'],
       intro: [
-        'Stel je een pannetje melk op het fornuis voor. Soms staat het vuur uit. Soms begint het zachtjes te pruttelen. En soms kookt het over.',
-        'Zo werken je gevoelens ook. Ze stijgen meestal trap voor trap. Het kan voelen alsof je in één keer van rustig naar woedend gaat. Maar er zitten bijna altijd stappen tussen.',
-        'Het pannetjesmodel heeft vijf pannen. Pan 1 is Rustig. Pan 2 is Rimpelt: er komt iets op. Pan 3 is Borrelt: het wordt sterker. Pan 4 is Pruttelt: je voelt je echt niet fijn. Pan 5 is Kookt over: je verliest de grip.',
-        'Het goede nieuws: op elke trede kun je iets doen. Hoe eerder je merkt in welke pan je zit, hoe meer keus je hebt. De vaardigheden uit deze cursus zijn het keukengerei waarmee je het vuur lager zet.'
+        'Stel je een pannetje melk op het fornuis voor. Soms staat het vuur uit. Soms begint het zachtjes te rimpelen. En soms kookt het over.',
+        'Zo werken je gevoelens ook. Ze lopen meestal stap voor stap op. Het kan voelen alsof je in één keer van rustig naar woedend gaat. Maar er zitten bijna altijd stappen tussen.',
+        'Het pannetjesmodel heeft vijf pannen. Pan 1 is Rustig. Pan 2 is Rimpelt: er beweegt iets. Pan 3 is Borrelt: het wordt sterker. Pan 4 is Pruttelt: je voelt je echt niet fijn. Pan 5 is Kookt over: je verliest de grip.',
+        'Het goede nieuws: op elke stap kun je iets doen. Hoe eerder je merkt in welke pan je zit, hoe meer keus je hebt. De vaardigheden uit deze cursus zijn het keukengerei waarmee je het vuur lager zet.'
       ],
       metaphorCard: {
         title: 'Pannetjes op het fornuis',
-        text: 'Je gevoelens zijn als pannetjes melk. Ze warmen trap voor trap op: Rustig, Rimpelt, Borrelt, Pruttelt, Kookt over. Jij leert het vuur op tijd lager te zetten.',
+        text: 'Je gevoelens zijn als pannetjes melk. Ze warmen stap voor stap op: Rustig, Rimpelt, Borrelt, Pruttelt, Kookt over. Jij leert het vuur op tijd lager te zetten.',
         art: 'mist'
       },
       reflection: 'Iedereen zit weleens in elke pan. Ook in pan 4 of 5. Daar is niets mis mee. Het gaat erom dat je leert merken waar je zit.',
@@ -70,8 +70,8 @@ export const week01: Week = {
       exercise: {
         title: 'Je eerste check-in',
         steps: [
-          { n: 1, title: 'Stop even', text: 'Zet wat je doet even op pauze. Neem één rustige ademhaling.', seconds: 15 },
-          { n: 2, title: 'Kijk naar binnen', text: 'Vraag jezelf: hoe voel ik me nu? Rustig, of borrelt er iets? Alles mag er zijn.', seconds: 30 },
+          { n: 1, title: 'Stop even', text: 'Zet wat je doet even op pauze. Haal één keer rustig adem.', seconds: 15 },
+          { n: 2, title: 'Kijk naar binnen', text: 'Vraag jezelf af: hoe voel ik me nu? Rustig, of borrelt er iets? Alles mag er zijn.', seconds: 30 },
           { n: 3, title: 'Kies je pan', text: 'Kies het pannetje dat het beste past: Rustig, Rimpelt, Borrelt, Pruttelt of Kookt over. Gok gerust, het hoeft niet perfect.', seconds: 20 },
           { n: 4, title: 'Klaar', text: 'Dat was het. Je hebt vandaag naar jezelf gekeken. Precies goed.', seconds: 10 }
         ]
@@ -91,10 +91,10 @@ export const week01: Week = {
       intro: [
         'De cursus duurt twaalf weken. Elke week heeft een eigen thema, met een paar korte lessen en oefeningen.',
         'Zo ziet je week eruit: je doet elke dag je check-in. Je volgt de lessen in je eigen tempo. En je oefent in je dagelijks leven met een kleine opdracht.',
-        'Flashcards helpen je onthouden wat je leerde. In de Oefenen-toolbox vind je al je vaardigheden terug. Die blijft altijd open.',
+        'Flashcards helpen je onthouden wat je leerde. Bij Oefenen vind je al je vaardigheden terug. Die kun je altijd gebruiken.',
         'Sla je een dag over? Geen probleem. Je pikt de draad gewoon weer op. Deze cursus is geen toets. Hij is er voor jou.'
       ],
-      reflection: 'Deze cursus is scholing, geen behandeling. Merk je dat het te zwaar wordt? Praat dan met je huisarts of behandelaar. Steun vragen is sterk.',
+      reflection: 'Deze cursus is zelfhulp, geen behandeling. Merk je dat het te zwaar wordt? Praat dan met je huisarts of behandelaar. Steun vragen is sterk.',
       assignment: 'Kies vandaag jouw vaste moment voor de check-in. Zeg tegen jezelf: "Na het ... doe ik mijn check-in."',
       relatedSkillIds: [],
       flashcardIds: ['w01-l04-f1', 'w01-l04-f2']
@@ -119,13 +119,13 @@ export const week01Flashcards: Flashcard[] = [
     id: 'w01-l02-f1',
     lessonId: 'w01-l02',
     front: 'Noem de vijf pannen van het pannetjesmodel.',
-    back: 'Pan 1 Rustig, pan 2 Rimpelt, pan 3 Borrelt, pan 4 Pruttelt, pan 5 Kookt over. Je gevoelens stijgen trap voor trap.'
+    back: 'Pan 1 Rustig, pan 2 Rimpelt, pan 3 Borrelt, pan 4 Pruttelt, pan 5 Kookt over. Je gevoelens lopen meestal stap voor stap op.'
   },
   {
     id: 'w01-l02-f2',
     lessonId: 'w01-l02',
     front: 'Waarom helpt het om te weten in welke pan je zit?',
-    back: 'Emoties stijgen meestal in stappen, niet in één keer. Hoe eerder je merkt waar je zit, hoe eerder je iets kunt doen. Op elke trede heb je keus.'
+    back: 'Emoties lopen meestal in stappen op, niet in één keer. Hoe eerder je merkt waar je zit, hoe eerder je iets kunt doen. Op elke stap heb je keus.'
   },
   {
     id: 'w01-l02-f3',

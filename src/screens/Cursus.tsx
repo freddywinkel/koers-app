@@ -21,7 +21,7 @@ export default function Cursus() {
         <p className="eyebrow">Cursus</p>
         <h1 className="mt-1.5 font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">Jouw 12 weken</h1>
         <p className="sub mt-1.5">
-          Rustig tempo, één week tegelijk. Een nieuwe week opent als je ongeveer twee derde van de vorige week hebt
+          Rustig tempo, één week tegelijk. Een nieuwe week opent als je ongeveer tweederde van de vorige week hebt
           gedaan. Je mag altijd terug naar eerdere lessen.
         </p>
       </header>

@@ -75,7 +75,7 @@ export default function AudioPlayer() {
             ? 'Gepauzeerd'
             : state.status === 'error'
               ? 'Afspelen niet gelukt'
-              : 'Oefening speelt';
+              : 'De oefening wordt afgespeeld';
 
   const saveOffline = async (): Promise<void> => {
     setOfflineState('downloading');
@@ -96,8 +96,8 @@ export default function AudioPlayer() {
         : offlineState === 'saved'
           ? 'Offline beschikbaar'
           : offlineState === 'error'
-            ? 'Download opnieuw proberen'
-            : 'Bewaar voor offline';
+            ? 'Bewaren opnieuw proberen'
+            : 'Bewaar voor offline gebruik';
 
   return (
     <div className="screen-stack">
@@ -203,7 +203,7 @@ export default function AudioPlayer() {
         {offlineLabel}
       </button>
       <p className="sub -mt-2 px-1 text-[12.5px]">
-        De stem is met AI gegenereerd en is geen menselijke opname. Bewaar de oefening vooraf als je zonder internet wilt luisteren.
+        De stem is met AI gegenereerd; het is geen opname van een echt mens. Bewaar de oefening vooraf als je zonder internet wilt luisteren.
       </p>
 
       {!state.supported && (

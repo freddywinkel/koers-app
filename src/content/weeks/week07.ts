@@ -34,7 +34,7 @@ export const week07: Week = {
       exercise: {
         title: 'Kijken naar je dag',
         steps: [
-          { n: 1, title: 'Kom rustig aan', text: 'Ga rustig zitten. Neem één rustige ademhaling. Je hoeft nergens anders heen.', seconds: 20 },
+          { n: 1, title: 'Kom tot rust', text: 'Ga rustig zitten. Haal één keer rustig adem. Je hoeft nergens anders heen.', seconds: 20 },
           { n: 2, title: 'Denk aan een mooi moment', text: 'Denk aan een moment deze week dat goed voelde. Klein mag: koffie in de zon, een praatje, even rust.', seconds: 60 },
           { n: 3, title: 'Wat maakte het mooi?', text: 'Vraag je af: wat zat er in dat moment dat jou belangrijk is? Samen zijn? Rust? Zorgen voor iemand?', seconds: 60 },
           { n: 4, title: 'Schrijf één woord op', text: 'Schrijf één woord op dat dat belangrijke ding benoemt. Dat kan al een waarde van jou zijn.', seconds: 45 }
@@ -57,7 +57,7 @@ export const week07: Week = {
         'Een doel kun je afvinken. "Ik bel mijn zus deze week." Klaar is klaar.',
         'Een waarde vink je nooit af. "Een zorgzame zus zijn" is nooit klaar. Je kunt er elke dag weer voor kiezen.',
         'Waarden zijn een richting, geen eindpunt. Dat is goed nieuws. Je hoeft nergens te komen. Je kunt vandaag al in de richting lopen.',
-        'Soms leven we mee met doelen van anderen. "Dat hoort zo." Deze les helpt je kijken: is dit echt van mij?'
+        'Soms gaan we mee in de doelen van anderen. "Dat hoort zo." Deze les helpt je kijken: is dit echt van mij?'
       ],
       metaphorCard: {
         title: 'De poolster',
@@ -68,11 +68,11 @@ export const week07: Week = {
         title: 'Van waarde naar doel',
         steps: [
           { n: 1, title: 'Kies een waarde', text: 'Pak je woord van les 1 erbij. Of kies iets als: gezondheid, vriendschap, rust.', seconds: 30 },
-          { n: 2, title: 'Maak er een doel bij', text: 'Bedenk iets kleins dat bij die waarde past. Iets dat je kunt afvinken. Bijvoorbeeld: vanavond twintig minuten wandelen.', seconds: 60 },
-          { n: 3, title: 'Zie het verschil', text: 'Kijk naar je lijstje. Het doel is de stap. De waarde is de richting. Je voelt het verschil.', seconds: 45 }
+          { n: 2, title: 'Maak er een doel van', text: 'Bedenk iets kleins dat bij die waarde past. Iets dat je kunt afvinken. Bijvoorbeeld: vanavond twintig minuten wandelen.', seconds: 60 },
+          { n: 3, title: 'Zie het verschil', text: 'Kijk naar je waarde en je doel. Het doel is de stap. De waarde is de richting. Je voelt het verschil.', seconds: 45 }
         ]
       },
-      reflection: 'Voelt iets als "moeten"? Dan is het misschien een doel van een ander. Jouw eigen waarden voelen van binnenuit goed, ook als het spannend is.',
+      reflection: 'Voelt iets als "moeten"? Dan is het misschien een doel van een ander. Jouw eigen waarden voelen van binnen goed, ook als het spannend is.',
       assignment: 'Schrijf bij één waarde twee kleine doelen. Ze mogen heel klein zijn. Klein is juist goed.',
       relatedSkillIds: [],
       flashcardIds: ['w07-l02-f1', 'w07-l02-f2']
@@ -95,9 +95,9 @@ export const week07: Week = {
         steps: [
           { n: 1, title: 'Kom rustig aan', text: 'Ga rustig zitten. Voel je voeten op de grond. Adem een paar keer rustig in en uit.', seconds: 40 },
           { n: 2, title: 'Je tachtigste verjaardag', text: 'Stel je voor: je bent tachtig. Er is een feestje. Mensen die jij lief vindt, zijn er.', seconds: 45 },
-          { n: 3, title: 'Wat zeggen ze?', text: 'Iemand houdt een korte toespraak over jou. Wat wil jij dat die persoon zegt? Waar stond jij voor in je leven?', seconds: 90 },
+          { n: 3, title: 'Wat zeggen ze?', text: 'Iemand houdt een kort praatje over jou. Wat wil jij dat die persoon zegt? Waar stond jij voor in je leven?', seconds: 90 },
           { n: 4, title: 'Kies je woorden', text: 'Schrijf drie dingen op die je hoorde. Bijvoorbeeld: liefdevol, eerlijk, moedig, betrouwbaar. Dat zijn jouw waarden.', seconds: 60 },
-          { n: 5, title: 'Kijk waar je staat', text: 'Denk aan vier delen van je leven: werk, familie en vrienden, gezondheid, vrije tijd. Bij welk deel leef je je waarde al? Bij welk deel nog weinig?', seconds: 75 },
+          { n: 5, title: 'Kijk waar je staat', text: 'Denk aan vier delen van je leven: werk, familie en vrienden, gezondheid, vrije tijd. Bij welk deel leef je je waarden al? Bij welk deel nog weinig?', seconds: 75 },
           { n: 6, title: 'Rond zachtjes af', text: 'Kijk om je heen. Wat je ook vond: je keek serieus naar je leven. Dat is knap.', seconds: 20 }
         ]
       },
@@ -163,7 +163,7 @@ export const week07Flashcards: Flashcard[] = [
   {
     id: 'w07-l03-f1',
     lessonId: 'w07-l03',
-    front: 'Hoe werkt de tachtigste-verjaardag-oefening?',
+    front: 'Hoe werkt de oefening met je tachtigste verjaardag?',
     back: 'Je stelt je voor dat je tachtig bent en dat iemand over jou spreekt. Wat je die persoon hoort zeggen, laat zien wat jij echt belangrijk vindt.'
   },
   {

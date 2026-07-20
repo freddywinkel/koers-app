@@ -28,7 +28,7 @@ const sampleFlashcards: Flashcard[] = [
     lessonId: 'w02-l03',
     skillId: 'ademanker',
     front: 'Wat doe je als je aandacht afdwaalt tijdens het ademen?',
-    back: 'Helemaal niets bijzonders — en dát is de oefening. Merk zachtjes op dat je afdwaalde en breng je aandacht terug naar je adem. Zonder jezelf af te raffelen.'
+    back: 'Helemaal niets bijzonders — en dát is de oefening. Merk zachtjes op dat je afdwaalde en breng je aandacht terug naar je adem. Zonder streng voor jezelf te zijn.'
   },
   {
     id: 'fc-w02-l03-b',
