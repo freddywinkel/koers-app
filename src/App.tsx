@@ -10,6 +10,9 @@ import Oefenen from './screens/Oefenen';
 import AudioList from './screens/AudioList';
 import AudioPlayer from './screens/AudioPlayer';
 import HumanVoices from './screens/HumanVoices';
+import Vaardigheden from './screens/Vaardigheden';
+import OefeningenLijst from './screens/OefeningenLijst';
+import FlashcardsOverzicht from './screens/FlashcardsOverzicht';
 import FlashcardDeck from './components/FlashcardDeck';
 import Profiel from './screens/Profiel';
 import Crisis from './screens/Crisis';
@@ -69,6 +72,9 @@ export default function App() {
             <Route path="/oefenen/audio" element={<AudioList />} />
             <Route path="/oefenen/audio/:id" element={<AudioPlayer />} />
             <Route path="/oefenen/echte-stemmen" element={<HumanVoices />} />
+            <Route path="/oefenen/vaardigheden" element={<Vaardigheden />} />
+            <Route path="/oefenen/oefeningen" element={<OefeningenLijst />} />
+            <Route path="/oefenen/flashcards-overzicht" element={<FlashcardsOverzicht />} />
             <Route path="/oefenen/flashcards" element={<FlashcardDeck />} />
             <Route path="/profiel" element={<Profiel />} />
             <Route path="/steun" element={<Crisis />} />
