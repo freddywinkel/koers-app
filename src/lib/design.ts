@@ -45,6 +45,13 @@ export function useApplyDesign(): void {
     const design = DESIGNS.find((option) => option.value === value) ?? DESIGNS[0];
     const root = document.documentElement;
     root.dataset.theme = design.value;
+    if (row?.value) {
+      try {
+        localStorage.setItem('koers-design', design.value);
+      } catch {
+        // De ontwerpwissel werkt ook zonder deze snelle opstartcache.
+      }
+    }
 
     const syncThemeColor = () => {
       const content = root.classList.contains('dark') ? design.themeColor.dark : design.themeColor.light;

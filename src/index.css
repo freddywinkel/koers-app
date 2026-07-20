@@ -71,6 +71,7 @@
 }
 
 html {
+  background-color: var(--mist);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
