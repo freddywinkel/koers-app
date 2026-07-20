@@ -149,8 +149,11 @@ export type ThemeSetting = 'systeem' | 'licht' | 'donker';
 
 /** Past de dark-class toe op <html> op basis van instelling 'theme'. Eén keer aanroepen in App. */
 export function useApplyTheme(): void {
-  const row = useLiveQuery(() => db.settings.get('theme'), []);
+  // null is uitsluitend de laadstatus. Daardoor blijft de in index.html al
+  // toegepaste opstartkleur staan totdat IndexedDB echt antwoord heeft.
+  const row = useLiveQuery(() => db.settings.get('theme'), [], null);
   useEffect(() => {
+    if (row === null) return;
     const value = (row?.value ?? 'systeem') as ThemeSetting;
     if (row?.value) {
       try {
@@ -168,7 +171,7 @@ export function useApplyTheme(): void {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     mq.addEventListener('change', apply);
     return () => mq.removeEventListener('change', apply);
-  }, [row?.value]);
+  }, [row]);
 }
 
 /* ------------------------------ Databeheer ------------------------------- */

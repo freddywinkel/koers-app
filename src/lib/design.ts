@@ -38,9 +38,12 @@ export const DESIGNS: DesignOption[] = [
 
 /** Past het opgeslagen ontwerp live toe en synchroniseert de PWA-statusbalk. */
 export function useApplyDesign(): void {
-  const row = useLiveQuery(() => db.settings.get('design'), []);
+  // null is uitsluitend de laadstatus. De vroege kleur uit index.html mag
+  // niet met een standaardontwerp worden overschreven terwijl IndexedDB laadt.
+  const row = useLiveQuery(() => db.settings.get('design'), [], null);
 
   useEffect(() => {
+    if (row === null) return;
     const value = (row?.value ?? 'noordzeemist') as DesignSetting;
     const design = DESIGNS.find((option) => option.value === value) ?? DESIGNS[0];
     const root = document.documentElement;
@@ -72,5 +75,5 @@ export function useApplyDesign(): void {
     const observer = new MutationObserver(syncThemeColor);
     observer.observe(root, { attributes: true, attributeFilter: ['class'] });
     return () => observer.disconnect();
-  }, [row?.value]);
+  }, [row]);
 }
