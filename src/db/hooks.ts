@@ -133,6 +133,13 @@ export function useSettings() {
     ready: rows !== undefined,
     get: (key: string, fallback = ''): string => map.get(key) ?? fallback,
     set: async (key: string, value: string): Promise<void> => {
+      if (key === 'theme' || key === 'design') {
+        try {
+          localStorage.setItem(`koers-${key}`, value);
+        } catch {
+          // IndexedDB blijft de bron van waarheid als localStorage niet mag.
+        }
+      }
       await db.settings.put({ key, value });
     }
   };
@@ -145,6 +152,13 @@ export function useApplyTheme(): void {
   const row = useLiveQuery(() => db.settings.get('theme'), []);
   useEffect(() => {
     const value = (row?.value ?? 'systeem') as ThemeSetting;
+    if (row?.value) {
+      try {
+        localStorage.setItem('koers-theme', value);
+      } catch {
+        // De themawissel werkt ook zonder deze snelle opstartcache.
+      }
+    }
     const apply = () => {
       const dark = value === 'donker' || (value === 'systeem' && window.matchMedia('(prefers-color-scheme: dark)').matches);
       document.documentElement.classList.toggle('dark', dark);
@@ -171,4 +185,10 @@ export async function exportAllData(): Promise<string> {
 /** Wis álle lokale gegevens (na bevestiging op Profiel). */
 export async function clearAllData(): Promise<void> {
   await Promise.all(db.tables.map((t) => t.clear()));
+  try {
+    localStorage.removeItem('koers-theme');
+    localStorage.removeItem('koers-design');
+  } catch {
+    // Geen extra actie nodig als localStorage niet beschikbaar is.
+  }
 }
