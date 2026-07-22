@@ -63,6 +63,10 @@ test('de expliciete productcorrecties blijven zichtbaar', async () => {
   assert.match(today, /disabled=!panCheckinUnlocked|disabled=\{!panCheckinUnlocked\}/);
   assert.match(support, />Steunmiddelen</);
   assert.doesNotMatch(support, />Je gereedschappen</);
+  assert.ok(
+    support.indexOf('<SafetyContacts />') > support.indexOf('{crisisRaw.steunendeAfsluiting}'),
+    'Directe hulp hoort helemaal onderaan de Steun-pagina te staan'
+  );
   assert.doesNotMatch(week2, /\bdwalt\b|\bdwalde\b/i);
   assert.match(week2, /\bdwaalt\b/);
   assert.match(week2, /\bdwaalde\b/);
