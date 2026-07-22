@@ -11,8 +11,8 @@ import {
 /**
  * Steun (/steun) — kalm, compleet oppervlak voor moeilijke momenten.
  * Volgorde: eerst gronden (5-4-3-2-1), daarna een kleine aanvullende
- * methode kiezen en tenslotte doorverwijzen naar de eigen steunmiddelen
- * (Signaleringsplan en G-Schema) op eigen pagina's.
+ * methode kiezen, doorverwijzen naar de eigen steunmiddelen en helemaal
+ * onderaan de directe hulpcontacten tonen.
  */
 
 /* ------------------------- Defensieve contentlaag ------------------------- */
@@ -129,8 +129,6 @@ export default function Crisis() {
         <p className="sub mt-1.5">{INTRO}</p>
       </header>
 
-      <SafetyContacts />
-
       {/* Gronding: interactieve 5-4-3-2-1 */}
       <section className="card !bg-dune" aria-label="Kom eerst even tot rust">
         <h2 className="card-title">Kom eerst even tot rust</h2>
@@ -149,6 +147,8 @@ export default function Crisis() {
       <p className="px-1 pb-2 text-center text-[13px] font-semibold leading-body text-ink-soft">
         {crisisRaw.steunendeAfsluiting} 🤍
       </p>
+
+      <SafetyContacts />
     </div>
   );
 }
