@@ -22,6 +22,7 @@ import { PinLockScreen, PinSetup } from '../components/PinLock';
 import { isIOS, isStandalone, promptInstall, useCanInstall } from '../lib/install';
 import VersionCard from '../components/VersionCard';
 import DesignPicker from '../components/DesignPicker';
+import { getLanguage, storeLanguage, type AppLanguage } from '../i18n';
 
 type ThemeChoice = 'systeem' | 'licht' | 'donker';
 type StorageStatus = 'checking' | 'persistent' | 'best-effort' | 'unsupported';
@@ -43,7 +44,15 @@ export default function Profiel() {
   const [deleted, setDeleted] = useState(false);
 
   const theme = (get('theme', 'systeem') || 'systeem') as ThemeChoice;
+  const language = (get('language', getLanguage()) || 'nl') as AppLanguage;
   const totalLessons = allLessons().length;
+
+  async function handleLanguageChange(nextLanguage: AppLanguage) {
+    if (nextLanguage === language) return;
+    storeLanguage(nextLanguage);
+    await set('language', nextLanguage);
+    window.location.reload();
+  }
 
   /* ---------------------------- Herinneringen ---------------------------- */
   const [permission, setPermission] = useState<PermissionState>(() => getPermissionState());
@@ -233,7 +242,37 @@ export default function Profiel() {
       <section className="card" aria-label="Instellingen">
         <h2 className="card-title">Instellingen</h2>
 
-        <p className="sub mt-3">Uiterlijk</p>
+        <p className="sub mt-3">Taal</p>
+        <fieldset className="mt-1.5 grid grid-cols-2 gap-2" aria-label="Taal van de app">
+          <legend className="sr-only">Taal</legend>
+          {([
+            { value: 'nl', label: 'Nederlands' },
+            { value: 'en', label: 'English' }
+          ] as const).map((option) => {
+            const active = language === option.value;
+            return (
+              <label
+                key={option.value}
+                className={[
+                  'choice-option flex min-h-[48px] cursor-pointer items-center justify-center rounded-2xl border text-sm font-extrabold',
+                  active ? 'border-euca-deep bg-eucatint text-euca-deep' : 'border-line bg-dune text-ink'
+                ].join(' ')}
+              >
+                <input
+                  className="sr-only"
+                  type="radio"
+                  name="language"
+                  value={option.value}
+                  checked={active}
+                  onChange={() => void handleLanguageChange(option.value)}
+                />
+                {option.label}
+              </label>
+            );
+          })}
+        </fieldset>
+
+        <p className="sub mt-4">Uiterlijk</p>
         <fieldset className="mt-1.5 flex min-w-0 flex-wrap gap-2">
           <legend className="sr-only">Kleurmodus</legend>
           {THEMES.map((t) => {

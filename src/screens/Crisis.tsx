@@ -208,7 +208,7 @@ function GroundingStepper({ steps }: { steps: GroundingStep[] }) {
           ))}
         </div>
         <span className="ml-auto text-[12px] font-bold text-ink-soft">
-          Stap {stepIdx + 1} van {steps.length}
+          {`Stap ${stepIdx + 1} van ${steps.length}`}
         </span>
       </div>
 
@@ -228,7 +228,7 @@ function GroundingStepper({ steps }: { steps: GroundingStep[] }) {
           className="btn-primary mt-4"
           onClick={() => setRemaining((r) => Math.max(0, r - 1))}
         >
-          Ik heb er {remaining === step.count ? 'een' : 'nog een'} benoemd
+          {remaining === step.count ? 'Ik heb er een benoemd' : 'Ik heb er nog een benoemd'}
         </button>
       ) : (
         <button type="button" className="btn-primary mt-4" onClick={goNext}>
@@ -345,7 +345,7 @@ function SteunmiddelenSection() {
           </span>
           {plan && filled !== undefined && (
             <span className="chip flex-none">
-              {filled} van {SIGNALERINGSPLAN_SECTIONS.length}
+              {`${filled} van ${SIGNALERINGSPLAN_SECTIONS.length}`}
             </span>
           )}
           <svg

@@ -1,6 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, type SignaleringsplanRow } from '../db/db';
 import { EHP_SECTIONS, type EhpFieldDef, type EhpSectionDef } from './ehp';
+import { translate } from '../i18n';
 
 /**
  * Signaleringsplan — datahooks boven op `db.signaleringsplannen`
@@ -83,7 +84,8 @@ export async function startNieuwSignaleringsplan(): Promise<number> {
  */
 export function planVeldContent(def: EhpFieldDef, fields: Record<string, string> | undefined): string {
   const saved = fields?.[def.key];
-  return saved !== undefined ? saved : (def.prefill ?? '');
+  if (saved !== undefined) return saved;
+  return def.prefill?.split('\n').map(translate).join('\n') ?? '';
 }
 
 /** Hoeveel secties hebben minstens één veld met zichtbare inhoud? */
@@ -95,5 +97,6 @@ export function countFilledPlanSections(fields: Record<string, string> | undefin
 
 /** Datumnotatie voor records, bv. "12 mei 2026". */
 export function formatRecordDate(ts: number): string {
-  return new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(ts));
+  const locale = localStorage.getItem('koers-language') === 'en' ? 'en-GB' : 'nl-NL';
+  return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(ts));
 }

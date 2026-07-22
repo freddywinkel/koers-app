@@ -4,22 +4,33 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ffmpegPath from 'ffmpeg-static';
 import { audioSessions } from '../src/content/audio.ts';
+import { ENGLISH_TRANSLATIONS } from '../src/i18n.generated.ts';
+import { AUDIO_ENGLISH_OVERRIDES } from '../src/content/audioEnglish.ts';
 
 const MODEL = process.env.OPENAI_TTS_MODEL ?? 'gpt-4o-mini-tts';
 const VOICE = process.env.OPENAI_TTS_VOICE ?? 'marin';
 const API_KEY = process.env.OPENAI_API_KEY;
 const FORCE = process.argv.includes('--force');
+const LANGUAGE = process.argv.includes('--language=en') ? 'en' : 'nl';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const OUTPUT_DIR = path.join(ROOT, 'public', 'audio');
-const WORK_DIR = path.join(ROOT, '.audio-work');
+const OUTPUT_DIR = path.join(ROOT, 'public', 'audio', ...(LANGUAGE === 'en' ? ['en'] : []));
+const WORK_DIR = path.join(ROOT, '.audio-work', LANGUAGE);
 
-const INSTRUCTIONS = [
-  'Spreek helder Nederlands met een natuurlijk Nederlands accent, als een ervaren mindfulnessbegeleider.',
-  'Klink warm, rustig, gegrond en menselijk. Spreek langzaam, ongeveer 105 woorden per minuut.',
-  'Gebruik zachte intonatie en lage energie, zonder monotoon te worden.',
-  'Klink niet als een reclame-, podcast- of nieuwslezer. Fluister niet.',
-  'Laat iedere zin rustig landen. Voeg niets toe en verander de aangeleverde tekst niet.'
-].join(' ');
+const INSTRUCTIONS = LANGUAGE === 'en'
+  ? [
+      'Speak clear, natural British English as an experienced mindfulness guide.',
+      'Sound warm, calm, grounded and human. Speak slowly, at about 105 words per minute.',
+      'Use gentle intonation and low energy without becoming monotonous.',
+      'Do not sound like an advertisement, podcast or newsreader. Do not whisper.',
+      'Let every sentence land calmly. Do not add anything or change the supplied text.'
+    ].join(' ')
+  : [
+      'Spreek helder Nederlands met een natuurlijk Nederlands accent, als een ervaren mindfulnessbegeleider.',
+      'Klink warm, rustig, gegrond en menselijk. Spreek langzaam, ongeveer 105 woorden per minuut.',
+      'Gebruik zachte intonatie en lage energie, zonder monotoon te worden.',
+      'Klink niet als een reclame-, podcast- of nieuwslezer. Fluister niet.',
+      'Laat iedere zin rustig landen. Voeg niets toe en verander de aangeleverde tekst niet.'
+    ].join(' ');
 
 if (!API_KEY) {
   throw new Error('OPENAI_API_KEY ontbreekt. Stel de variabele lokaal in en voer npm run audio:generate uit.');
@@ -136,17 +147,34 @@ async function generateSession(session: (typeof audioSessions)[number]): Promise
   console.log(`Klaar: ${path.relative(ROOT, destination)}`);
 }
 
+function translateSession(session: (typeof audioSessions)[number]): (typeof audioSessions)[number] {
+  if (LANGUAGE !== 'en') return session;
+  const translateRequired = (source: string): string => {
+    const translated = AUDIO_ENGLISH_OVERRIDES[source] ?? ENGLISH_TRANSLATIONS[source];
+    if (!translated || translated === source) {
+      throw new Error(`Engelse audiovertaling ontbreekt voor: ${source}`);
+    }
+    return translated;
+  };
+  return {
+    ...session,
+    title: translateRequired(session.title),
+    doel: translateRequired(session.doel),
+    segments: session.segments.map((segment) => ({ ...segment, text: translateRequired(segment.text) }))
+  };
+}
+
 await mkdir(OUTPUT_DIR, { recursive: true });
 await mkdir(WORK_DIR, { recursive: true });
 
 for (const session of audioSessions) {
-  await generateSession(session);
+  await generateSession(translateSession(session));
 }
 
 await writeFile(
   path.join(OUTPUT_DIR, 'generation.json'),
-  `${JSON.stringify({ model: MODEL, voice: VOICE, generatedAt: new Date().toISOString() }, null, 2)}\n`,
+  `${JSON.stringify({ language: LANGUAGE, model: MODEL, voice: VOICE, generatedAt: new Date().toISOString() }, null, 2)}\n`,
   'utf8'
 );
 await rm(WORK_DIR, { recursive: true, force: true });
-console.log(`Alle ${audioSessions.length} oefeningen zijn gegenereerd met stem ${VOICE}.`);
+console.log(`Alle ${audioSessions.length} ${LANGUAGE === 'en' ? 'Engelse' : 'Nederlandse'} oefeningen zijn gegenereerd met stem ${VOICE}.`);

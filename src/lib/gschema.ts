@@ -190,5 +190,6 @@ export async function clearGSchemaDraft(): Promise<void> {
 
 /** Datumnotatie voor records, bv. "12 mei 2026". */
 export function formatGSchemaDate(ts: number): string {
-  return new Intl.DateTimeFormat('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(ts));
+  const locale = localStorage.getItem('koers-language') === 'en' ? 'en-GB' : 'nl-NL';
+  return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(ts));
 }

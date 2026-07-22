@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import test from 'node:test';
 
 const projectRoot = new URL('../', import.meta.url);
@@ -88,4 +88,58 @@ test('een nieuwe pincode vergrendelt de huidige sessie niet tussentijds', async 
   const sessionIndex = pinLock.indexOf('markSessionUnlocked();', pinLock.indexOf('const pinHash = await hashPin(pin)'));
   const writeIndex = pinLock.indexOf('await set(PIN_HASH_KEY, pinHash);', sessionIndex);
   assert.ok(sessionIndex >= 0 && writeIndex > sessionIndex);
+});
+
+test('de volledige Engelse taalstand blijft offline en het profiel is duidelijk zichtbaar', async () => {
+  const i18n = await read('src/i18n.ts');
+  const translations = await read('src/i18n.generated.ts');
+  const profile = await read('src/screens/Profiel.tsx');
+  const today = await read('src/screens/Vandaag.tsx');
+  const hooks = await read('src/db/hooks.ts');
+  assert.match(i18n, /installLanguageRuntime/);
+  assert.match(i18n, /'Bel nu 112': 'Call 112 now'/);
+  assert.match(translations, /"Welkom bij Koers": "Welcome to Koers"/);
+  assert.match(translations, /"Taal": "Language"/);
+  assert.match(profile, /value: 'nl', label: 'Nederlands'/);
+  assert.match(profile, /value: 'en', label: 'English'/);
+  assert.match(today, /min-h-12/);
+  assert.match(today, />Profiel</);
+  assert.match(hooks, /key === 'language'/);
+  assert.match(hooks, /'theme', 'design', 'language'/);
+});
+
+test('Engelse geleide audio gebruikt eigen opnames en dezelfde offline cache', async () => {
+  const player = await read('src/lib/audioPlayer.ts');
+  const generator = await read('scripts/generate-guided-audio.ts');
+  const metadata = JSON.parse(await read('public/audio/en/generation.json'));
+  assert.match(player, /audio\/en\/\$\{session\.id\}\.mp3/);
+  assert.match(player, /getLanguage\(\) === 'en'/);
+  assert.match(generator, /natural British English/);
+  assert.match(generator, /AUDIO_ENGLISH_OVERRIDES/);
+  assert.equal(metadata.language, 'en');
+  assert.equal(metadata.voice, 'marin');
+  for (const id of [
+    'adem-anker',
+    'bodyscan',
+    'bladeren-op-de-stroom',
+    'toestaan-van-emoties',
+    'veilige-plek',
+    'compassievolle-pauze'
+  ]) {
+    const file = await stat(new URL(`public/audio/en/${id}.mp3`, projectRoot));
+    assert.ok(file.size > 1_000_000, `${id}.mp3 is onverwacht klein`);
+  }
+});
+
+test('Engelse echte stemmen gebruiken de sessies van Victoria Mlynko', async () => {
+  const voices = await read('src/content/humanVoices.ts');
+  const screen = await read('src/screens/HumanVoices.tsx');
+  assert.match(voices, /englishHumanVoiceSessions/);
+  assert.match(voices, /Victoria Mlynko/);
+  assert.match(voices, /3XYCcjeJdrSdfFNf1UD9CU/);
+  assert.match(voices, /73UBuaeqs2d0NOV2woYTcF/);
+  assert.match(voices, /5KbmyZAgrKegLsFqr025JH/);
+  assert.match(voices, /1kFsyh4n9Po3kIbIwH093O/);
+  assert.match(screen, /getLanguage\(\) === 'en'/);
+  assert.match(screen, /Meditations for Mental Health/);
 });

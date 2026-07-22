@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { getLocale } from '../i18n';
 
-const buildLabel = new Date(__BUILD_TIME__).toLocaleString('nl-NL', {
+const buildLabel = new Date(__BUILD_TIME__).toLocaleString(getLocale(), {
   day: 'numeric',
   month: 'long',
   year: 'numeric',

@@ -18,6 +18,8 @@
  * Instelling: tijd staat in settings key 'herinnering-tijd' ('19:00').
  */
 
+import { translate } from '../i18n';
+
 export const REMINDER_TITLE = 'Koers';
 export const REMINDER_BODY = 'Tijd voor je dagelijkse check-in';
 export const REMINDER_SETTINGS_EVENT = 'koers:reminder-settings-changed';
@@ -97,7 +99,7 @@ async function showReminder(): Promise<void> {
   const appUrl = new URL('#/', appBase).href;
   const iconUrl = new URL('icons/icon-192.png', appBase).href;
   const options: NotificationOptions = {
-    body: REMINDER_BODY,
+    body: translate(REMINDER_BODY),
     icon: iconUrl,
     badge: iconUrl,
     data: { url: appUrl },
