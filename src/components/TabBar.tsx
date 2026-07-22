@@ -72,7 +72,7 @@ export default function TabBar() {
   const { pathname } = useLocation();
   return (
     <nav
-      className="grid min-h-[76px] grid-cols-4 border-t border-line bg-sand px-2.5 pt-2"
+      className="grid min-h-[76px] grid-cols-4 border-t border-line bg-sand px-2.5 pt-2 md:px-12"
       style={{ paddingBottom: 'max(15px, env(safe-area-inset-bottom))' }}
       aria-label="Hoofdnavigatie"
     >

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="Koers — een rustige cursus van 12 weken voor meer grip op je gevoelens." />
+    <meta name="color-scheme" content="light dark" />
     <meta id="koers-theme-color" name="theme-color" content="#F2F4F1" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,6 +34,7 @@
           // Opslag kan in een afgeschermde browsercontext geweigerd worden.
         }
         const dark = mode === 'donker' || (mode === 'systeem' && matchMedia('(prefers-color-scheme: dark)').matches);
+        root.style.colorScheme = dark ? 'dark' : 'light';
         root.classList.toggle('dark', dark);
         root.dataset.theme = design;
         document.getElementById('koers-theme-color').content = colors[design][dark ? 'dark' : 'light'];
