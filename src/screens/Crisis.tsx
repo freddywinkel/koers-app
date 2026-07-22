@@ -28,6 +28,7 @@ interface GroundingStep {
   count: number;
   label: string;
   hint: string;
+  doneLabel: string;
 }
 
 const FALLBACK_TITLE = 'Je hoeft dit niet alleen te dragen';
@@ -78,11 +79,36 @@ const CALMING_METHODS: CalmingMethod[] = [
 ];
 
 const FALLBACK_GROUNDING: GroundingStep[] = [
-  { count: 5, label: 'dingen die je kunt zien', hint: 'Kijk langzaam om je heen. Benoem ze één voor één in je hoofd.' },
-  { count: 4, label: 'dingen die je kunt voelen', hint: 'Je voeten op de grond, de stof van je kleding, de temperatuur van de lucht.' },
-  { count: 3, label: 'dingen die je kunt horen', hint: 'Dichtbij of ver weg. Je hoeft ze niet mooi te vinden.' },
-  { count: 2, label: 'dingen die je kunt ruiken', hint: 'Adem rustig in door je neus. Een klein beetje ruiken is ook goed.' },
-  { count: 1, label: 'ding dat je kunt proeven', hint: 'Neem een slokje water, of merk de smaak in je mond op.' }
+  {
+    count: 5,
+    label: 'dingen die je kunt zien',
+    hint: 'Kijk langzaam om je heen. Benoem ze één voor één in je hoofd.',
+    doneLabel: 'Ik heb 5 dingen gezien'
+  },
+  {
+    count: 4,
+    label: 'dingen die je kunt voelen',
+    hint: 'Je voeten op de grond, de stof van je kleding, de temperatuur van de lucht.',
+    doneLabel: 'Ik heb 4 dingen gevoeld'
+  },
+  {
+    count: 3,
+    label: 'dingen die je kunt horen',
+    hint: 'Dichtbij of ver weg. Je hoeft ze niet mooi te vinden.',
+    doneLabel: 'Ik heb 3 dingen gehoord'
+  },
+  {
+    count: 2,
+    label: 'dingen die je kunt ruiken',
+    hint: 'Adem rustig in door je neus. Een klein beetje ruiken is ook goed.',
+    doneLabel: 'Ik heb 2 dingen geroken'
+  },
+  {
+    count: 1,
+    label: 'ding dat je kunt proeven',
+    hint: 'Neem een slokje water, of merk de smaak in je mond op.',
+    doneLabel: 'Ik heb 1 ding geproefd'
+  }
 ];
 
 const cm = crisisRaw as unknown as {
@@ -107,7 +133,12 @@ function asGrounding(value: unknown): GroundingStep[] | null {
     const count = typeof o.count === 'number' && o.count > 0 ? Math.round(o.count) : NaN;
     const label = asText(o.label ?? o.sense ?? o.text, '');
     if (!Number.isFinite(count) || !label) continue;
-    out.push({ count, label, hint: asText(o.hint ?? o.description, '') });
+    out.push({
+      count,
+      label,
+      hint: asText(o.hint ?? o.description, ''),
+      doneLabel: asText(o.doneLabel, `Ik heb ${count} benoemd`)
+    });
   }
   return out.length > 0 ? out : null;
 }
@@ -157,7 +188,6 @@ export default function Crisis() {
 
 function GroundingStepper({ steps }: { steps: GroundingStep[] }) {
   const [stepIdx, setStepIdx] = useState(0);
-  const [remaining, setRemaining] = useState(steps[0].count);
   const [finished, setFinished] = useState(false);
 
   const step = steps[Math.min(stepIdx, steps.length - 1)];
@@ -165,7 +195,6 @@ function GroundingStepper({ steps }: { steps: GroundingStep[] }) {
 
   function restart() {
     setStepIdx(0);
-    setRemaining(steps[0].count);
     setFinished(false);
   }
 
@@ -174,7 +203,6 @@ function GroundingStepper({ steps }: { steps: GroundingStep[] }) {
       setFinished(true);
     } else {
       setStepIdx(stepIdx + 1);
-      setRemaining(steps[stepIdx + 1].count);
     }
   }
 
@@ -214,27 +242,17 @@ function GroundingStepper({ steps }: { steps: GroundingStep[] }) {
 
       {/* Huidige stap */}
       <p className="mt-4 text-center font-display text-[44px] font-semibold leading-none text-euca-deep">
-        {remaining}
+        {step.count}
       </p>
       <p className="mt-1.5 text-center text-[15.5px] font-bold text-ink">
         {step.label}
       </p>
       {step.hint && <p className="sub mt-1 text-center">{step.hint}</p>}
 
-      {/* Acties — tikken telt af, overslaan mag altijd */}
-      {remaining > 0 ? (
-        <button
-          type="button"
-          className="btn-primary mt-4"
-          onClick={() => setRemaining((r) => Math.max(0, r - 1))}
-        >
-          {remaining === step.count ? 'Ik heb er een benoemd' : 'Ik heb er nog een benoemd'}
-        </button>
-      ) : (
-        <button type="button" className="btn-primary mt-4" onClick={goNext}>
-          {isLast ? 'Afronden' : 'Volgende stap'}
-        </button>
-      )}
+      {/* Eén bevestiging rondt de hele zintuigstap af en gaat meteen verder. */}
+      <button type="button" className="btn-primary mt-4" onClick={goNext}>
+        {step.doneLabel}
+      </button>
       <div className="mt-1 grid grid-cols-2 gap-2">
         <button
           type="button"

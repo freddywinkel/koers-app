@@ -24,7 +24,7 @@ export default function PanSelector({ value, onChange, disabled = false }: Props
             <label
               key={pan}
               className={[
-                'choice-option flex min-h-[88px] cursor-pointer flex-col items-center justify-center gap-1 rounded-2xl border-[1.5px] px-0 pb-2 pt-2.5 transition-all has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-45',
+                'choice-option flex min-h-[96px] cursor-pointer flex-col items-center justify-start gap-1 rounded-2xl border-[1.5px] px-0 pb-2 pt-2.5 transition-all has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-45',
                 selected
                   ? '-translate-y-0.5 border-euca-deep bg-raised shadow-lift'
                   : 'border-transparent bg-pantile hover:-translate-y-px'
@@ -42,7 +42,7 @@ export default function PanSelector({ value, onChange, disabled = false }: Props
               <span className="text-[11px] font-extrabold tracking-[0.04em] text-ink-soft">PAN {pan}</span>
               <span
                 className={[
-                  'text-center text-[11px] font-extrabold leading-[1.15]',
+                  'flex min-h-[26px] items-start justify-center text-center text-[11px] font-extrabold leading-[1.15]',
                   selected ? 'text-euca-deep' : 'text-ink'
                 ].join(' ')}
               >
