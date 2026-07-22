@@ -73,6 +73,21 @@ test('de expliciete productcorrecties blijven zichtbaar', async () => {
   assert.match(week2, /\bdwaalde\b/);
 });
 
+test('5-4-3-2-1 gaat met een bevestiging per zintuig direct verder', async () => {
+  const support = await read('src/screens/Crisis.tsx');
+  assert.match(support, /doneLabel: 'Ik heb 5 dingen gezien'/);
+  assert.match(support, /doneLabel: 'Ik heb 1 ding geproefd'/);
+  assert.match(support, /\{step\.doneLabel\}/);
+  assert.match(support, /className="btn-primary mt-4" onClick=\{goNext\}/);
+  assert.doesNotMatch(support, /setRemaining|Ik heb er nog een benoemd/);
+});
+
+test('Engelse pannamen blijven op gelijke vaste rijen uitgelijnd', async () => {
+  const selector = await read('src/components/PanSelector.tsx');
+  assert.match(selector, /flex min-h-\[96px\].*flex-col items-center justify-start/);
+  assert.match(selector, /flex min-h-\[26px\] items-start justify-center text-center/);
+});
+
 test('deep-link terugknoppen blijven binnen de app', async () => {
   const helper = await read('src/lib/navigation.ts');
   const audioList = await read('src/screens/AudioList.tsx');
