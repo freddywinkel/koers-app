@@ -3,4 +3,5 @@ dist
 dev-dist
 *.local
 .audio-work
+scripts/.english-translations-cache.json
 Open AI API/

@@ -16,6 +16,7 @@ import { lessonCrumb } from '../content/helpers';
 import { getSkill } from '../content/skills';
 import type { PanValue } from '../content/types';
 import { useNextCourseLesson } from '../lib/courseHooks';
+import { getLocale } from '../i18n';
 
 function greeting(): string {
   const h = new Date().getHours();
@@ -26,7 +27,7 @@ function greeting(): string {
 }
 
 function dateLabel(): string {
-  const s = new Intl.DateTimeFormat('nl-NL', { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
+  const s = new Intl.DateTimeFormat(getLocale(), { weekday: 'long', day: 'numeric', month: 'long' }).format(new Date());
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
@@ -47,7 +48,7 @@ const RECOMMENDED_SKILL_IDS: Record<PanValue, string> = {
 };
 
 function checkinDateLabel(ts: number): string {
-  const label = new Intl.DateTimeFormat('nl-NL', { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(ts));
+  const label = new Intl.DateTimeFormat(getLocale(), { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(ts));
   return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
@@ -184,28 +185,28 @@ export default function Vandaag() {
         <Link
           to="/profiel"
           aria-label="Profiel openen"
-          className="grid h-10 w-10 flex-none place-items-center rounded-full border border-line bg-eucatint text-euca-deep"
+          className="flex min-h-12 flex-none items-center gap-2 rounded-2xl border border-euca-deep/25 bg-eucatint px-3.5 text-euca-deep shadow-sm transition-transform active:scale-[0.98]"
         >
-          {initialen ? (
-            <span className="text-[13px] font-extrabold" aria-hidden="true">
-              {initialen}
-            </span>
-          ) : (
-            <svg
-              width="21"
-              height="21"
-              viewBox="0 0 22 22"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <circle cx="11" cy="7.4" r="3.4" />
-              <path d="M4.6 18.6c.8-3.3 3.3-4.9 6.4-4.9s5.6 1.6 6.4 4.9" />
-            </svg>
-          )}
+          <span className="grid h-7 w-7 place-items-center rounded-full bg-sand/70" aria-hidden="true">
+            {initialen ? (
+              <span className="text-[12px] font-extrabold">{initialen}</span>
+            ) : (
+              <svg
+                width="19"
+                height="19"
+                viewBox="0 0 22 22"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="11" cy="7.4" r="3.4" />
+                <path d="M4.6 18.6c.8-3.3 3.3-4.9 6.4-4.9s5.6 1.6 6.4 4.9" />
+              </svg>
+            )}
+          </span>
+          <span className="text-sm font-extrabold">Profiel</span>
         </Link>
       </header>
 

@@ -1,6 +1,7 @@
 /** Koers — speler voor vooraf gegenereerde geleide oefeningen. */
 
 import type { AudioSession } from '../content/audio';
+import { getLanguage } from '../i18n';
 
 export type PlayerStatus = 'idle' | 'loading' | 'playing' | 'paused' | 'done' | 'error';
 
@@ -19,7 +20,8 @@ export function audioSupported(): boolean {
 }
 
 export function audioUrl(session: AudioSession): string {
-  return `${import.meta.env.BASE_URL}${session.audioSrc}`;
+  const source = getLanguage() === 'en' ? `audio/en/${session.id}.mp3` : session.audioSrc;
+  return `${import.meta.env.BASE_URL}${source}`;
 }
 
 export async function isAudioCached(session: AudioSession): Promise<boolean> {

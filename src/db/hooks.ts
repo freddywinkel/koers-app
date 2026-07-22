@@ -167,7 +167,7 @@ export function useSettings() {
       const appearanceChanged =
         (key === 'theme' && (map.get(key) ?? 'systeem') !== value) ||
         (key === 'design' && (map.get(key) ?? 'noordzeemist') !== value);
-      if (key === 'theme' || key === 'design') {
+      if (key === 'theme' || key === 'design' || key === 'language') {
         try {
           localStorage.setItem(`koers-${key}`, value);
         } catch {
@@ -369,6 +369,7 @@ function isSettingRow(value: unknown): value is SettingRow {
   if (typeof value.key !== 'string' || value.key.length === 0 || typeof value.value !== 'string') return false;
   if (value.key === 'theme') return ['systeem', 'licht', 'donker'].includes(value.value);
   if (value.key === 'design') return ['noordzeemist', 'zand-salie', 'terracotta-linnen'].includes(value.value);
+  if (value.key === 'language') return ['nl', 'en'].includes(value.value);
   if (value.key === 'herinnering-tijd') return isValidTime(value.value);
   return true;
 }
@@ -465,7 +466,7 @@ function validateBackup(json: string): ValidatedBackup {
 
 function syncAppearanceCache(settings: SettingRow[], mode: ImportMode): void {
   try {
-    for (const key of ['theme', 'design'] as const) {
+    for (const key of ['theme', 'design', 'language'] as const) {
       const row = settings.find((setting) => setting.key === key);
       if (row) localStorage.setItem(`koers-${key}`, row.value);
       else if (mode === 'replace') localStorage.removeItem(`koers-${key}`);
@@ -555,6 +556,7 @@ export async function clearAllData(): Promise<void> {
   try {
     localStorage.removeItem('koers-theme');
     localStorage.removeItem('koers-design');
+    localStorage.removeItem('koers-language');
     localStorage.removeItem('koers-reminder-last-fired');
     localStorage.removeItem('koers-concept-gschema-recovery');
   } catch {

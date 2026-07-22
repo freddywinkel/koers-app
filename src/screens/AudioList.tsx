@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { audioSessions } from '../content/audio';
 import { navigateBackOr } from '../lib/navigation';
+import { getLanguage } from '../i18n';
 
 /** Overzicht van alle geleide audio-oefeningen. */
 export default function AudioList() {
@@ -52,7 +53,9 @@ export default function AudioList() {
       </section>
 
       <p className="sub px-1 text-[12.5px]">
-        De oefeningen worden voorgelezen door een rustige, met AI gegenereerde stem.
+        {getLanguage() === 'en'
+          ? 'The exercises are narrated in English by a calm, AI-generated voice.'
+          : 'De oefeningen worden voorgelezen door een rustige, met AI gegenereerde stem.'}
       </p>
     </div>
   );

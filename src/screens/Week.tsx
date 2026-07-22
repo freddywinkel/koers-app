@@ -86,9 +86,7 @@ export default function Week() {
       <header className="px-1">
         <h1 className="hyphens-auto font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">{week.title}</h1>
         {week.tagline && <p className="sub mt-1.5">{week.tagline}</p>}
-        <p className="sub mt-1">
-          {doneCount} van {week.lessons.length} lessen afgerond
-        </p>
+        <p className="sub mt-1">{`${doneCount} van ${week.lessons.length} lessen afgerond`}</p>
       </header>
 
       {weekComplete && actuallyComplete && (
