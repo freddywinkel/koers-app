@@ -47,7 +47,7 @@ export const week04: Week = {
       },
       reflection: 'Een gedachte hoeft niet waar te zijn om luid te zijn. Je kunt hem horen zonder hem te gehoorzamen. Dat is het begin van defusie.',
       assignment: 'Let deze week op drie gedachten die vaak terugkomen. Schrijf ze op of onthoud ze. Je doet er nog niets mee. Alleen herkennen is genoeg.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['defusie-afstand-van-gedachten'],
       flashcardIds: ['w04-l01-f1', 'w04-l01-f2', 'w04-l01-f3']
     },
     {
@@ -75,7 +75,7 @@ export const week04: Week = {
       },
       reflection: 'Voelde het gek? Dat hoort erbij. Woorden zijn klanken tot wij er verhalen van maken. Daar zit je vrijheid.',
       assignment: 'Probeer deze week bij een lastige gedachte één van de drie snelle stappen: de zin ervoor, bedank je brein, of een naam voor het verhaal. Gaat de gedachte over een controleerbaar feit? Dan mag je hem ook als detective nakijken.',
-      relatedSkillIds: ['afstand-observeren'],
+      relatedSkillIds: ['defusie-afstand-van-gedachten'],
       flashcardIds: ['w04-l02-f1', 'w04-l02-f2', 'w04-l02-f3']
     },
     {
@@ -101,7 +101,7 @@ export const week04: Week = {
       },
       reflection: 'Het werkt ook als het maar af en toe lukt. Elke keer dat je een gedachte herkende, was je al aan het oefenen.',
       assignment: 'Benoem deze week elke dag drie gedachten met "ik merk de gedachte dat...". Bijvoorbeeld in de trein, onder de douche of voor het slapen.',
-      relatedSkillIds: ['afstand-observeren'],
+      relatedSkillIds: ['defusie-afstand-van-gedachten'],
       flashcardIds: ['w04-l03-f1', 'w04-l03-f2']
     },
     {
@@ -151,14 +151,14 @@ export const week04: Week = {
       exercise: {
         title: 'Terugblik in 3 stappen',
         steps: [
-          { n: 1, title: 'Herinner je een gedachte', text: 'Welke gedachte kwam deze week vaak terug? Hoe ging je ermee om?', seconds: 60 },
+          { n: 1, title: 'Denk terug aan een gedachte', text: 'Welke gedachte kwam deze week vaak terug? Hoe ging je ermee om?', seconds: 60 },
           { n: 2, title: 'Kies je favoriete stap', text: 'Wat hielp het meest: benoemen, bedanken, bladeren of de detective? Kies er één om te bewaren.', seconds: 60 },
           { n: 3, title: 'Rond af', text: 'Haal één keer rustig adem. Je hebt nu gereedschap uit twee weken: ruimte voor gevoelens, afstand van gedachten.', seconds: 20 }
         ]
       },
       reflection: 'Afstand nemen is geen trucje dat altijd meteen werkt. Het is een richting. Elke keer dat je een gedachte zag als gedachte, was je al onderweg.',
       assignment: 'Blijf komende week elke dag drie gedachten benoemen. Week 5 gaat over het deel van jou dat alles kan waarnemen. Rustig kijken helpt daarbij.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['defusie-afstand-van-gedachten'],
       flashcardIds: ['w04-l05-f1', 'w04-l05-f2']
     }
   ]

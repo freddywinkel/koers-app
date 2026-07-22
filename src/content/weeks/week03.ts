@@ -45,7 +45,7 @@ export const week03: Week = {
       },
       reflection: 'Misschien voelde het vreemd om iets toe te staan. Dat is logisch. Toestaan is een vaardigheid, geen knop. Elke keer oefenen telt.',
       assignment: 'Let deze week op één moment per dag waarop je tegen een gevoel vecht. Zeg dan zachtjes: dit mag er even zijn. Meer hoeft niet.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['acceptatie-toestaan'],
       flashcardIds: ['w03-l01-f1', 'w03-l01-f2', 'w03-l01-f3']
     },
     {
@@ -72,12 +72,12 @@ export const week03: Week = {
           { n: 1, title: 'Ga rustig zitten', text: 'Ga lekker zitten. Je ogen mogen open of dicht.', seconds: 15 },
           { n: 2, title: 'Denk aan een ijsbeer', text: 'Stel je een witte ijsbeer voor. Groot en zacht, in de sneeuw. Maak het beeld heel duidelijk.', seconds: 30 },
           { n: 3, title: 'Nu juist niet denken', text: 'Probeer één minuut níet aan de ijsbeer te denken. Helemaal niet. Let goed op wat er gebeurt.', seconds: 60 },
-          { n: 4, title: 'Kijk wat er gebeurde', text: 'Lukte het niet? Bijna niemand lukt dat. Een gedachte verbieden maakt hem juist sterker.', seconds: 30 }
+          { n: 4, title: 'Kijk wat er gebeurde', text: 'Lukte het niet? Dat lukt bijna niemand. Een gedachte verbieden maakt hem juist sterker.', seconds: 30 }
         ]
       },
       reflection: 'Deze test lukt bijna niemand. Dat is precies de les. Wegduwen en verbieden werken niet bij gedachten en gevoelens. Daarom oefenen we met toestaan.',
       assignment: 'Schrijf drie dingen op die jij doet om moeilijke gevoelens weg te houden. Wat kosten ze je op een dag? Alleen kijken, nog niets veranderen.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['acceptatie-toestaan'],
       flashcardIds: ['w03-l02-f1', 'w03-l02-f2', 'w03-l02-f3']
     },
     {
@@ -106,7 +106,7 @@ export const week03: Week = {
       },
       reflection: 'Misschien werd het gevoel zachter, misschien niet. Allebei is goed. Het doel was niet weghalen, maar ruimte maken. Dat je bleef kijken, is de oefening.',
       assignment: 'Oefen deze week elke dag drie minuten met een klein gevoel. Bijvoorbeeld lichte ergernis in de rij, of onrust voor het slapen.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['acceptatie-toestaan'],
       flashcardIds: ['w03-l03-f1', 'w03-l03-f2']
     },
     {
@@ -129,12 +129,12 @@ export const week03: Week = {
           { n: 2, title: 'Leg je hand erop', text: 'Voel waar het gevoel zit. Leg je hand op die plek. Je buik, je borst of je keel.', seconds: 30 },
           { n: 3, title: 'Zeg het zachtjes', text: 'Zeg in jezelf: dit gevoel mag er zijn. Of: ik hoef hier niet tegen te vechten. Kies woorden die bij jou passen.', seconds: 60 },
           { n: 4, title: 'Blijf even zo', text: 'Houd je hand op de plek. Adem rustig. Merk op wat er gebeurt als je niet vecht.', seconds: 90 },
-          { n: 5, title: 'Rond af', text: 'Haal je hand weg. Neem één diepe ademhaling. Kijk om je heen.', seconds: 15 }
+          { n: 5, title: 'Rond af', text: 'Haal je hand weg. Haal één keer rustig adem. Kijk om je heen.', seconds: 15 }
         ]
       },
       reflection: 'Toestemming geven kan in het begin raar voelen. Alsof je iets binnenlaat dat er niet hoort. Maar het gevoel was er al. Jij stopte alleen met duwen.',
       assignment: 'Zeg deze week bij elk moeilijk gevoel één keer: dit mag er zijn. Ook als het maar half lukt. Half is genoeg.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['acceptatie-toestaan'],
       flashcardIds: ['w03-l04-f1', 'w03-l04-f2']
     },
     {
@@ -154,12 +154,12 @@ export const week03: Week = {
           { n: 1, title: 'Denk terug aan de strijd', text: 'Denk aan een moment deze week waarop je tegen een gevoel vocht. Wat deed je toen? Wat kostte het je?', seconds: 60 },
           { n: 2, title: 'Denk terug aan de ruimte', text: 'Was er ook een moment dat het gevoel er mocht zijn? Hoe klein ook. Wat hielp je toen?', seconds: 60 },
           { n: 3, title: 'Kies één beeld', text: 'Drijfzand of touwtrekken: welk beeld blijft hangen? Dat beeld is je anker voor als het weer spannend wordt.', seconds: 45 },
-          { n: 4, title: 'Rond af', text: 'Neem een rustige ademhaling. Je hebt deze week iets nieuws geoefend. Dat telt.', seconds: 15 }
+          { n: 4, title: 'Rond af', text: 'Haal één keer rustig adem. Je hebt deze week iets nieuws geoefend. Dat telt.', seconds: 15 }
         ]
       },
       reflection: 'Minder vechten leer je door te oefenen, niet door het alleen te snappen. Liet je deze week één keer het touw vallen? Dan heb je de kern al te pakken.',
       assignment: 'Blijf komende week elke dag kort oefenen: twee minuten ruimte maken of toestemming geven. Week 4 gaat over gedachten. De rust van deze week neem je daarin mee.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['acceptatie-toestaan'],
       flashcardIds: ['w03-l05-f1', 'w03-l05-f2']
     }
   ]

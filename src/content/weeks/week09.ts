@@ -76,7 +76,7 @@ export const week09: Week = {
       },
       reflection: 'Alleen al merken dat je aan het piekeren was, is winst. Je hoeft nog niet alles op te lossen. Eerlijk kijken is genoeg.',
       assignment: 'Let deze week op je piekermomenten. Stel bij elke zorg de vraag: kan ik hier iets aan doen? Schrijf het antwoord er even bij.',
-      relatedSkillIds: ['bladeren-op-de-stroom', 'afstand-observeren'],
+      relatedSkillIds: ['problemen-aanpakken', 'acceptatie-toestaan'],
       flashcardIds: ['w09-l02-f1', 'w09-l02-f2', 'w09-l02-f3']
     },
     {
@@ -111,7 +111,7 @@ export const week09: Week = {
       },
       reflection: 'De eerste keer voelt dit plan misschien onwennig. Dat hoort bij iets nieuws. Elke keer dat je het doorloopt, wordt het pad begaanbaarder.',
       assignment: 'Gebruik het zevenstappenplan deze week bij één echt probleem. Klein is prima. Schrijf je stappen op, zodat je ze kunt teruglezen.',
-      relatedSkillIds: ['afstand-observeren'],
+      relatedSkillIds: ['problemen-aanpakken'],
       flashcardIds: ['w09-l03-f1', 'w09-l03-f2', 'w09-l03-f3']
     },
     {
@@ -136,7 +136,7 @@ export const week09: Week = {
       },
       reflection: 'Trots mag. Je hebt geoefend met een vaardigheid die veel mensen nooit leren. Kleine oefening, echte verandering.',
       assignment: 'Bewaar je stappenplannen van deze week. Ze zijn het begin van jouw eigen handleiding voor lastige momenten.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['problemen-aanpakken'],
       flashcardIds: ['w09-l04-f1', 'w09-l04-f2']
     }
   ]

@@ -2,7 +2,6 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { skills } from '../content/skills';
 import { audioSessions } from '../content/audio';
-import { flashcards } from '../content/flashcards';
 
 /** Klein icoon-tje voor de link-kaarten (eucatint tegel, stroke currentColor). */
 function CardIcon({ children }: { children: ReactNode }) {
@@ -49,7 +48,7 @@ export default function Oefenen() {
           <span className="min-w-0 flex-1">
             <span className="block text-[15px] font-bold text-ink">Offline audio-oefeningen</span>
             <span className="sub mt-0.5 block">
-              {audioSessions.length} sessies om te beluisteren — gedownload, dus ook zonder internet.
+              {audioSessions.length} sessies om te beluisteren — bewaar een sessie eerst, dan werkt die ook zonder internet.
             </span>
           </span>
           <Chevron />
@@ -112,7 +111,7 @@ export default function Oefenen() {
           <span className="min-w-0 flex-1">
             <span className="block text-[15px] font-bold text-ink">Flashcards</span>
             <span className="sub mt-0.5 block">
-              {flashcards.length} kaarten, gegroepeerd per week — herhaal kort en houd het vers.
+              Kaarten uit je afgeronde lessen — herhaal kort en houd het vers.
             </span>
           </span>
           <Chevron />

@@ -3,7 +3,7 @@ import type { Flashcard, Week } from '../types';
 /**
  * Week 12 — Vooruit & volhouden.
  * Terugkijken op de hele cursus, terugvalpreventie (dip is geen stap terug),
- * het EHP afronden, een onderhoudsplan met ritme, en zacht afsluiten.
+ * het Signaleringsplan afronden, een onderhoudsplan met ritme, en zacht afsluiten.
  * De flashcards van deze week vlechten herhaling van de hele cursus erdoorheen.
  * Alle teksten zijn origineel geschreven.
  */
@@ -22,7 +22,7 @@ export const week12: Week = {
       minutes: 6,
       tags: ['Terugblik'],
       intro: [
-        'Twaalf weken geleden begon je bij het pannetjesmodel. Kijk eens hoeveel je sindsdien hebt geleerd.',
+        'Aan het begin van de cursus begon je bij het pannetjesmodel. Kijk eens hoeveel je sindsdien hebt geleerd.',
         'Je leerde kijken zonder te oordelen. Ruimte maken voor gevoelens. Afstand nemen van gedachten. En je ontdekte dat jij meer bent dan wat er in je hoofd gebeurt.',
         'Ook vond je jouw kompas: wat jij belangrijk vindt en hoe je daar met kleine stappen naartoe komt. Daar komt je plan voor moeilijke momenten bij. Dat is een hele gereedschapskist.'
       ],
@@ -37,7 +37,7 @@ export const week12: Week = {
       },
       reflection: 'Vooruitgang is zelden een rechte lijn. Misschien ging het met vallen en opstaan. Dat is precies hoe leren werkt.',
       assignment: 'Vertel deze week aan iemand wat je hebt geleerd. Hardop benoemen maakt het sterker.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['toegewijd-handelen'],
       flashcardIds: ['w12-l01-f1', 'w12-l01-f2', 'w12-l01-f3', 'w12-l01-f4']
     },
     {
@@ -68,7 +68,12 @@ export const week12: Week = {
         ]
       },
       reflection: 'Voorbereiden is geen negativiteit. Het is juist vriendelijk voor de jij van later. Die hoeft dan alleen het plan te volgen.',
-      assignment: 'Schrijf deze week drie als-dan-zinnen op en voeg ze toe aan je EHP.',
+      assignment: 'Schrijf deze week drie als-dan-zinnen in het speciale onderdeel van je Signaleringsplan.',
+      supportCta: {
+        label: 'Schrijf mijn als-dan-plannen op',
+        to: '/steun/signaleringsplan',
+        description: 'Je Signaleringsplan heeft een eigen plek voor drie als-dan-zinnen.'
+      },
       relatedSkillIds: ['afstand-observeren'],
       flashcardIds: ['w12-l02-f1', 'w12-l02-f2', 'w12-l02-f3']
     },
@@ -79,15 +84,15 @@ export const week12: Week = {
       kind: 'oefening',
       title: 'Jouw plan voor later',
       minutes: 10,
-      tags: ['EHP', 'Vooruit'],
+      tags: ['Signaleringsplan', 'Vooruit'],
       intro: [
-        'Nu zet je alles op zijn plek. Je maakt je Emotiehanteringsplan af. En je maakt een klein onderhoudsplan voor na de cursus.',
+        'Nu zet je alles op zijn plek. Je maakt je Signaleringsplan — in de lessen ook EHP genoemd — af. En je maakt een klein onderhoudsplan voor na de cursus.',
         'Oefenen blijft belangrijk, maar het mag klein. Een dagelijkse check-in van een halve minuut houdt je aandacht wakker. Een wekelijkse blik op je plan houdt het vers.'
       ],
       exercise: {
         title: 'Je plan afronden',
         steps: [
-          { n: 1, title: 'Werk je EHP bij', text: 'Neem je plan uit week 11 erbij. Voeg je als-dan-zinnen toe. En vul aan wat nog mist.', seconds: 180 },
+          { n: 1, title: 'Werk je plan bij', text: 'Open je Signaleringsplan uit week 11. Voeg je als-dan-zinnen toe en vul aan wat nog mist.', seconds: 180 },
           { n: 2, title: 'Controleer pan 4 en 5', text: 'Staat daar wat je doet, wie je bereikt en welke professionele hulp er is? Dan is je plan compleet.', seconds: 90 },
           { n: 3, title: 'Kies je dagelijkse minuut', text: 'Kies een vast moment voor je check-in. Bijvoorbeeld bij je koffie. Of vlak voor het slapen.', seconds: 60 },
           { n: 4, title: 'Kies je weekmoment', text: 'Kies één moment per week om je pannetjes en je plan te bekijken. Tien minuten is genoeg.', seconds: 60 },
@@ -97,6 +102,11 @@ export const week12: Week = {
       },
       reflection: 'Je hebt nu iets kostbaars: een handleiding over jezelf, gemaakt door jezelf. Die mag je blijven aanpassen. Hij is van jou.',
       assignment: 'Leg je plan op een vaste plek. En zet je dagelijkse en wekelijkse momenten echt in je agenda of telefoon.',
+      supportCta: {
+        label: 'Rond mijn Signaleringsplan af',
+        to: '/steun/signaleringsplan',
+        description: 'Controleer alle pannen, je als-dan-plannen en professionele hulp.'
+      },
       relatedSkillIds: ['ademanker', 'gronden-54321'],
       flashcardIds: ['w12-l03-f1', 'w12-l03-f2', 'w12-l03-f3']
     },
@@ -109,7 +119,7 @@ export const week12: Week = {
       minutes: 5,
       tags: ['Afsluiting'],
       intro: [
-        'Dit is de laatste les van Koers. Twaalf weken lang heb je geoefend, geschreven en gevoeld. Dat verdient een zachte landing.',
+        'Dit is de laatste les van Koers. Tijdens deze cursus heb je geoefend, geschreven en gevoeld. Dat verdient een zachte landing.',
         'Afscheid nemen van de cursus is geen afscheid van je vaardigheden. Die neem je mee. De app en je plan blijven gewoon bij je.',
         'Groeien gaat met pieken en dalen. Soms zul je teruggrijpen op deze lessen. Dat is geen stap terug. Dat is precies waar ze voor zijn.'
       ],
@@ -127,9 +137,9 @@ export const week12: Week = {
           { n: 4, title: 'Kijk vooruit', text: 'Wat is de eerste kleine stap die je deze week zet? Helemaal voor jezelf.', seconds: 60 }
         ]
       },
-      reflection: 'Je bent dezelfde persoon als twaalf weken geleden. Maar nu met meer taal, meer ruimte en een plan. Dank je wel dat je dit werk deed.',
+      reflection: 'Je bent dezelfde persoon als aan het begin van de cursus. Maar nu met meer taal, meer ruimte en een plan. Dank je wel dat je dit werk deed.',
       assignment: 'Vier het op jouw manier. Klein of groot. En kom over vier tot zes weken terug voor je terugkommoment.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['toegewijd-handelen'],
       flashcardIds: ['w12-l04-f1', 'w12-l04-f2']
     }
   ]
@@ -160,8 +170,8 @@ export const week12Flashcards: Flashcard[] = [
     id: 'w12-l01-f4',
     lessonId: 'w12-l01',
     skillId: 'ademanker',
-    front: 'Welke vaardigheid kun je altijd en overal gebruiken?',
-    back: 'Het Ademanker. Je adem is altijd bij je. Twee minuten volgen is genoeg om weer grond onder je voeten te voelen.'
+    front: 'Welke vaardigheid kun je op veel momenten gebruiken?',
+    back: 'Het Ademanker. Je adem kan als anker dienen. Twee minuten volgen kan helpen om weer wat meer grond onder je voeten te voelen.'
   },
   {
     id: 'w12-l02-f1',
@@ -184,7 +194,7 @@ export const week12Flashcards: Flashcard[] = [
   {
     id: 'w12-l03-f1',
     lessonId: 'w12-l03',
-    front: 'Wat staat er in een compleet EHP?',
+    front: 'Wat staat er in een compleet Signaleringsplan?',
     back: 'Per pan: je signalen, wat jij zelf kunt doen en wat anderen kunnen doen. Bij pan 4 en 5 ook: wie je bereikt en welke professionele hulp er is.'
   },
   {

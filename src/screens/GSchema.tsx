@@ -1,10 +1,14 @@
-import { useCallback, useEffect, useState, type ChangeEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import {
   GSCHEMA_DEEL1,
   GSCHEMA_DEEL2,
+  cacheGSchemaDraftForRecovery,
+  clearGSchemaDraft,
   formatGSchemaDate,
+  loadGSchemaDraft,
   saveGSchema,
+  saveGSchemaDraft,
   useGSchemas,
   type GSchemaVeldDef
 } from '../lib/gschema';
@@ -30,6 +34,16 @@ export default function GSchema() {
   const [showSaved, setShowSaved] = useState(false);
   const [showHint, setShowHint] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(false);
+  const [draftReady, setDraftReady] = useState(false);
+  const [draftStatus, setDraftStatus] = useState<'idle' | 'restored' | 'pending' | 'saved' | 'error'>('idle');
+  const fieldsRef = useRef(fields);
+  const percentagesRef = useRef(percentages);
+  const draftReadyRef = useRef(false);
+  const draftTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const draftWriteChainRef = useRef<Promise<void>>(Promise.resolve());
+  const revisionRef = useRef(0);
+  const mountedRef = useRef(true);
 
   // Zachte bevestiging 2,4 s na opslaan.
   useEffect(() => {
@@ -45,29 +59,149 @@ export default function GSchema() {
     return () => clearTimeout(t);
   }, [showHint]);
 
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  // Herstel een eerder concept, maar overschrijf nooit invoer die tijdens het laden is begonnen.
+  useEffect(() => {
+    let alive = true;
+    void loadGSchemaDraft().then((draft) => {
+      if (!alive) return;
+      if (draft && revisionRef.current === 0) {
+        fieldsRef.current = draft.fields;
+        percentagesRef.current = draft.percentages;
+        setFields(draft.fields);
+        setPercentages(draft.percentages);
+        setDraftStatus('restored');
+      }
+      draftReadyRef.current = true;
+      setDraftReady(true);
+    });
+    return () => {
+      alive = false;
+    };
+  }, []);
+
+  const persistDraft = useCallback((nextFields: Record<string, string>, nextPercentages: Record<string, number>, revision: number) => {
+    const hasDraft =
+      Object.values(nextFields).some((value) => value !== '') || Object.keys(nextPercentages).length > 0;
+    const write = draftWriteChainRef.current
+      .catch(() => undefined)
+      .then(() => (hasDraft ? saveGSchemaDraft(nextFields, nextPercentages) : clearGSchemaDraft()));
+    draftWriteChainRef.current = write;
+    void write.then(
+      () => {
+        if (mountedRef.current && revision === revisionRef.current) setDraftStatus(hasDraft ? 'saved' : 'idle');
+      },
+      () => {
+        if (mountedRef.current) setDraftStatus('error');
+      }
+    );
+    return write;
+  }, []);
+
+  // Debounced conceptopslag: typen blijft vloeiend en de laatste versie wint.
+  useEffect(() => {
+    if (!draftReady) return;
+    if (draftTimerRef.current) clearTimeout(draftTimerRef.current);
+    const revision = revisionRef.current;
+    setDraftStatus('pending');
+    draftTimerRef.current = setTimeout(() => {
+      draftTimerRef.current = null;
+      void persistDraft(fieldsRef.current, percentagesRef.current, revision);
+    }, 650);
+    return () => {
+      if (draftTimerRef.current) clearTimeout(draftTimerRef.current);
+    };
+  }, [draftReady, fields, percentages, persistDraft]);
+
+  // Flush bij app-wissel, sluiten of navigeren; IndexedDB blijft de bron van waarheid.
+  useEffect(() => {
+    const flush = () => {
+      if (!draftReadyRef.current && revisionRef.current === 0) return;
+      if (draftTimerRef.current) {
+        clearTimeout(draftTimerRef.current);
+        draftTimerRef.current = null;
+      }
+      void persistDraft(fieldsRef.current, percentagesRef.current, revisionRef.current);
+    };
+    const handleVisibility = () => {
+      if (document.visibilityState === 'hidden') flush();
+    };
+    window.addEventListener('pagehide', flush);
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      window.removeEventListener('pagehide', flush);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      flush();
+    };
+  }, [persistDraft]);
+
   const setField = useCallback((key: string, value: string) => {
-    setFields((prev) => ({ ...prev, [key]: value }));
+    const next = { ...fieldsRef.current, [key]: value };
+    fieldsRef.current = next;
+    revisionRef.current += 1;
+    cacheGSchemaDraftForRecovery(next, percentagesRef.current);
+    setFields(next);
     setShowHint(false);
+    setSaveError(false);
   }, []);
 
   const setPercentage = useCallback((key: string, value: number) => {
-    setPercentages((prev) => ({ ...prev, [key]: value }));
+    const next = { ...percentagesRef.current, [key]: value };
+    percentagesRef.current = next;
+    revisionRef.current += 1;
+    cacheGSchemaDraftForRecovery(fieldsRef.current, next);
+    setPercentages(next);
   }, []);
 
   async function handleSave() {
     if (saving) return;
+    const fieldsToSave = { ...fieldsRef.current };
+    const percentagesToSave = Object.fromEntries(
+      [...GSCHEMA_DEEL1, ...GSCHEMA_DEEL2]
+        .filter((field) => field.percentageLabel)
+        .map((field) => [field.key, percentagesRef.current[field.key] ?? PERCENTAGE_DEFAULT])
+    );
     // Volledig leeg formulier: niet opslaan, maar een vriendelijke hint tonen.
-    const hasText = Object.values(fields).some((v) => v.trim() !== '');
+    const hasText = Object.values(fieldsToSave).some((v) => v.trim() !== '');
     if (!hasText) {
       setShowHint(true);
       return;
     }
+    if (draftTimerRef.current) {
+      clearTimeout(draftTimerRef.current);
+      draftTimerRef.current = null;
+    }
     setSaving(true);
+    setSaveError(false);
     try {
-      await saveGSchema(fields, percentages);
-      setFields({});
-      setPercentages({});
+      await saveGSchema(fieldsToSave, percentagesToSave);
+
+      // Invoer die tijdens het opslaan is gewijzigd blijft als nieuw concept staan.
+      const remainingFields = Object.fromEntries(
+        Object.entries(fieldsRef.current).filter(([key, value]) => fieldsToSave[key] !== value)
+      );
+      const remainingPercentages = Object.fromEntries(
+        Object.entries(percentagesRef.current).filter(([key, value]) => percentagesToSave[key] !== value)
+      );
+      fieldsRef.current = remainingFields;
+      percentagesRef.current = remainingPercentages;
+      revisionRef.current += 1;
+      setFields(remainingFields);
+      setPercentages(remainingPercentages);
+      try {
+        await persistDraft(remainingFields, remainingPercentages, revisionRef.current);
+      } catch {
+        // Het definitieve schema is al veilig opgeslagen; alleen de conceptstatus toont de fout.
+      }
       setShowSaved(true);
+    } catch {
+      setSaveError(true);
     } finally {
       setSaving(false);
     }
@@ -132,12 +266,27 @@ export default function GSchema() {
           {saving ? 'Even geduld …' : 'G-schema opslaan'}
         </button>
         <p className="mt-2 text-[12.5px] font-semibold text-ink-soft" aria-live="polite">
-          {showSaved
+          {saveError
+            ? 'Opslaan lukte niet. Je invoer staat nog in het formulier; probeer het gerust opnieuw.'
+            : saving
+              ? 'Je G-schema wordt opgeslagen. Je kunt intussen veilig doorgaan met typen.'
+              : showSaved
             ? "✓ Opgeslagen — je vindt het hieronder terug bij je eerdere G-schema's."
             : showHint
               ? 'Schrijf eerst iets in één van de velden — een paar woorden is al genoeg.'
               : 'Je hoeft niet alles in te vullen; jij bepaalt wat genoeg is.'}
         </p>
+        {draftReady && draftStatus !== 'idle' && (
+          <p className="mt-1 text-[12px] text-ink-soft" aria-live="polite">
+            {draftStatus === 'restored'
+              ? 'Je eerdere concept is hersteld.'
+              : draftStatus === 'pending'
+                ? 'Concept wordt zo opgeslagen…'
+                : draftStatus === 'saved'
+                  ? 'Concept automatisch opgeslagen.'
+                  : 'Automatisch opslaan lukte niet; laat deze pagina open en probeer handmatig op te slaan.'}
+          </p>
+        )}
       </div>
 
       {/* Eerdere G-schema's */}

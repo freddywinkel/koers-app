@@ -1,30 +1,73 @@
-import { useEffect, type ReactNode } from 'react';
+import { Component, lazy, Suspense, useEffect, type ErrorInfo, type ReactNode } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import AppShell from './components/AppShell';
 import { PinGate } from './components/PinLock';
-import Vandaag from './screens/Vandaag';
-import Cursus from './screens/Cursus';
-import Week from './screens/Week';
-import Les from './screens/Les';
-import Oefenen from './screens/Oefenen';
-import AudioList from './screens/AudioList';
-import AudioPlayer from './screens/AudioPlayer';
-import HumanVoices from './screens/HumanVoices';
-import Vaardigheden from './screens/Vaardigheden';
-import OefeningenLijst from './screens/OefeningenLijst';
-import FlashcardsOverzicht from './screens/FlashcardsOverzicht';
-import FlashcardDeck from './components/FlashcardDeck';
-import Profiel from './screens/Profiel';
-import Crisis from './screens/Crisis';
-import Signaleringsplan from './screens/Signaleringsplan';
-import GSchema from './screens/GSchema';
-import Onboarding from './screens/Onboarding';
-import NotFound from './screens/NotFound';
 import UpdatePrompt from './components/UpdatePrompt';
 import { db } from './db/db';
 import { useApplyTheme, useSettings } from './db/hooks';
 import { useApplyDesign } from './lib/design';
 import { startReminderScheduler } from './lib/reminders';
+
+// Schermen worden pas geladen als de route ze nodig heeft. Dat houdt de eerste
+// download klein, terwijl de service worker ze daarna gewoon offline bewaart.
+const Vandaag = lazy(() => import('./screens/Vandaag'));
+const Cursus = lazy(() => import('./screens/Cursus'));
+const Week = lazy(() => import('./screens/Week'));
+const Les = lazy(() => import('./screens/Les'));
+const Oefenen = lazy(() => import('./screens/Oefenen'));
+const AudioList = lazy(() => import('./screens/AudioList'));
+const AudioPlayer = lazy(() => import('./screens/AudioPlayer'));
+const HumanVoices = lazy(() => import('./screens/HumanVoices'));
+const Vaardigheden = lazy(() => import('./screens/Vaardigheden'));
+const OefeningenLijst = lazy(() => import('./screens/OefeningenLijst'));
+const FlashcardsOverzicht = lazy(() => import('./screens/FlashcardsOverzicht'));
+const FlashcardDeck = lazy(() => import('./components/FlashcardDeck'));
+const Profiel = lazy(() => import('./screens/Profiel'));
+const Crisis = lazy(() => import('./screens/Crisis'));
+const Signaleringsplan = lazy(() => import('./screens/Signaleringsplan'));
+const GSchema = lazy(() => import('./screens/GSchema'));
+const Onboarding = lazy(() => import('./screens/Onboarding'));
+const NotFound = lazy(() => import('./screens/NotFound'));
+
+function RouteLoader() {
+  return (
+    <div className="screen-stack" role="status" aria-live="polite">
+      <p className="card sub">Koers wordt klaargelegd…</p>
+    </div>
+  );
+}
+
+/** Vang onverwachte render-/opslagfouten op met een bruikbare herstelroute. */
+export class AppErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+
+  static getDerivedStateFromError(): { failed: boolean } {
+    return { failed: true };
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo): void {
+    console.error('Koers kon niet verder laden.', error, info);
+  }
+
+  render() {
+    if (!this.state.failed) return this.props.children;
+    return (
+      <main className="mx-auto flex min-h-[100dvh] w-full max-w-xl items-center px-[18px] py-8 pt-[max(2rem,env(safe-area-inset-top))]">
+        <section className="card w-full" role="alert">
+          <p className="eyebrow">Er ging iets mis</p>
+          <h1 className="mt-1.5 font-display text-[26px] font-semibold leading-tight text-ink">Koers kon niet verder laden</h1>
+          <p className="sub mt-2">
+            Je lokale gegevens zijn niet verwijderd. Probeer de app opnieuw te laden. Blijft dit gebeuren, exporteer
+            je gegevens zodra Profiel weer opent voordat je browsergegevens wist.
+          </p>
+          <button type="button" className="btn-primary mt-4" onClick={() => window.location.reload()}>
+            Opnieuw laden
+          </button>
+        </section>
+      </main>
+    );
+  }
+}
 
 /**
  * Eerste-launch-omleiding: stuurt '/' naar /onboarding zolang de gebruiker de
@@ -34,7 +77,7 @@ import { startReminderScheduler } from './lib/reminders';
  */
 function RequireOnboarding({ children }: { children: ReactNode }) {
   const { ready, get } = useSettings();
-  if (!ready) return null; // settings laden nog: niets tonen (voorkomt flits)
+  if (!ready) return <RouteLoader />;
   if (get('onboarding-done') !== 'ja') return <Navigate to="/onboarding" replace />;
   return <>{children}</>;
 }
@@ -55,7 +98,14 @@ export default function App() {
       <PinGate>
         <Routes>
           {/* Onboarding staat buiten de AppShell: geen tab bar, geen afleiding. */}
-          <Route path="/onboarding" element={<Onboarding />} />
+          <Route
+            path="/onboarding"
+            element={
+              <Suspense fallback={<RouteLoader />}>
+                <Onboarding />
+              </Suspense>
+            }
+          />
           <Route element={<AppShell />}>
             <Route
               path="/"

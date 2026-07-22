@@ -54,12 +54,12 @@ export const week05: Week = {
       tags: ['Waarnemend zelf'],
       intro: [
         'Boosheid of somberheid kan zo groot voelen dat je denkt: zo ben ik. Maar je hébt een gevoel. Je bent het gevoel niet.',
-        'Denk aan de lucht. Er is weer: regen, wind, soms een storm. Maar boven het weer is altijd de rustige hemel.',
-        'Jij bent als die hemel. Je gevoelens zijn het weer. Weer verandert altijd. De hemel blijft er, onbeschadigd.'
+        'Denk aan de lucht. Er is weer: regen, wind, soms een storm. Achter al dat weer kun je je een wijde hemel voorstellen.',
+        'Jij bent als die hemel. Je gevoelens zijn het weer. Weer kan veranderen, terwijl de hemel in dit beeld ruimte houdt voor wat langskomt.'
       ],
       metaphorCard: {
         title: 'De hemel en het weer',
-        text: 'Weer komt en gaat: bewolking, regen, zon. De hemel gaat nooit kapot van een storm. Zo ben jij ook: je gevoelens trekken voorbij, jij blijft.',
+        text: 'Weer kan veranderen: bewolking, regen, zon. De hemel is in dit beeld de ruimte eromheen. Zo kun je ook naar gevoelens kijken: ze zijn er, maar ze zijn niet alles wat jij bent.',
         art: 'mist'
       },
       exercise: {
@@ -156,7 +156,7 @@ export const week05Flashcards: Flashcard[] = [
     id: 'fc-w05-l02-a',
     lessonId: 'w05-l02',
     front: 'Wat betekent de metafoor van de hemel en het weer?',
-    back: 'Jij bent de hemel, je gevoelens zijn het weer. Weer verandert steeds en gaat weer weg. De hemel blijft altijd heel en aanwezig.'
+    back: 'Jij bent in dit beeld de hemel en je gevoelens zijn het weer. Weer kan veranderen, terwijl de hemel staat voor de ruimte eromheen.'
   },
   {
     id: 'fc-w05-l02-b',

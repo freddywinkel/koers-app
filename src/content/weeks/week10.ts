@@ -45,7 +45,7 @@ export const week10: Week = {
       },
       reflection: 'Er bestaat geen goed of fout cijfer. De kaart laat alleen zien waar je energie stroomt en waar hij weglekt. Kijken is al genoeg voor vandaag.',
       assignment: 'Bewaar je kaart. Kijk er deze week elke dag even naar, vooral naar het gebied dat je koos. Alleen kijken is al voldoende.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['slaap-rust', 'eten-regelmaat', 'dagstructuur'],
       flashcardIds: ['w10-l01-f1', 'w10-l01-f2', 'w10-l01-f3']
     },
     {
@@ -76,8 +76,8 @@ export const week10: Week = {
         ]
       },
       reflection: 'Een nee tegen een verzoek is vaak een ja tegen iets belangrijks: je rust, je gezin, je herstel. Jij kiest waar je energie heen gaat.',
-      assignment: 'Let er deze week op waar je ja zegt terwijl je nee voelt. Alleen opmerken is genoeg. Lukt het? Oefen dan één keer een kleine, vriendelijke nee.',
-      relatedSkillIds: [],
+      assignment: 'Let er deze week op waar je ja zegt terwijl je nee voelt. Alleen opmerken is genoeg. Lukt het? Oefen dan één keer een klein, vriendelijk nee.',
+      relatedSkillIds: ['nee-zeggen', 'grens-aangeven'],
       flashcardIds: ['w10-l02-f1', 'w10-l02-f2', 'w10-l02-f3']
     },
     {
@@ -103,7 +103,7 @@ export const week10: Week = {
         steps: [
           { n: 1, title: 'Pak je domeinenkaart', text: 'Kijk naar je kaart uit de eerste les van deze week.', seconds: 20 },
           { n: 2, title: 'Kies één gebied', text: 'Niet het moeilijkste. Kies het gebied dat je nu aandacht wilt geven.', seconds: 30 },
-          { n: 3, title: 'Bedenk een piepklein stapje', text: 'Zo klein dat het bijna altijd lukt. Bij slapen: om elf uur de telefoon weg. Bij bewegen: tien minuten wandelen.', seconds: 60 },
+          { n: 3, title: 'Bedenk een piepklein stapje', text: 'Zo klein dat het voor jou nu haalbaar voelt. Bij slapen: om elf uur de telefoon weg. Bij bewegen: tien minuten wandelen.', seconds: 60 },
           { n: 4, title: 'Plan je stapje concreet', text: 'Welke dag? Welk moment van de dag? Schrijf het op. Vage plannen verdwijnen vanzelf.', seconds: 45 },
           { n: 5, title: 'Plan ook iets fijns', text: 'Kies één ding dat je energie geeft. Een bad, een goed gesprek, muziek. Plan dat ook. Het is onderhoud, geen luxe.', seconds: 45 },
           { n: 6, title: 'Kijk later vriendelijk terug', text: 'Aan het einde van de week kijk je terug. Gelukt? Fijn. Niet gelukt? Dan was de stap te groot. Maak je stapje kleiner en probeer het opnieuw.', seconds: 45 }
@@ -111,7 +111,7 @@ export const week10: Week = {
       },
       reflection: 'Balans is geen eindpunt dat je bereikt. Het is een ritme dat je elke week opnieuw afstemt. Kleine stappen tellen echt.',
       assignment: 'Voer deze week je twee geplande stappen uit: je kleine stap en je fijne moment. Vink ze af. En neem even de tijd om ze te vieren, hoe klein ook.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['dagstructuur', 'toegewijd-handelen'],
       flashcardIds: ['w10-l03-f1', 'w10-l03-f2', 'w10-l03-f3']
     },
     {
@@ -136,7 +136,7 @@ export const week10: Week = {
       },
       reflection: 'Je bouwt aan een ritme dat bij jou past. Dat gaat met vallen en opstaan, en dat is normaal. Elke week opnieuw kijken: dát is de vaardigheid.',
       assignment: 'Maak er een vast moment van: neem elke week tien minuten om je domeinenkaart in te vullen en één klein stapje te kiezen. Bijvoorbeeld op zondag.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['dagstructuur'],
       flashcardIds: ['w10-l04-f1', 'w10-l04-f2']
     }
   ]
@@ -176,14 +176,14 @@ export const week10Flashcards: Flashcard[] = [
   {
     id: 'w10-l02-f3',
     lessonId: 'w10-l02',
-    front: 'Hoe klinkt een korte, vriendelijke nee?',
+    front: 'Hoe klinkt een kort, vriendelijk nee?',
     back: 'Bijvoorbeeld: "Dat past me nu niet." Kort en duidelijk is genoeg. Een lange uitleg of excuses hoeven niet.'
   },
   {
     id: 'w10-l03-f1',
     lessonId: 'w10-l03',
     front: 'Hoe klein mag een stap zijn?',
-    back: 'Zo klein dat het bijna altijd lukt. Tien minuten wandelen telt. Klein en vaak werkt beter dan groot en eenmalig.'
+    back: 'Zo klein dat het voor jou nu haalbaar voelt. Tien minuten wandelen telt. Klein en vaak werkt beter dan groot en eenmalig.'
   },
   {
     id: 'w10-l03-f2',

@@ -20,7 +20,9 @@
 
 export const REMINDER_TITLE = 'Koers';
 export const REMINDER_BODY = 'Tijd voor je dagelijkse check-in';
+export const REMINDER_SETTINGS_EVENT = 'koers:reminder-settings-changed';
 const DEFAULT_TIME = '19:00';
+const LAST_FIRED_KEY = 'koers-reminder-last-fired';
 
 export type PermissionState = NotificationPermission | 'unsupported';
 
@@ -73,12 +75,32 @@ function dayKey(d = new Date()): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
+function readLastFiredDay(): string {
+  try {
+    return localStorage.getItem(LAST_FIRED_KEY) ?? '';
+  } catch {
+    return '';
+  }
+}
+
+function rememberFiredDay(value: string): void {
+  try {
+    localStorage.setItem(LAST_FIRED_KEY, value);
+  } catch {
+    // De timer blijft in deze sessie alsnog beschermd tegen dubbele meldingen.
+  }
+}
+
 /** Toon de melding: via de service worker als die er is (beter op mobiel), anders klassiek. */
 async function showReminder(): Promise<void> {
+  const appBase = new URL(import.meta.env.BASE_URL, window.location.origin);
+  const appUrl = new URL('#/', appBase).href;
+  const iconUrl = new URL('icons/icon-192.png', appBase).href;
   const options: NotificationOptions = {
     body: REMINDER_BODY,
-    icon: '/icons/icon-192.png',
-    badge: '/icons/icon-192.png',
+    icon: iconUrl,
+    badge: iconUrl,
+    data: { url: appUrl },
     tag: 'vv-dagelijkse-checkin', // vervangt een eerdere melding ipv stapelen
     silent: true
   };
@@ -92,7 +114,12 @@ async function showReminder(): Promise<void> {
     // val terug op de klassieke Notification hieronder
   }
   try {
-    new Notification(REMINDER_TITLE, options);
+    const notification = new Notification(REMINDER_TITLE, options);
+    notification.onclick = () => {
+      notification.close();
+      window.focus();
+      window.location.assign(appUrl);
+    };
   } catch {
     // sommige mobiele browsers staan alleen SW-meldingen toe; dan laten we het rustig
   }
@@ -110,7 +137,7 @@ async function showReminder(): Promise<void> {
  */
 export function startReminderScheduler(getTime: () => string | Promise<string>): () => void {
   let timer: number | undefined;
-  let lastFiredDay = '';
+  let lastFiredDay = readLastFiredDay();
   let stopped = false;
 
   async function currentTime(): Promise<string> {
@@ -125,6 +152,7 @@ export function startReminderScheduler(getTime: () => string | Promise<string>):
   async function fireAndReschedule(): Promise<void> {
     if (stopped) return;
     lastFiredDay = dayKey();
+    rememberFiredDay(lastFiredDay);
     await showReminder();
     void schedule();
   }
@@ -160,9 +188,11 @@ export function startReminderScheduler(getTime: () => string | Promise<string>):
   const onVisibility = () => {
     if (document.visibilityState === 'visible') void checkOnFocus();
   };
+  const onSettingsChanged = () => void checkOnFocus();
 
   window.addEventListener('focus', onFocus);
   document.addEventListener('visibilitychange', onVisibility);
+  window.addEventListener(REMINDER_SETTINGS_EVENT, onSettingsChanged);
   void schedule();
 
   return () => {
@@ -170,5 +200,6 @@ export function startReminderScheduler(getTime: () => string | Promise<string>):
     if (timer !== undefined) window.clearTimeout(timer);
     window.removeEventListener('focus', onFocus);
     document.removeEventListener('visibilitychange', onVisibility);
+    window.removeEventListener(REMINDER_SETTINGS_EVENT, onSettingsChanged);
   };
 }

@@ -40,7 +40,7 @@ export const week01: Week = {
       tags: ['Pannetjesmodel'],
       intro: [
         'Stel je een pannetje melk op het fornuis voor. Soms staat het vuur uit. Soms begint het zachtjes te rimpelen. En soms kookt het over.',
-        'Zo werken je gevoelens ook. Ze lopen meestal stap voor stap op. Het kan voelen alsof je in één keer van rustig naar woedend gaat. Maar er zitten bijna altijd stappen tussen.',
+        'Zo werken je gevoelens vaak ook. Ze kunnen stap voor stap oplopen, al kan dat soms heel snel gaan. Het helpt om jouw eerste signalen te leren kennen.',
         'Het pannetjesmodel heeft vijf pannen. Pan 1 is Rustig. Pan 2 is Rimpelt: er beweegt iets. Pan 3 is Borrelt: het wordt sterker. Pan 4 is Pruttelt: je voelt je echt niet fijn. Pan 5 is Kookt over: je verliest de grip.',
         'Het goede nieuws: op elke stap kun je iets doen. Hoe eerder je merkt in welke pan je zit, hoe meer keus je hebt. De vaardigheden uit deze cursus zijn het keukengerei waarmee je het vuur lager zet.'
       ],

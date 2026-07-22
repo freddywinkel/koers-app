@@ -1,7 +1,8 @@
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { getWeek, KIND_LABELS } from '../content/helpers';
 import { useDoneLessonIds } from '../db/hooks';
-import { useIsWeekUnlocked } from '../lib/courseHooks';
+import { useAllWeeksOpen, useIsWeekUnlocked } from '../lib/courseHooks';
+import { getBlockingLesson, isLessonUnlocked, isWeekComplete } from '../lib/unlock';
 import NotFound from './NotFound';
 
 /** Kind-chip: les = neutraal, oefening = eucalyptus, herhaling = warme abrikoos. */
@@ -22,13 +23,16 @@ export default function Week() {
   const done = useDoneLessonIds();
   const location = useLocation();
   const weekComplete = (location.state as { weekComplete?: boolean } | null)?.weekComplete === true;
+  const allWeeksOpen = useAllWeeksOpen();
 
   // Hook altijd aanroepen (ook als week niet bestaat) met een veilige fallback.
   const unlocked = useIsWeekUnlocked(week ?? { id: '', number: 0, title: '', lessons: [] });
 
   if (!week) return <NotFound />;
+  if (done === undefined) return <p className="card sub" role="status">Je voortgang wordt geladen…</p>;
   const doneSet = done ?? new Set<string>();
   const doneCount = week.lessons.filter((l) => doneSet.has(l.id)).length;
+  const actuallyComplete = isWeekComplete(week, doneSet);
 
   if (!unlocked) {
     return (
@@ -53,8 +57,8 @@ export default function Week() {
           <span className="chip">Nog vergrendeld</span>
           <h2 className="card-title mt-3">Deze week opent vanzelf</h2>
           <p className="sub mt-1.5">
-            Rond ongeveer tweederde van week {week.number - 1} af, dan gaat deze week open. Rustig aan — het tempo
-            bepaal je zelf.
+            Rond ongeveer tweederde van de eerdere weken af, dan gaat deze week open. Rustig aan — het tempo bepaal
+            je zelf.
           </p>
           <Link to="/cursus" className="btn-secondary mt-4 w-full">
             Terug naar je weken
@@ -87,7 +91,7 @@ export default function Week() {
         </p>
       </header>
 
-      {weekComplete && (
+      {weekComplete && actuallyComplete && (
         <section className="card !bg-eucatint">
           <p className="eyebrow">Week {week.number} afgerond</p>
           <h2 className="card-title mt-1">Mooi werk.</h2>
@@ -100,8 +104,10 @@ export default function Week() {
 
       {week.lessons.map((lesson) => {
         const isDone = doneSet.has(lesson.id);
-        return (
-          <Link key={lesson.id} to={`/les/${lesson.id}`} className="card flex items-center gap-3.5 transition-transform active:scale-[0.99]">
+        const accessible = isLessonUnlocked(lesson, doneSet, allWeeksOpen);
+        const blockingLesson = getBlockingLesson(lesson, doneSet);
+        const inner = (
+          <>
             <span
               className={[
                 'grid h-10 w-10 flex-none place-items-center rounded-[14px] font-display text-lg font-semibold',
@@ -124,13 +130,33 @@ export default function Week() {
                 <span className="sub">
                   {lesson.minutes ? `± ${lesson.minutes} min` : ''}
                   {isDone ? `${lesson.minutes ? ' · ' : ''}afgerond` : ''}
+                  {!accessible && blockingLesson
+                    ? `${lesson.minutes ? ' · ' : ''}eerst Les ${blockingLesson.order}`
+                    : ''}
                 </span>
               </span>
             </span>
             <svg className="flex-none text-ink-soft" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M6.5 3.5 11 9l-4.5 5.5" />
+              {accessible ? <path d="M6.5 3.5 11 9l-4.5 5.5" /> : <path d="M6 7V5.5a3 3 0 0 1 6 0V7m-7 0h8v7H5V7Z" />}
             </svg>
+          </>
+        );
+        return accessible ? (
+          <Link
+            key={lesson.id}
+            to={`/les/${lesson.id}`}
+            className="card flex items-center gap-3.5 transition-transform active:scale-[0.99]"
+          >
+            {inner}
           </Link>
+        ) : (
+          <div
+            key={lesson.id}
+            className="card flex items-center gap-3.5 opacity-60"
+            aria-label={`Les ${lesson.order}, ${lesson.title} — nog vergrendeld${blockingLesson ? `, rond eerst Les ${blockingLesson.order} af` : ''}`}
+          >
+            {inner}
+          </div>
         );
       })}
     </div>

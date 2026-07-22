@@ -2,7 +2,7 @@ import type { Flashcard, Week } from '../types';
 
 /**
  * Week 11 — Crisis & veiligheid.
- * Signalen herkennen, het Emotiehanteringsplan (EHP) opbouwen,
+ * Signalen herkennen, het Signaleringsplan (EHP) opbouwen,
  * en weten waar professionele hulp te vinden is (o.a. 113-route).
  * Toon: extra zacht en veilig. Alle teksten zijn origineel geschreven.
  */
@@ -21,7 +21,7 @@ export const week11: Week = {
       minutes: 6,
       tags: ['Signalen', 'Pannetjesmodel'],
       intro: [
-        'Niemand springt in één keer van pan 1 naar pan 5. Het lijkt soms wel zo. Maar er is bijna altijd een opbouw.',
+        'Vaak is er een opbouw van pan 1 naar pan 5, maar soms gaat die heel snel.',
         'Je lichaam en je gedrag waarschuwen je vaak als eerste. Misschien slaap je slechter. Of je trekt je terug. Of je wordt kortaf. Dat zijn signalen.',
         'In deze les ga je op zoek naar jouw eigen signalen. Niet om jezelf te controleren. Maar om eerder zacht voor jezelf te kunnen zijn.'
       ],
@@ -49,21 +49,21 @@ export const week11: Week = {
       weekId: 'w11',
       order: 2,
       kind: 'oefening',
-      title: 'Je Emotiehanteringsplan (EHP)',
+      title: 'Je Signaleringsplan (EHP)',
       minutes: 12,
-      tags: ['EHP', 'Veiligheid'],
+      tags: ['Signaleringsplan', 'Veiligheid'],
       intro: [
         'Je hebt nu veel vaardigheden geleerd. Maar op een hevig moment denk je daar niet aan. Dan helpt een plan dat je op een rustige dag maakte.',
-        'Dat plan heet het Emotiehanteringsplan, kortweg EHP. Per pan schrijf je op: hoe herken ik dit? Wat helpt mij? Wat kunnen anderen doen?',
+        'Zo’n plan heet ook wel een Emotiehanteringsplan, kortweg EHP. In Koers heet je EHP het Signaleringsplan. Per pan schrijf je op: hoe herken ik dit? Wat helpt mij? Wat kunnen anderen doen?',
         'Vandaag maak je de eerste versie. Hij hoeft niet af te zijn. Volgende week werk je hem verder uit.'
       ],
       metaphorCard: {
         title: 'Een gebruiksaanwijzing van jezelf',
-        text: 'Je EHP is een gebruiksaanwijzing die je aan jezelf en aan anderen geeft. Op een moeilijke dag hoef je niet meer na te denken. Je pakt gewoon het plan erbij.',
+        text: 'Je Signaleringsplan is een gebruiksaanwijzing die je aan jezelf en aan anderen geeft. Op een moeilijke dag hoef je niet alles opnieuw te bedenken. Je pakt het plan erbij.',
         art: 'mist'
       },
       exercise: {
-        title: 'Je EHP stap voor stap opbouwen',
+        title: 'Je Signaleringsplan stap voor stap opbouwen',
         steps: [
           { n: 1, title: 'Verzamel je materiaal', text: 'Pak je notities van de vorige lessen erbij. Je signalen, je favoriete oefeningen en je steunpersonen.', seconds: 60 },
           { n: 2, title: 'Pan 1 en 2: Rustig en Rimpelt', text: 'Schrijf op wat je doet om zo te blijven. Bijvoorbeeld: slapen, bewegen, even ademen met aandacht.', seconds: 120 },
@@ -75,7 +75,12 @@ export const week11: Week = {
         ]
       },
       reflection: 'Een plan maken terwijl het rustig is, is de beste zorg voor moeilijke momenten. Je plan groeit met je mee. Het hoeft nooit perfect te zijn.',
-      assignment: 'Bewaar je EHP op een plek die je snel vindt. Vertel deze week aan minstens één persoon die je vertrouwt dat je dit plan hebt.',
+      assignment: 'Vul je Signaleringsplan in Koers in. Vertel deze week aan minstens één persoon die je vertrouwt dat je dit plan hebt.',
+      supportCta: {
+        label: 'Open mijn Signaleringsplan',
+        to: '/steun/signaleringsplan',
+        description: 'Vul je signalen, steunmiddelen en contactpersonen meteen in.'
+      },
       relatedSkillIds: ['gronden-54321', 'ademanker'],
       flashcardIds: ['w11-l02-f1', 'w11-l02-f2', 'w11-l02-f3']
     },
@@ -103,7 +108,7 @@ export const week11: Week = {
       },
       reflection: 'Hulp vragen voelt soms groter dan het is. De meeste mensen vinden het juist fijn als je ze vertrouwt. En professionals doen hun werk met aandacht en zorg.',
       assignment: 'Zet twee nummers in je telefoon: je huisarts en 113 (0800-0113). Dan hoef je niet te zoeken op een moeilijk moment.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['om-hulp-vragen'],
       flashcardIds: ['w11-l03-f1', 'w11-l03-f2', 'w11-l03-f3']
     },
     {
@@ -122,13 +127,13 @@ export const week11: Week = {
         title: 'Zachte weekblik',
         steps: [
           { n: 1, title: 'Check je pan', text: 'In welke pan zit je nu? Gewoon benoemen is genoeg.', seconds: 30 },
-          { n: 2, title: 'Kijk naar je plan', text: 'Je hebt een eerste versie van je EHP. Welk onderdeel vond je het lastigst? Dat mag er zijn.', seconds: 60 },
+          { n: 2, title: 'Kijk naar je plan', text: 'Je hebt een eerste versie van je Signaleringsplan. Welk onderdeel vond je het lastigst? Dat mag er zijn.', seconds: 60 },
           { n: 3, title: 'Wat deed je goed?', text: 'Noem één ding dat je deze week voor jezelf deed. Hoe klein ook. Het telt.', seconds: 60 },
           { n: 4, title: 'Plan iets rustigs', text: 'Kies één rustig moment voor vandaag. Een wandeling, thee, je adem. Plan het nu.', seconds: 30 }
         ]
       },
       reflection: 'Je bent niet te veel en niet te gevoelig. Je leert gewoon een nieuwe taal: de taal van je eigen gevoelens.',
-      assignment: 'Doe iets ontspannends dit weekend. En leg je EHP klaar voor volgende week. Dan maak je je plan af.',
+      assignment: 'Doe iets ontspannends dit weekend. Open volgende week je Signaleringsplan weer. Dan maak je het af.',
       relatedSkillIds: [],
       flashcardIds: ['w11-l04-f1', 'w11-l04-f2']
     }
@@ -141,7 +146,7 @@ export const week11Flashcards: Flashcard[] = [
     id: 'w11-l01-f1',
     lessonId: 'w11-l01',
     front: 'Waarom is het handig om je signalen te kennen?',
-    back: 'Emoties gaan bijna nooit in één keer van pan 1 naar pan 5. Zie je de opbouw op tijd, dan kun je eerder iets doen dat helpt.'
+    back: 'Vaak is er een opbouw, maar soms gaat die heel snel. Herken je een vroeg signaal, dan kun je eerder iets doen dat helpt.'
   },
   {
     id: 'w11-l01-f2',
@@ -158,13 +163,13 @@ export const week11Flashcards: Flashcard[] = [
   {
     id: 'w11-l02-f1',
     lessonId: 'w11-l02',
-    front: 'Wat is een Emotiehanteringsplan (EHP)?',
+    front: 'Wat is een Signaleringsplan (EHP)?',
     back: 'Je eigen gebruiksaanwijzing voor moeilijke momenten. Per pan staat er: hoe herken ik dit, wat helpt mij, en wat kunnen anderen doen.'
   },
   {
     id: 'w11-l02-f2',
     lessonId: 'w11-l02',
-    front: 'Wanneer maak je een EHP?',
+    front: 'Wanneer maak je een Signaleringsplan?',
     back: 'Op een rustige dag. Op een hevig moment denk je niet helder. Dan pak je gewoon het plan erbij dat je eerder maakte.'
   },
   {

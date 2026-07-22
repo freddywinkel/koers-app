@@ -32,7 +32,7 @@ const extraSkills: SkillCard[] = [
     name: 'Ademanker',
     panMin: 2,
     panMax: 5,
-    summary: 'Je adem is een anker dat altijd bij je is. Twee minuten volgen is genoeg om weer grond onder je voeten te voelen.',
+    summary: 'Je adem kan als anker dienen. Twee minuten volgen kan helpen om weer wat meer grond onder je voeten te voelen.',
     steps: [
       'Leg één hand op je buik.',
       'Adem in door je neus en voel je buik omhoog gaan.',

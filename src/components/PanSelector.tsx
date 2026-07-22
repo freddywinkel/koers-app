@@ -15,42 +15,43 @@ interface Props {
  */
 export default function PanSelector({ value, onChange, disabled = false }: Props) {
   return (
-    <div
-      className={['mt-3.5 grid grid-cols-5 gap-1.5', disabled ? 'grayscale' : ''].join(' ')}
-      role="radiogroup"
-      aria-label="Kies je pan"
-      aria-disabled={disabled}
-    >
-      {PANS.map((pan) => {
-        const selected = value === pan;
-        return (
-          <button
-            key={pan}
-            type="button"
-            role="radio"
-            aria-checked={selected}
-            disabled={disabled}
-            onClick={() => onChange(pan)}
-            className={[
-              'flex min-h-[88px] flex-col items-center justify-center gap-1 rounded-2xl border-[1.5px] px-0 pb-2 pt-2.5 transition-all disabled:cursor-not-allowed disabled:opacity-45',
-              selected
-                ? '-translate-y-0.5 border-euca-deep bg-raised shadow-lift'
-                : 'border-transparent bg-pantile hover:-translate-y-px'
-            ].join(' ')}
-          >
-            <PanIcon pan={pan} />
-            <span className="text-[9.5px] font-extrabold tracking-[0.06em] text-ink-soft">PAN {pan}</span>
-            <span
+    <fieldset className="mt-3.5 min-w-0" disabled={disabled}>
+      <legend className="sr-only">Kies je pan</legend>
+      <div className={['grid grid-cols-5 gap-1.5', disabled ? 'grayscale' : ''].join(' ')}>
+        {PANS.map((pan) => {
+          const selected = value === pan;
+          return (
+            <label
+              key={pan}
               className={[
-                'text-center text-[10px] font-extrabold leading-[1.1]',
-                selected ? 'text-euca-deep' : 'text-ink'
+                'choice-option flex min-h-[88px] cursor-pointer flex-col items-center justify-center gap-1 rounded-2xl border-[1.5px] px-0 pb-2 pt-2.5 transition-all has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-45',
+                selected
+                  ? '-translate-y-0.5 border-euca-deep bg-raised shadow-lift'
+                  : 'border-transparent bg-pantile hover:-translate-y-px'
               ].join(' ')}
             >
-              {PAN_LABELS[pan]}
-            </span>
-          </button>
-        );
-      })}
-    </div>
+              <input
+                className="sr-only"
+                type="radio"
+                name="dagelijkse-pan"
+                value={pan}
+                checked={selected}
+                onChange={() => onChange(pan)}
+              />
+              <PanIcon pan={pan} />
+              <span className="text-[11px] font-extrabold tracking-[0.04em] text-ink-soft">PAN {pan}</span>
+              <span
+                className={[
+                  'text-center text-[11px] font-extrabold leading-[1.15]',
+                  selected ? 'text-euca-deep' : 'text-ink'
+                ].join(' ')}
+              >
+                {PAN_LABELS[pan]}
+              </span>
+            </label>
+          );
+        })}
+      </div>
+    </fieldset>
   );
 }

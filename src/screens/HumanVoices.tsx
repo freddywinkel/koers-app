@@ -6,6 +6,7 @@ import {
   spotifyEmbedUrl,
   spotifyEpisodeUrl
 } from '../content/humanVoices';
+import { navigateBackOr } from '../lib/navigation';
 
 /** Menselijk ingesproken mindfulnesssessies die via de officiële Spotify-player afspelen. */
 export default function HumanVoices() {
@@ -17,8 +18,8 @@ export default function HumanVoices() {
       <div className="flex items-center gap-3 px-0.5 pt-1">
         <button
           type="button"
-          onClick={() => navigate(-1)}
-          aria-label="Terug"
+          onClick={() => navigateBackOr(navigate, '/oefenen')}
+          aria-label="Terug naar oefenen"
           className="grid h-10 w-10 flex-none place-items-center rounded-[14px] border border-line bg-sand text-ink"
         >
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -54,6 +55,7 @@ export default function HumanVoices() {
           href={mindfulMinuutSpotifyUrl}
           target="_blank"
           rel="noreferrer"
+          aria-label="Bekijk Mindful Minuut op Spotify (opent in een nieuw venster)"
           className="btn-secondary mt-3 w-full"
         >
           Bekijk Mindful Minuut op Spotify
@@ -93,6 +95,7 @@ export default function HumanVoices() {
                 <button
                   type="button"
                   aria-expanded={isActive}
+                  aria-label={isActive ? `Sluit de speler voor ${session.title}` : `Luister hier naar ${session.title}`}
                   onClick={() => setActiveSessionId(isActive ? null : session.id)}
                   className="btn-primary !min-h-[44px] !py-2.5"
                 >
@@ -102,6 +105,7 @@ export default function HumanVoices() {
                   href={spotifyEpisodeUrl(session.spotifyEpisodeId)}
                   target="_blank"
                   rel="noreferrer"
+                  aria-label={`Beluister ${session.title} in Spotify (opent in een nieuw venster)`}
                   className="btn-secondary w-full"
                 >
                   Beluister in Spotify <span aria-hidden="true">↗</span>

@@ -42,7 +42,7 @@ export const week08: Week = {
       },
       reflection: 'Voelt je stap te groot? Maak hem kleiner. Een stap die je echt zet, is altijd beter dan een mooie stap die blijft liggen.',
       assignment: 'Zet deze week je kleine stap. Schrijf daarna kort op hoe het ging. Ook als het niet lukte.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['toegewijd-handelen'],
       flashcardIds: ['w08-l01-f1', 'w08-l01-f2']
     },
     {
@@ -75,7 +75,7 @@ export const week08: Week = {
       },
       reflection: 'Barrières zijn geen stopborden. Het zijn borden langs de weg: hier wordt het spannend. En daarom is het de moeite waard.',
       assignment: 'Doe deze week één keer je stap mét de spanning erbij. Merk op: je gevoelens gaan mee, en toch zet je je stap.',
-      relatedSkillIds: ['afstand-observeren', 'ademanker'],
+      relatedSkillIds: ['toegewijd-handelen', 'acceptatie-toestaan', 'defusie-afstand-van-gedachten'],
       flashcardIds: ['w08-l02-f1', 'w08-l02-f2', 'w08-l02-f3']
     },
     {
@@ -98,12 +98,12 @@ export const week08: Week = {
           { n: 2, title: 'Kies je stap', text: 'Kies één kleine stap die bij die waarde past. Zo klein dat het bijna niet kan mislukken.', seconds: 45 },
           { n: 3, title: 'Maak hem concreet', text: 'Wat doe je precies? Waar? Hoe lang? Schrijf het op in één zin.', seconds: 45 },
           { n: 4, title: 'Maak je als-dan-plan', text: 'Vul in: "Als het [moment] is, dan doe ik [mijn stap]." Bijvoorbeeld: "Als de afwas klaar is, dan bel ik mijn broer."', seconds: 60 },
-          { n: 5, title: 'Bedenk je plan B', text: 'Wat als het niet lukt? Kies een kleinere versie van je stap. Dan heb je altijd een weg vooruit.', seconds: 30 }
+          { n: 5, title: 'Bedenk je plan B', text: 'Wat als het niet lukt? Kies een kleinere versie van je stap. Dan houd je een passende mogelijkheid achter de hand.', seconds: 30 }
         ]
       },
       reflection: 'Je plan hoeft niet mooi te zijn, maar wel van jou. Een klein plan dat je echt doet, werkt beter dan een perfect plan op papier.',
       assignment: 'Voer je als-dan-plan deze week één keer uit. Schrijf daarna op: wat lukte, en wat was lastig?',
-      relatedSkillIds: [],
+      relatedSkillIds: ['toegewijd-handelen'],
       flashcardIds: ['w08-l03-f1', 'w08-l03-f2', 'w08-l03-f3']
     },
     {
@@ -128,7 +128,7 @@ export const week08: Week = {
       },
       reflection: 'Toegewijd handelen is nooit af. Elke week mag je opnieuw kiezen: dit is mijn richting, en dit is mijn stap.',
       assignment: 'Blijf met je ACTieplan aan de slag. Kies voor volgende week één stap bij één waarde. Klein is goed genoeg.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['toegewijd-handelen'],
       flashcardIds: ['w08-l04-f1', 'w08-l04-f2']
     }
   ]
@@ -158,7 +158,7 @@ export const week08Flashcards: Flashcard[] = [
     id: 'w08-l02-f2',
     lessonId: 'w08-l02',
     front: 'Wat doe je met een gedachte als "het lukt toch niet"?',
-    back: 'Neem afstand: "Ik heb de gedachte dat het niet lukt." Dan kies je toch je stap. De gedachte mag mee, maar hij stuurt niet.'
+    back: 'Neem afstand: "Ik merk de gedachte dat het niet lukt." Dan kies je toch je stap. De gedachte mag mee, maar hij stuurt niet.'
   },
   {
     id: 'w08-l02-f3',

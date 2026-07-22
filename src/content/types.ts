@@ -67,6 +67,12 @@ export interface Lesson {
   reflection?: string;
   /** Huiswerk/toepassing in het dagelijks leven. 1–2 zinnen. */
   assignment?: string;
+  /** Optionele interne vervolgstap naar een passend steunmiddel. */
+  supportCta?: {
+    label: string;
+    to: string;
+    description?: string;
+  };
   /** Verwijzingen naar SkillCard.id in skills.ts. */
   relatedSkillIds: string[];
   /** Verwijzingen naar Flashcard.id in flashcards.ts. */

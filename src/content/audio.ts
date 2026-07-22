@@ -39,7 +39,7 @@ export const audioSessions: AudioSession[] = [
       { text: 'Wees niet streng als het niet meteen lukt. Juist terugkomen is de oefening.', pauze: 12 },
       { text: 'Laat elke adem komen zoals hij komt. Kort of lang, diep of ondiep. Alles mag.', pauze: 12 },
       { text: 'Misschien merk je wat rust. Misschien niet. Allebei is goed.', pauze: 12 },
-      { text: 'Neem nu één bewuste, rustige ademhaling. Helemaal in … en helemaal uit.', pauze: 8 },
+      { text: 'Haal één keer rustig adem. Helemaal in … en helemaal uit.', pauze: 8 },
       { text: 'Beweeg zachtjes je vingers en tenen. Kijk rustig om je heen.', pauze: 6 },
       { text: 'De oefening is klaar. Je adem blijft bij je, de hele dag.' }
     ]
@@ -99,9 +99,9 @@ export const audioSessions: AudioSession[] = [
       { text: 'Het water stroomt langzaam voor je langs. Je kijkt ernaar. Verder hoef je niets.', pauze: 15 },
       { text: 'Er drijven bladeren op het water. Grote en kleine. Ze komen dichterbij en drijven weer weg.', pauze: 15 },
       { text: 'Nu komt er een gedachte bij je op. Wat je ook denkt, dat is oké. Leg die gedachte op een blad.', pauze: 12 },
-      { text: 'Kijk hoe het blad met je gedachte langzaam wegdrijft. Verder en verder, tot hij uit beeld is.', pauze: 18 },
+      { text: 'Kijk hoe het blad met je gedachte langzaam wegdrijft. Verder en verder, tot het uit beeld is.', pauze: 18 },
       { text: 'Dan komt het volgende blad. Leg daar je volgende gedachte op. En kijk weer toe.', pauze: 18 },
-      { text: 'Je gedachten mogen alles zijn. Zorgen, plannen, herinneringen. Elk mag op een blad.', pauze: 18 },
+      { text: 'Je gedachten mogen alles zijn. Zorgen, plannen, herinneringen. Elke gedachte mag op een blad.', pauze: 18 },
       { text: 'Is er even geen blad? Dan kijk je gewoon naar het water. Dat is ook goed.', pauze: 15 },
       { text: 'Soms blijft een blad hangen. Dat is niet erg. Merk het op en laat het water zijn werk doen.', pauze: 15 },
       { text: 'Merk je dat je met een gedachte meedrijft? Ga dan zachtjes weer aan de kant zitten.', pauze: 15 },
@@ -124,6 +124,7 @@ export const audioSessions: AudioSession[] = [
       { text: 'Welkom. Deze oefening helpt je ruimte te maken voor een moeilijk gevoel. Ga rustig zitten.', pauze: 10 },
       { text: 'Doe je ogen dicht als dat kan. Adem een paar keer rustig in en uit.', pauze: 12 },
       { text: 'Denk aan iets dat deze week lastig was. Kies iets kleins, niet het zwaarste wat je kent.', pauze: 15 },
+      { text: 'Wordt het toch te veel? Open je ogen, voel je voeten op de grond en stop de oefening. Je kunt dan kiezen voor 5-4-3-2-1 of iemand om steun vragen.', pauze: 12 },
       { text: 'Merk op wat je nu voelt. Boosheid, verdriet, angst, schaamte … alles mag er zijn.', pauze: 15 },
       { text: 'Waar voel je dit in je lijf? In je borst, je keel, je buik, je schouders?', pauze: 15 },
       { text: 'Kijk er even naar als een nieuwsgierige onderzoeker. Hoe groot voelt het? Warm of koud? Stil of bewegend?', pauze: 15 },
@@ -144,13 +145,14 @@ export const audioSessions: AudioSession[] = [
     id: 'veilige-plek',
     title: 'Je veilige plek',
     minutes: 7,
-    doel: 'Een veilige plek bouwen in je hoofd, met al je zintuigen. Een plek waar je altijd naartoe kunt.',
+    doel: 'Een rustige of neutrale plek voorstellen met je zintuigen. Jij kiest het beeld en je mag altijd stoppen.',
     audioSrc: 'audio/veilige-plek.mp3',
     segments: [
       { text: 'Welkom. In deze oefening maak je in je hoofd een plek waar jij je veilig voelt. Ga lekker zitten of liggen.', pauze: 10 },
-      { text: 'Doe je ogen dicht. Adem drie keer rustig in … en weer uit.', pauze: 15 },
+      { text: 'Houd je ogen open of doe ze dicht, wat voor jou het prettigst voelt. Adem drie keer rustig in … en weer uit.', pauze: 15 },
       { text: 'Denk aan een plek waar je je veilig voelt. Dat mag een echte plek zijn, of een plek die je verzint.', pauze: 15 },
-      { text: 'Het kan een strand zijn. Een bos. Een stoel bij de kachel. Een plek uit je jeugd. Alles is goed.', pauze: 15 },
+      { text: 'Komt er geen veilige plek op? Kies dan een rustige of neutrale verzonnen plek, zoals een lege tuin of een kamer. Je mag de oefening ook stoppen en je voeten op de grond voelen.', pauze: 15 },
+      { text: 'Het kan een strand zijn. Een bos. Een stoel bij de kachel. Kies alleen een beeld dat nu goed genoeg voelt.', pauze: 15 },
       { text: 'Ga daar in je hoofd naartoe. Kijk om je heen. Wat zie je? Kleuren, licht, vormen?', pauze: 18 },
       { text: 'Kijk naar de details. Hoe ziet de grond eruit? Wat is er nog meer om je heen?', pauze: 15 },
       { text: 'Misschien is er iemand die je vertrouwt. Die mag er zijn. Of je bent lekker alleen. Kies wat fijn voelt.', pauze: 15 },
@@ -158,13 +160,13 @@ export const audioSessions: AudioSession[] = [
       { text: 'Ruik de lucht van je plek. Misschien zee, bos, vers brood, koffie.', pauze: 15 },
       { text: 'Voel je plek. Is de temperatuur lekker? Voel je zon, een bries, een warme deken?', pauze: 18 },
       { text: 'Verandert er iets in je beeld? Dat is oké. Jouw plek mag met je meebewegen.', pauze: 12 },
-      { text: 'Hoe voelt je lijf hier? Merk de rust op. Hier ben je veilig. Hier hoef je niets.', pauze: 15 },
-      { text: 'Deze plek is van jou. Niemand kan hem afpakken. Je kunt er altijd naartoe.', pauze: 15 },
+      { text: 'Hoe voelt je lijf bij dit beeld? Misschien rustiger, misschien neutraal of nog gespannen. Alles is goed. Je hoeft niets te bereiken.', pauze: 15 },
+      { text: 'Dit beeld is van jou. Je bepaalt zelf wanneer je ernaartoe gaat en wanneer je het weer loslaat.', pauze: 15 },
       { text: 'Blijf hier nog even. Geniet van je plek, in je eigen tempo.', pauze: 30 },
       { text: 'Voordat je weggaat: bewaar één detail goed in je hoofd. Een kleur, een geluid, een gevoel.', pauze: 15 },
       { text: 'Dat detail is je sleutel. Daarmee kom je later snel terug naar deze plek.', pauze: 12 },
       { text: 'Haal één keer rustig adem. Zeg gedag tegen je plek. Je komt gauw terug.', pauze: 10 },
-      { text: 'Beweeg zachtjes je handen en voeten. Doe je ogen open. Je veilige plek gaat met je mee.' }
+      { text: 'Beweeg zachtjes je handen en voeten. Doe je ogen open als ze dicht waren. Kijk rustig om je heen en voel de grond.' }
     ]
   },
   {

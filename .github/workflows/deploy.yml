@@ -33,7 +33,7 @@ jobs:
       - name: Dependencies
         run: npm ci
 
-      - name: Build (gh-pages base)
+      - name: Productchecks, typecheck en Pages-build
         run: npm run build:pages
 
       - name: Pages instellen

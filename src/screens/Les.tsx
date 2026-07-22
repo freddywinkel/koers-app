@@ -1,11 +1,14 @@
+import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import MetaphorArt from '../components/MetaphorArt';
 import FlashcardView from '../components/FlashcardView';
-import { getLesson, lessonCrumb } from '../content/helpers';
+import { getLesson, getWeek, lessonCrumb } from '../content/helpers';
 import { getFlashcards } from '../content/flashcards';
 import { getSkill } from '../content/skills';
-import { markLessonDone, useLessonProgress } from '../db/hooks';
-import { followingLessonInWeek } from '../lib/courseHooks';
+import { markLessonDone, useDoneLessonIds } from '../db/hooks';
+import { followingLessonInWeek, useAllWeeksOpen } from '../lib/courseHooks';
+import { navigateBackOr } from '../lib/navigation';
+import { getBlockingLesson, isLessonUnlocked, isWeekComplete, isWeekUnlocked } from '../lib/unlock';
 import NotFound from './NotFound';
 
 function stepTime(seconds?: number): string | null {
@@ -22,25 +25,80 @@ function stepTime(seconds?: number): string | null {
 export default function Les() {
   const { lessonId } = useParams<{ lessonId: string }>();
   const lesson = lessonId ? getLesson(lessonId) : undefined;
-  const progress = useLessonProgress(lessonId ?? '');
+  const doneLessonIds = useDoneLessonIds();
+  const allWeeksOpen = useAllWeeksOpen();
   const navigate = useNavigate();
+  const [completing, setCompleting] = useState(false);
 
   if (!lesson) return <NotFound />;
+  if (doneLessonIds === undefined) {
+    return <p className="card sub" role="status">Je voortgang wordt geladen…</p>;
+  }
 
-  const isDone = progress?.status === 'done';
+  const week = getWeek(lesson.weekId);
+  const weekUnlocked = allWeeksOpen || (week ? isWeekUnlocked(week, doneLessonIds) : false);
+  const blockingLesson = weekUnlocked ? getBlockingLesson(lesson, doneLessonIds) : undefined;
+  if (!isLessonUnlocked(lesson, doneLessonIds, allWeeksOpen)) {
+    return (
+      <div className="screen-stack">
+        <div className="flex items-center gap-3 px-0.5 pt-1">
+          <Link
+            to="/cursus"
+            aria-label="Terug naar cursus"
+            className="grid h-10 w-10 flex-none place-items-center rounded-[14px] border border-line bg-sand text-ink"
+          >
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M11 3.5 5.5 9 11 14.5" />
+            </svg>
+          </Link>
+          <span className="eyebrow min-w-0 truncate !text-ink-soft">{lessonCrumb(lesson)}</span>
+        </div>
+        <section className="card">
+          <span className="chip">Nog vergrendeld</span>
+          <h1 className="card-title mt-3">Deze les komt straks</h1>
+          <p className="sub mt-1.5">
+            {blockingLesson
+              ? `Rond eerst Les ${blockingLesson.order}, ${blockingLesson.title}, af. Daarna gaat deze les vanzelf open.`
+              : 'Rond eerst genoeg lessen van de eerdere weken af. Daarna gaat deze week vanzelf open.'}
+          </p>
+          <Link
+            to={blockingLesson ? `/les/${blockingLesson.id}` : '/cursus'}
+            className="btn-primary mt-4"
+          >
+            {blockingLesson ? `Ga naar Les ${blockingLesson.order}` : 'Terug naar je weken'}
+          </Link>
+        </section>
+      </div>
+    );
+  }
+
+  const isDone = doneLessonIds.has(lesson.id);
   const cards = getFlashcards(lesson.flashcardIds);
   const relatedSkills = lesson.relatedSkillIds.map(getSkill).filter((s) => s !== undefined);
   const nextInWeek = followingLessonInWeek(lesson);
+  const nextIsUnlocked = nextInWeek ? isLessonUnlocked(nextInWeek, doneLessonIds, allWeeksOpen) : false;
   const hasBody = lesson.intro.length > 0;
 
-  const completeLesson = () => {
-    void markLessonDone(lesson.id).then(() => {
+  const goBack = () => {
+    navigateBackOr(navigate, `/cursus/week/${lesson.weekId}`);
+  };
+
+  const completeLesson = async () => {
+    if (completing) return;
+    setCompleting(true);
+    try {
+      await markLessonDone(lesson.id);
+      const completed = new Set(doneLessonIds);
+      completed.add(lesson.id);
+      const weekComplete = week ? isWeekComplete(week, completed) : false;
       if (nextInWeek) {
         navigate(`/les/${nextInWeek.id}`);
       } else {
-        navigate(`/cursus/week/${lesson.weekId}`, { state: { weekComplete: true } });
+        navigate(`/cursus/week/${lesson.weekId}`, { state: { weekComplete } });
       }
-    });
+    } finally {
+      setCompleting(false);
+    }
   };
 
   return (
@@ -49,7 +107,7 @@ export default function Les() {
       <div className="flex items-center gap-3 px-0.5 pt-1">
         <button
           type="button"
-          onClick={() => navigate(-1)}
+          onClick={goBack}
           aria-label="Terug"
           className="grid h-10 w-10 flex-none place-items-center rounded-[14px] border border-line bg-sand text-ink"
         >
@@ -145,6 +203,22 @@ export default function Les() {
         </section>
       )}
 
+      {/* Optionele vervolgstap naar een steunmiddel dat bij de les hoort. */}
+      {lesson.supportCta && (
+        <section className="card border-euca/25" aria-label="Passend steunmiddel">
+          <p className="eyebrow">Meteen toepassen</p>
+          {lesson.supportCta.description && (
+            <p className="sub mt-1.5">{lesson.supportCta.description}</p>
+          )}
+          <Link to={lesson.supportCta.to} className="btn-primary mt-3.5">
+            <span className="min-w-0">{lesson.supportCta.label}</span>
+            <svg className="flex-none" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M3 9h12m-5-5 5 5-5 5" />
+            </svg>
+          </Link>
+        </section>
+      )}
+
       {/* Flashcards */}
       {cards.length > 0 && (
         <section className="flex flex-col gap-3">
@@ -160,7 +234,7 @@ export default function Les() {
         <div className="flex flex-wrap items-center gap-2 px-0.5">
           <span className="sub">Past bij deze les:</span>
           {relatedSkills.map((s) => (
-            <Link key={s.id} to="/oefenen" className="chip">
+            <Link key={s.id} to={`/oefenen/vaardigheden?skill=${encodeURIComponent(s.id)}`} className="chip">
               {s.name}
             </Link>
           ))}
@@ -178,7 +252,7 @@ export default function Les() {
             </span>
             Voltooid — mooi gedaan.
           </p>
-          {nextInWeek ? (
+          {nextInWeek && nextIsUnlocked ? (
             <Link to={`/les/${nextInWeek.id}`} className="btn-primary">
               <span className="min-w-0">Volgende les: {nextInWeek.title}</span>
               <svg className="flex-none" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -186,8 +260,14 @@ export default function Les() {
               </svg>
             </Link>
           ) : (
-            <Link to={`/cursus/week/${lesson.weekId}`} state={{ weekComplete: true }} className="btn-primary">
-              <span className="min-w-0">Dit was de laatste les van deze week</span>
+            <Link
+              to={`/cursus/week/${lesson.weekId}`}
+              state={{ weekComplete: week ? isWeekComplete(week, doneLessonIds) : false }}
+              className="btn-primary"
+            >
+              <span className="min-w-0">
+                {week && isWeekComplete(week, doneLessonIds) ? 'Deze week is helemaal afgerond' : 'Terug naar deze week'}
+              </span>
               <svg className="flex-none" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d="M3 9h12m-5-5 5 5-5 5" />
               </svg>
@@ -195,8 +275,13 @@ export default function Les() {
           )}
         </div>
       ) : (
-        <button type="button" className="btn-primary min-h-[54px] rounded-[18px] text-base" onClick={completeLesson}>
-          <span className="min-w-0">Rond deze les af</span>
+        <button
+          type="button"
+          className="btn-primary min-h-[54px] rounded-[18px] text-base"
+          onClick={() => void completeLesson()}
+          disabled={completing}
+        >
+          <span className="min-w-0">{completing ? 'Voortgang opslaan…' : 'Rond deze les af'}</span>
           <svg className="flex-none" width="19" height="19" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M3 9h12m-5-5 5 5-5 5" />
           </svg>

@@ -1,12 +1,11 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { flashcards } from '../content/flashcards';
 import { getLesson, getWeek } from '../content/helpers';
 import type { Flashcard } from '../content/types';
 import FlashcardView from '../components/FlashcardView';
+import { useDoneLessonIds } from '../db/hooks';
+import { getEligibleFlashcards } from '../lib/flashcardEligibility';
 import { formatDueHint, useDueCount, useNextDue } from '../lib/srs';
-
-/** Alle flashcard-ids uit de contentlaag (stabiele moduleconstante voor de SRS-hooks). */
-const ALL_FLASHCARD_IDS = flashcards.map((f) => f.id);
 
 interface WeekGroep {
   weekNumber: number;
@@ -18,11 +17,11 @@ interface WeekGroep {
  * Kaarten zonder vindbare les/week komen in een aparte 'Overig'-groep.
  * Oplopend gesorteerd op weeknummer; weken zonder kaarten vallen weg.
  */
-function groepeerPerWeek(): { weken: WeekGroep[]; overig: Flashcard[] } {
+function groepeerPerWeek(cards: Flashcard[]): { weken: WeekGroep[]; overig: Flashcard[] } {
   const perWeek = new Map<number, Flashcard[]>();
   const overig: Flashcard[] = [];
 
-  for (const card of flashcards) {
+  for (const card of cards) {
     const lesson = card.lessonId ? getLesson(card.lessonId) : undefined;
     const weekNumber = lesson ? getWeek(lesson.weekId)?.number : undefined;
     if (weekNumber === undefined) {
@@ -42,9 +41,17 @@ function groepeerPerWeek(): { weken: WeekGroep[]; overig: Flashcard[] } {
 
 /** Overzicht van alle flashcards: SRS-herhalingstegel plus de kaartenlijst gegroepeerd per week. */
 export default function FlashcardsOverzicht() {
-  const dueCount = useDueCount(ALL_FLASHCARD_IDS);
-  const nextDue = useNextDue(ALL_FLASHCARD_IDS);
-  const { weken, overig } = groepeerPerWeek();
+  const doneLessonIds = useDoneLessonIds();
+  const eligibleCards = useMemo(
+    () => (doneLessonIds ? getEligibleFlashcards(doneLessonIds) : []),
+    [doneLessonIds]
+  );
+  const eligibleIds = useMemo(() => eligibleCards.map((card) => card.id), [eligibleCards]);
+  const dueCount = useDueCount(eligibleIds);
+  const nextDue = useNextDue(eligibleIds);
+  const { weken, overig } = useMemo(() => groepeerPerWeek(eligibleCards), [eligibleCards]);
+  const ready = doneLessonIds !== undefined && dueCount !== undefined;
+  const due = dueCount ?? 0;
 
   return (
     <div className="screen-stack">
@@ -64,20 +71,24 @@ export default function FlashcardsOverzicht() {
         <div className="card flex flex-col gap-3.5">
           <div className="flex items-start gap-3.5">
             <span className="grid h-11 w-11 flex-none place-items-center rounded-[14px] bg-eucatint font-display text-lg font-semibold text-euca-deep" aria-hidden="true">
-              {dueCount ?? '·'}
+              {ready ? due : '·'}
             </span>
             <span className="min-w-0 flex-1">
               <span className="block text-[15px] font-bold text-ink">
-                {dueCount === undefined
+                {!ready
                   ? 'Herhaling wordt geladen…'
-                  : dueCount > 0
-                    ? `${dueCount} ${dueCount === 1 ? 'kaart' : 'kaarten'} om te herhalen`
+                  : eligibleCards.length === 0
+                    ? 'Nog geen kaarten beschikbaar'
+                  : due > 0
+                    ? `${due} ${due === 1 ? 'kaart' : 'kaarten'} om te herhalen`
                     : 'Alles herhaald'}
               </span>
               <span className="sub mt-0.5 block">
-                {dueCount === undefined
+                {!ready
                   ? 'Even geduld.'
-                  : dueCount > 0
+                  : eligibleCards.length === 0
+                    ? 'Rond een les af; de kaarten uit die les verschijnen dan hier.'
+                  : due > 0
                     ? 'Kort herhalen houdt het vers.'
                     : nextDue
                       ? `De volgende kaart komt ${formatDueHint(nextDue)} terug.`
@@ -85,17 +96,22 @@ export default function FlashcardsOverzicht() {
               </span>
             </span>
           </div>
-          <Link
-            to="/oefenen/flashcards"
-            className={dueCount && dueCount > 0 ? 'btn-primary !min-h-[44px]' : 'btn-secondary w-full'}
-          >
-            Start herhaling
-          </Link>
+          {ready && due > 0 ? (
+            <Link to="/oefenen/flashcards" className="btn-primary !min-h-[44px]">
+              Start herhaling
+            </Link>
+          ) : (
+            <button type="button" className="btn-secondary w-full" disabled>
+              {eligibleCards.length === 0 ? 'Rond eerst een les af' : 'Nu niets te herhalen'}
+            </button>
+          )}
         </div>
       </section>
 
       {/* Kaartenlijst, gegroepeerd per week */}
-      {flashcards.length === 0 ? (
+      {!ready ? (
+        <p className="card sub" role="status">Je kaarten worden geladen…</p>
+      ) : eligibleCards.length === 0 ? (
         <p className="card sub">Nog geen kaarten — ze verschijnen zodra je lessen afrondt.</p>
       ) : (
         <>

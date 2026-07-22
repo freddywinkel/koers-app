@@ -7,21 +7,26 @@ export default function DesignPicker() {
   const active = get('design', 'noordzeemist');
 
   return (
-    <div className="mt-1.5 flex flex-col gap-2" role="radiogroup" aria-label="Ontwerp">
+    <fieldset className="mt-1.5 flex min-w-0 flex-col gap-2">
+      <legend className="sr-only">Ontwerp</legend>
       {DESIGNS.map((design) => {
         const isActive = active === design.value;
         return (
-          <button
+          <label
             key={design.value}
-            type="button"
-            role="radio"
-            aria-checked={isActive}
-            onClick={() => void set('design', design.value)}
             className={[
-              'flex min-h-[56px] items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-transform active:scale-[0.99]',
+              'choice-option flex min-h-[56px] cursor-pointer items-center gap-3 rounded-2xl border px-3.5 py-2.5 text-left transition-transform active:scale-[0.99]',
               isActive ? 'border-euca-deep bg-eucatint' : 'border-line bg-raised'
             ].join(' ')}
           >
+            <input
+              className="sr-only"
+              type="radio"
+              name="koers-design"
+              value={design.value}
+              checked={isActive}
+              onChange={() => void set('design', design.value)}
+            />
             <span className="flex flex-none -space-x-1.5" aria-hidden="true">
               {design.swatches.map((hex) => (
                 <span key={hex} className="h-5 w-5 rounded-full border border-line" style={{ backgroundColor: hex }} />
@@ -47,9 +52,9 @@ export default function DesignPicker() {
                 <path d="M3.5 9.5 7 13l7.5-8" />
               </svg>
             )}
-          </button>
+          </label>
         );
       })}
-    </div>
+    </fieldset>
   );
 }

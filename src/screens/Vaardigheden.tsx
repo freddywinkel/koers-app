@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { skills } from '../content/skills';
 import type { PanValue } from '../content/types';
 import { PAN_LABELS } from '../components/PanIcon';
@@ -8,11 +8,39 @@ const PAN_OPTIONS: PanValue[] = [1, 2, 3, 4, 5];
 
 /** Vaardighedenpagina: alle vaardigheden met pan-filter, bereikbaar via /oefenen/vaardigheden. */
 export default function Vaardigheden() {
+  const [searchParams, setSearchParams] = useSearchParams();
   /* Pan-filter: null = alles tonen. Een vaardigheid past als de gekozen pan
    * binnen diens panMin..panMax valt. */
-  const [panFilter, setPanFilter] = useState<PanValue | null>(null);
-  const visibleSkills =
-    panFilter === null ? skills : skills.filter((s) => s.panMin <= panFilter && panFilter <= s.panMax);
+  const requestedPan = Number(searchParams.get('pan'));
+  const panFilter: PanValue | null =
+    Number.isInteger(requestedPan) && requestedPan >= 1 && requestedPan <= 5
+      ? (requestedPan as PanValue)
+      : null;
+  const selectedSkillId = searchParams.get('skill');
+  const visibleSkills = useMemo(
+    () => (panFilter === null ? skills : skills.filter((s) => s.panMin <= panFilter && panFilter <= s.panMax)),
+    [panFilter]
+  );
+
+  const setPanFilter = (pan: PanValue | null) => {
+    const next = new URLSearchParams(searchParams);
+    if (pan === null) next.delete('pan');
+    else next.set('pan', String(pan));
+    next.delete('skill');
+    setSearchParams(next, { replace: true });
+  };
+
+  useEffect(() => {
+    if (!selectedSkillId || !visibleSkills.some((skill) => skill.id === selectedSkillId)) return;
+    const frame = window.requestAnimationFrame(() => {
+      const details = document.getElementById(`skill-${selectedSkillId}`);
+      if (!(details instanceof HTMLDetailsElement)) return;
+      details.open = true;
+      details.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      details.querySelector<HTMLElement>('summary')?.focus({ preventScroll: true });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [selectedSkillId, visibleSkills]);
 
   return (
     <div className="screen-stack">
@@ -71,8 +99,12 @@ export default function Vaardigheden() {
           <p className="card sub">Geen vaardigheden gevonden bij deze pan — kies een andere pan of &lsquo;Alles&rsquo;.</p>
         ) : (
           visibleSkills.map((skill) => (
-            <details key={skill.id} className="card group">
-              <summary className="flex cursor-pointer list-none items-center gap-3 [&::-webkit-details-marker]:hidden">
+            <details
+              id={`skill-${skill.id}`}
+              key={skill.id}
+              className="card group scroll-mt-4"
+            >
+              <summary className="flex cursor-pointer list-none items-center gap-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-euca-deep [&::-webkit-details-marker]:hidden">
                 <span className="min-w-0 flex-1">
                   <span className="card-title block">{skill.name}</span>
                   <span className="sub mt-1 block">{skill.summary}</span>

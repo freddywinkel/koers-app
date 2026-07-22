@@ -1,10 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import PanSelector from '../components/PanSelector';
 import { PAN_LABELS } from '../components/PanIcon';
 import StreakRing from '../components/StreakRing';
-import { useDoneLessonIds, useTodayCheckin, saveCheckin, useStreak, useSettings } from '../db/hooks';
+import {
+  useDoneLessonIds,
+  useRecentCheckins,
+  useTodayCheckin,
+  saveCheckin,
+  startOfDay,
+  useStreak,
+  useSettings
+} from '../db/hooks';
 import { lessonCrumb } from '../content/helpers';
+import { getSkill } from '../content/skills';
+import type { PanValue } from '../content/types';
 import { useNextCourseLesson } from '../lib/courseHooks';
 
 function greeting(): string {
@@ -20,7 +30,7 @@ function dateLabel(): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
-const FEEDBACK: Record<number, string> = {
+const FEEDBACK: Record<PanValue, string> = {
   1: 'Mooi. Neem dit rustige gevoel even in je op.',
   2: 'Fijn dat je even voelt hoe het gaat.',
   3: 'Goed dat je het merkt. Je hoeft er nu niets mee.',
@@ -28,8 +38,22 @@ const FEEDBACK: Record<number, string> = {
   5: 'Dat is echt veel. Kijk bij Steun als je direct iets nodig hebt — daar ben je nooit een last.'
 };
 
+const RECOMMENDED_SKILL_IDS: Record<PanValue, string> = {
+  1: 'waarden-verhelderen',
+  2: 'ademanker',
+  3: 'gronden-54321',
+  4: 'adem-vertragen',
+  5: 'gronden-54321'
+};
+
+function checkinDateLabel(ts: number): string {
+  const label = new Intl.DateTimeFormat('nl-NL', { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(ts));
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
 export default function Vandaag() {
   const checkin = useTodayCheckin();
+  const recentCheckins = useRecentCheckins(8);
   const streak = useStreak();
   const doneLessonIds = useDoneLessonIds();
   const { get } = useSettings();
@@ -37,9 +61,99 @@ export default function Vandaag() {
   const panCheckinUnlocked = doneLessonIds?.has('w01-l03') ?? false;
 
   const [note, setNote] = useState('');
+  const [noteStatus, setNoteStatus] = useState<'idle' | 'pending' | 'saved' | 'error'>('idle');
+  const noteRef = useRef('');
+  const noteDirtyRef = useRef(false);
+  const noteTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const checkinRef = useRef(checkin);
+  const panRef = useRef<PanValue | null>(checkin?.pan ?? null);
+  const panLocallyAheadRef = useRef(false);
+  const changeRevisionRef = useRef(0);
+  const saveChainRef = useRef<Promise<void>>(Promise.resolve());
+  const mountedRef = useRef(true);
+  checkinRef.current = checkin;
+
   useEffect(() => {
-    setNote(checkin?.note ?? '');
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (noteDirtyRef.current) return;
+    const savedNote = checkin?.note ?? '';
+    noteRef.current = savedNote;
+    setNote(savedNote);
   }, [checkin?.id, checkin?.note]);
+
+  useEffect(() => {
+    if (!panLocallyAheadRef.current) panRef.current = checkin?.pan ?? null;
+  }, [checkin?.id, checkin?.pan]);
+
+  const queueNoteSave = useCallback((value: string, pan: PanValue, revision = changeRevisionRef.current) => {
+    const write = saveChainRef.current
+      .catch(() => undefined)
+      .then(() => saveCheckin({ pan, note: value }));
+    saveChainRef.current = write;
+    void write.then(
+      () => {
+        if (revision === changeRevisionRef.current && panRef.current === pan && noteRef.current === value) {
+          noteDirtyRef.current = false;
+          panLocallyAheadRef.current = false;
+          if (mountedRef.current) setNoteStatus('saved');
+        }
+      },
+      () => {
+        if (revision === changeRevisionRef.current && panRef.current === pan && noteRef.current === value) {
+          noteDirtyRef.current = true;
+          panLocallyAheadRef.current = false;
+          panRef.current = checkinRef.current?.pan ?? null;
+          if (mountedRef.current) setNoteStatus('error');
+        }
+      }
+    );
+    return write;
+  }, []);
+
+  const flushNote = useCallback(() => {
+    const current = checkinRef.current;
+    const pan = panRef.current ?? current?.pan;
+    if (!pan || !noteDirtyRef.current) return;
+    if (noteTimerRef.current) {
+      clearTimeout(noteTimerRef.current);
+      noteTimerRef.current = null;
+    }
+    void queueNoteSave(noteRef.current, pan, changeRevisionRef.current);
+  }, [queueNoteSave]);
+
+  useEffect(() => {
+    if (!checkin || !noteDirtyRef.current) return;
+    if (noteTimerRef.current) clearTimeout(noteTimerRef.current);
+    noteTimerRef.current = setTimeout(() => {
+      noteTimerRef.current = null;
+      void queueNoteSave(noteRef.current, panRef.current ?? checkin.pan, changeRevisionRef.current);
+    }, 650);
+    return () => {
+      if (noteTimerRef.current) clearTimeout(noteTimerRef.current);
+    };
+  }, [checkin?.id, checkin?.pan, note, queueNoteSave]);
+
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.visibilityState === 'hidden') flushNote();
+    };
+    window.addEventListener('pagehide', flushNote);
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => {
+      window.removeEventListener('pagehide', flushNote);
+      document.removeEventListener('visibilitychange', handleVisibility);
+      flushNote();
+    };
+  }, [flushNote]);
+
+  const recommendation = checkin ? getSkill(RECOMMENDED_SKILL_IDS[checkin.pan]) : undefined;
+  const previousCheckins = (recentCheckins ?? []).filter((row) => startOfDay(row.ts) < startOfDay(Date.now())).slice(0, 5);
 
   const naam = get('naam').trim();
   const initialen = naam
@@ -105,15 +219,27 @@ export default function Vandaag() {
           value={checkin?.pan ?? null}
           disabled={!panCheckinUnlocked}
           onChange={(pan) => {
-            void saveCheckin({ pan });
+            if (noteTimerRef.current) {
+              clearTimeout(noteTimerRef.current);
+              noteTimerRef.current = null;
+            }
+            panRef.current = pan;
+            panLocallyAheadRef.current = true;
+            noteDirtyRef.current = true;
+            changeRevisionRef.current += 1;
+            setNoteStatus('pending');
+            void queueNoteSave(noteRef.current, pan, changeRevisionRef.current);
           }}
         />
         {!panCheckinUnlocked && doneLessonIds !== undefined && (
           <div className="mt-3.5 rounded-2xl border border-line bg-dune px-4 py-3" role="status" aria-live="polite">
             <p className="text-sm font-extrabold text-ink">Nog vergrendeld</p>
             <p className="sub mt-1">Rond Week 1, Les 3 af om het pannetjesmodel te ontgrendelen.</p>
-            <Link to="/les/w01-l03" className="mt-2 inline-flex min-h-[44px] items-center font-extrabold text-euca-deep underline underline-offset-2">
-              Ga naar Week 1, Les 3
+            <Link
+              to={next.lesson ? `/les/${next.lesson.id}` : '/cursus/week/w01'}
+              className="mt-2 inline-flex min-h-[44px] items-center font-extrabold text-euca-deep underline underline-offset-2"
+            >
+              {next.lesson?.weekId === 'w01' ? `Ga verder met Les ${next.lesson.order}` : 'Ga naar Week 1'}
             </Link>
           </div>
         )}
@@ -130,15 +256,62 @@ export default function Vandaag() {
                 rows={2}
                 value={note}
                 placeholder="Eén zin is genoeg."
-                onChange={(e) => setNote(e.target.value)}
-                onBlur={() => {
-                  if (note !== (checkin.note ?? '')) void saveCheckin({ pan: checkin.pan, note });
+                onChange={(e) => {
+                  noteRef.current = e.target.value;
+                  noteDirtyRef.current = true;
+                  changeRevisionRef.current += 1;
+                  setNoteStatus('pending');
+                  setNote(e.target.value);
                 }}
+                onBlur={flushNote}
               />
+              <span className="mt-1 block text-[12px] text-ink-soft" aria-live="polite">
+                {noteStatus === 'pending'
+                  ? 'Notitie wordt automatisch opgeslagen…'
+                  : noteStatus === 'saved'
+                    ? 'Notitie opgeslagen.'
+                    : noteStatus === 'error'
+                      ? 'Opslaan lukte niet. Je tekst blijft staan; probeer het opnieuw.'
+                      : 'Je notitie wordt automatisch bewaard.'}
+              </span>
             </label>
+            {recommendation && (
+              <div className="mt-3.5 rounded-2xl border border-euca/25 bg-eucatint px-4 py-3">
+                <p className="text-sm font-extrabold text-ink">Past nu: {recommendation.name}</p>
+                <p className="sub mt-1">{recommendation.summary}</p>
+                <Link
+                  to={`/oefenen/vaardigheden?pan=${checkin.pan}&skill=${encodeURIComponent(recommendation.id)}`}
+                  className="mt-2 inline-flex min-h-[44px] items-center font-extrabold text-euca-deep underline underline-offset-2"
+                >
+                  Open deze vaardigheid
+                </Link>
+              </div>
+            )}
           </>
         )}
       </section>
+
+      {panCheckinUnlocked && recentCheckins !== undefined && previousCheckins.length > 0 && (
+        <section className="card !p-0" aria-labelledby="recente-checkins-heading">
+          <div className="px-[18px] pb-2 pt-[18px]">
+            <h2 id="recente-checkins-heading" className="card-title">Recente check-ins</h2>
+            <p className="sub mt-1">Zo kun je rustig terugkijken naar de afgelopen dagen.</p>
+          </div>
+          <ul className="divide-y divide-line">
+            {previousCheckins.map((row) => (
+              <li key={row.id ?? row.ts} className="px-[18px] py-3">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-[13px] font-bold text-ink-soft">{checkinDateLabel(row.ts)}</span>
+                  <span className="chip chip-warm">Pan {row.pan} · {PAN_LABELS[row.pan]}</span>
+                </div>
+                {row.note?.trim() && (
+                  <p className="mt-1.5 whitespace-pre-wrap text-sm leading-body text-ink">{row.note}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/* Volgende les — eerste onafgeronde les van de vroegste ontgrendelde week */}
       {next.ready &&

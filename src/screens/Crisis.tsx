@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import SafetyContacts from '../components/SafetyContacts';
 import * as crisisRaw from '../content/crisis';
 import {
   countFilledPlanSections,
@@ -37,8 +38,12 @@ const CALMING_METHODS: CalmingMethod[] = [
   {
     id: 'adem',
     title: 'Adem langer uit',
-    text: 'Een rustige, langere uitademing kan je lichaam helpen vertragen.',
-    steps: ['Adem zacht in en tel tot 4.', 'Adem langzaam uit en tel tot 6.', 'Herhaal dit 6 keer — rustig aan, het hoeft niet perfect.']
+    text: 'Een rustige, iets langere uitademing kan helpen om wat te vertragen.',
+    steps: [
+      'Adem rustig in op een manier die vanzelf gaat. Tel eventueel tot 4.',
+      'Adem zacht uit en maak de uitademing alleen iets langer als dat prettig voelt. Tel eventueel tot 6.',
+      'Herhaal dit een paar keer. Stop als je duizelig, benauwd of onrustiger wordt.'
+    ]
   },
   {
     id: 'koel',
@@ -63,7 +68,7 @@ const CALMING_METHODS: CalmingMethod[] = [
   {
     id: 'klein',
     title: 'Houd de volgende minuut klein',
-    text: 'Je hoeft nu niet alles op te lossen. Kies alleen één haalbare stap.',
+    text: 'Duw niets weg. Je hoeft nu niet alles op te lossen. Kies alleen één haalbare stap.',
     steps: [
       'Ga zitten op een plek die iets rustiger voelt.',
       'Neem een slok water of pak iets zachts vast.',
@@ -124,6 +129,8 @@ export default function Crisis() {
         <p className="sub mt-1.5">{INTRO}</p>
       </header>
 
+      <SafetyContacts />
+
       {/* Gronding: interactieve 5-4-3-2-1 */}
       <section className="card !bg-dune" aria-label="Kom eerst even tot rust">
         <h2 className="card-title">Kom eerst even tot rust</h2>
@@ -139,7 +146,9 @@ export default function Crisis() {
       {/* Steunmiddelen: doorverwijzing naar eigen pagina's */}
       <SteunmiddelenSection />
 
-      <p className="px-1 pb-2 text-center text-[13px] font-semibold text-ink-soft">Je bent niet alleen. 🤍</p>
+      <p className="px-1 pb-2 text-center text-[13px] font-semibold leading-body text-ink-soft">
+        {crisisRaw.steunendeAfsluiting} 🤍
+      </p>
     </div>
   );
 }
@@ -174,7 +183,7 @@ function GroundingStepper({ steps }: { steps: GroundingStep[] }) {
       <div className="mt-4 rounded-2xl bg-sand p-4 text-center">
         <p className="font-display text-[19px] font-semibold text-ink">Goed gedaan. 🤍</p>
         <p className="sub mt-1.5">
-          Je aandacht is even terug bij het hier en nu. Dit gevoel is hevig — en het gaat weer voorbij.
+          Je aandacht is even terug bij het hier en nu. Dit gevoel is hevig — en het kan weer wat zakken.
         </p>
         <button type="button" className="btn-secondary mx-auto mt-3.5 w-full" onClick={restart}>
           Oefening opnieuw beginnen
@@ -320,7 +329,7 @@ function SteunmiddelenSection() {
     <section className="card" aria-label="Steunmiddelen">
       <p className="eyebrow">Voor later en voor nu</p>
       <h2 className="card-title mt-1">Steunmiddelen</h2>
-      <p className="sub mt-1.5">Twee rustige oefeningen, elk op een eigen pagina — altijd bij de hand.</p>
+      <p className="sub mt-1.5">Twee steunmiddelen, elk op een eigen pagina — altijd bij de hand.</p>
 
       <div className="mt-3 flex flex-col gap-2">
         {/* Signaleringsplan */}

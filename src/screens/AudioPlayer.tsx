@@ -8,6 +8,7 @@ import {
   isAudioCached,
   type PlayerState
 } from '../lib/audioPlayer';
+import { navigateBackOr } from '../lib/navigation';
 import NotFound from './NotFound';
 
 type OfflineState = 'checking' | 'ready' | 'downloading' | 'saved' | 'error';
@@ -104,7 +105,7 @@ export default function AudioPlayer() {
       <div className="flex items-center gap-3 px-0.5 pt-1">
         <button
           type="button"
-          onClick={() => navigate(-1)}
+          onClick={() => navigateBackOr(navigate, '/oefenen/audio')}
           aria-label="Terug"
           className="grid h-10 w-10 flex-none place-items-center rounded-[14px] border border-line bg-sand text-ink"
         >
@@ -180,7 +181,7 @@ export default function AudioPlayer() {
         <section className="card border-euca-deep/25 bg-eucatint">
           <h2 className="card-title">Mooi gedaan</h2>
           <p className="sub mt-1.5">
-            Je hebt de oefening helemaal afgerond. Neem even een rustige ademhaling voordat je verder gaat.
+            Je hebt de oefening helemaal afgerond. Haal één keer rustig adem voordat je verder gaat.
           </p>
           <button type="button" className="btn-secondary mt-3.5 w-full" onClick={() => void player.start()}>
             Opnieuw beluisteren
