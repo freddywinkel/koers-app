@@ -113,6 +113,13 @@ input[type='date'] {
   outline-offset: 3px;
 }
 
+/* AppShell focust de nieuwe paginakop programmatisch voor screenreaders.
+   Die h1 is geen toetsenbordbediening en staat met tabindex -1 niet in de
+   tabvolgorde; voorkom daarom de misleidende rechthoek op een iOS-koude start. */
+main h1[tabindex='-1']:focus {
+  outline: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html:focus-within {
     scroll-behavior: auto;

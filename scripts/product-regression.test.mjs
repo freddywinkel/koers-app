@@ -35,6 +35,7 @@ test('toetsenbordfocus en bewegingsvoorkeur hebben een globaal vangnet', async (
   const shell = await read('src/components/AppShell.tsx');
   const updatePrompt = await read('src/components/UpdatePrompt.tsx');
   assert.match(css, /:focus-visible/);
+  assert.match(css, /main h1\[tabindex='-1'\]:focus\s*\{\s*outline:\s*none;/);
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(shell, /<Suspense/);
   assert.match(shell, /querySelector<HTMLHeadingElement>\('h1'\)/);
