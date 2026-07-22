@@ -10,7 +10,7 @@ import {
 /**
  * Steun (/steun) — kalm, compleet oppervlak voor moeilijke momenten.
  * Volgorde: eerst gronden (5-4-3-2-1), daarna een kleine aanvullende
- * methode kiezen en tenslotte doorverwijzen naar het eigen gereedschap
+ * methode kiezen en tenslotte doorverwijzen naar de eigen steunmiddelen
  * (Signaleringsplan en G-Schema) op eigen pagina's.
  */
 
@@ -136,8 +136,8 @@ export default function Crisis() {
 
       <CalmingMethods />
 
-      {/* Gereedschap: doorverwijzing naar eigen pagina's */}
-      <GereedschapSection />
+      {/* Steunmiddelen: doorverwijzing naar eigen pagina's */}
+      <SteunmiddelenSection />
 
       <p className="px-1 pb-2 text-center text-[13px] font-semibold text-ink-soft">Je bent niet alleen. 🤍</p>
     </div>
@@ -310,16 +310,16 @@ function CalmingMethods() {
   );
 }
 
-/* ------------------------------- Gereedschap ------------------------------ */
+/* ------------------------------ Steunmiddelen ----------------------------- */
 
-function GereedschapSection() {
+function SteunmiddelenSection() {
   const plan = useHuidigSignaleringsplan();
   const filled = plan ? countFilledPlanSections(plan.fields) : undefined;
 
   return (
-    <section className="card" aria-label="Je gereedschap">
+    <section className="card" aria-label="Steunmiddelen">
       <p className="eyebrow">Voor later en voor nu</p>
-      <h2 className="card-title mt-1">Je gereedschap</h2>
+      <h2 className="card-title mt-1">Steunmiddelen</h2>
       <p className="sub mt-1.5">Twee rustige oefeningen, elk op een eigen pagina — altijd bij de hand.</p>
 
       <div className="mt-3 flex flex-col gap-2">

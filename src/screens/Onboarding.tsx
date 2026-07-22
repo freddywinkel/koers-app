@@ -34,7 +34,7 @@ export default function Onboarding() {
   }
 
   return (
-    <div className="mx-auto flex h-screen min-h-screen w-full max-w-md flex-col overflow-y-auto overscroll-y-contain bg-mist px-[18px] pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] supports-[height:100dvh]:h-dvh supports-[height:100dvh]:min-h-dvh">
+    <div className="mx-auto flex h-screen min-h-screen w-full max-w-2xl flex-col overflow-y-auto overscroll-y-contain bg-mist px-[18px] pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] md:px-8 supports-[height:100dvh]:h-dvh supports-[height:100dvh]:min-h-dvh">
       {/* Overslaan (niet op het laatste scherm: daar staat de startknop) */}
       <div className="flex min-h-[44px] items-center justify-end">
         {!isLast && (

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PanSelector from '../components/PanSelector';
 import { PAN_LABELS } from '../components/PanIcon';
 import StreakRing from '../components/StreakRing';
-import { useTodayCheckin, saveCheckin, useStreak, useSettings } from '../db/hooks';
+import { useDoneLessonIds, useTodayCheckin, saveCheckin, useStreak, useSettings } from '../db/hooks';
 import { lessonCrumb } from '../content/helpers';
 import { useNextCourseLesson } from '../lib/courseHooks';
 
@@ -31,8 +31,10 @@ const FEEDBACK: Record<number, string> = {
 export default function Vandaag() {
   const checkin = useTodayCheckin();
   const streak = useStreak();
+  const doneLessonIds = useDoneLessonIds();
   const { get } = useSettings();
   const next = useNextCourseLesson();
+  const panCheckinUnlocked = doneLessonIds?.has('w01-l03') ?? false;
 
   const [note, setNote] = useState('');
   useEffect(() => {
@@ -96,14 +98,26 @@ export default function Vandaag() {
       {/* Check-in · pannetjesmodel */}
       <section className="card" aria-label="Dagelijkse check-in">
         <h2 className="card-title">Welke pan ben je nu?</h2>
-        <p className="sub mt-1">Tik op de pan die bij dit moment past.</p>
+        <p className="sub mt-1">
+          {panCheckinUnlocked ? 'Tik op de pan die bij dit moment past.' : 'Het pannetjesmodel komt later in Week 1 aan bod.'}
+        </p>
         <PanSelector
           value={checkin?.pan ?? null}
+          disabled={!panCheckinUnlocked}
           onChange={(pan) => {
             void saveCheckin({ pan });
           }}
         />
-        {checkin && (
+        {!panCheckinUnlocked && doneLessonIds !== undefined && (
+          <div className="mt-3.5 rounded-2xl border border-line bg-dune px-4 py-3" role="status" aria-live="polite">
+            <p className="text-sm font-extrabold text-ink">Nog vergrendeld</p>
+            <p className="sub mt-1">Rond Week 1, Les 3 af om het pannetjesmodel te ontgrendelen.</p>
+            <Link to="/les/w01-l03" className="mt-2 inline-flex min-h-[44px] items-center font-extrabold text-euca-deep underline underline-offset-2">
+              Ga naar Week 1, Les 3
+            </Link>
+          </div>
+        )}
+        {panCheckinUnlocked && checkin && (
           <>
             <p className="mt-3.5 flex items-start gap-2 text-[12.5px] font-semibold text-ink-soft">
               <span className="mt-[5px] h-2 w-2 flex-none rounded-full bg-euca" aria-hidden="true" />
@@ -176,7 +190,11 @@ export default function Vandaag() {
           ) : (
             <>
               <h2 className="card-title">Een zachte start</h2>
-              <p className="sub mt-[3px]">Check vandaag even in en begin aan een nieuwe reeks. Klein is genoeg.</p>
+              <p className="sub mt-[3px]">
+                {panCheckinUnlocked
+                  ? 'Check vandaag even in en begin aan een nieuwe reeks. Klein is genoeg.'
+                  : 'Na Week 1, Les 3 kun je hier dagelijks inchecken en een reeks opbouwen.'}
+              </p>
             </>
           )}
         </div>

@@ -9,6 +9,7 @@
    ============================================================ */
 
 :root {
+  color-scheme: light;
   --mist: #f2f4f1;
   --dune: #e6eae5;
   --sand: #fcfcfa;
@@ -46,6 +47,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --mist: #202826;
   --dune: #29322e;
   --sand: #2a332f;
@@ -131,7 +133,7 @@ input[type='date'] {
     @apply flex min-h-[44px] items-center justify-center gap-2 rounded-2xl bg-dune px-4 py-2.5 text-sm font-extrabold text-ink transition-transform active:scale-[0.99];
   }
   .screen-stack {
-    @apply flex flex-col gap-3.5 px-[18px] pb-6 pt-5;
+    @apply mx-auto flex w-full max-w-4xl flex-col gap-3.5 px-[18px] pb-6 pt-5 md:gap-5 md:px-8 md:pb-8 md:pt-7;
   }
   .input-soft {
     @apply min-h-[44px] w-full rounded-2xl border border-line bg-raised px-4 py-2.5 text-base text-ink placeholder:text-ink-soft placeholder:opacity-60;

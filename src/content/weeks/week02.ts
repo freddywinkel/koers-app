@@ -25,7 +25,7 @@ export const week02: Week = {
         'Je hoofd is vaak als een tijdmachine. Het reist naar gisteren: wat er misging. Of naar morgen: wat er allemaal kan komen.',
         'Maar je leven gebeurt op één plek: hier, nu. In dit moment. Je aandacht is de knop waarmee je terugkomt.',
         'Aandacht betekent: merken wat er nú is. Wat je ziet, hoort en voelt. Zonder er meteen iets van te vinden.',
-        'Dat klinkt simpel. En het is ook simpel. Maar het vraagt wel oefening. Je hoofd dwalt vanzelf weer weg. Dat hoort erbij.'
+        'Dat klinkt simpel. En het is ook simpel. Maar het vraagt wel oefening. Je hoofd dwaalt vanzelf weer weg. Dat hoort erbij.'
       ],
       metaphorCard: {
         title: 'De automatische piloot',
@@ -40,7 +40,7 @@ export const week02: Week = {
           { n: 3, title: 'Terug naar nu', text: 'Voel je voeten op de grond. Voel de stoel of de vloer. Je bent hier, nu.', seconds: 15 }
         ]
       },
-      reflection: 'Misschien dwalde je af. Misschien niet. Allebei is prima. Aandacht oefenen is telkens zachtjes terugkomen.',
+      reflection: 'Misschien dwaalde je even af. Misschien niet. Allebei is prima. Aandacht oefenen is telkens zachtjes terugkomen.',
       assignment: 'Doe deze week elke dag één ding met volle aandacht. Bijvoorbeeld je koffie drinken of je handen wassen. Alleen dat ene ding.',
       relatedSkillIds: [],
       flashcardIds: ['w02-l01-f1', 'w02-l01-f2']
@@ -178,7 +178,7 @@ export const week02Flashcards: Flashcard[] = [
   {
     id: 'w02-l01-f2',
     lessonId: 'w02-l01',
-    front: 'Je hoofd dwalt af tijdens een oefening. Wat dan?',
+    front: 'Je hoofd dwaalt af tijdens een oefening. Wat dan?',
     back: 'Heel normaal. Zo werken hoofden. Merk het vriendelijk op en kom zachtjes terug. Dat terugkomen ís de oefening.'
   },
   {

@@ -164,7 +164,11 @@ export function useApplyTheme(): void {
     }
     const apply = () => {
       const dark = value === 'donker' || (value === 'systeem' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-      document.documentElement.classList.toggle('dark', dark);
+      const root = document.documentElement;
+      // Geef WebKit naast onze CSS-class ook de browserkleur door. Zonder dit
+      // signaal kan de iOS-statusbalk licht blijven na een live themawissel.
+      root.style.colorScheme = dark ? 'dark' : 'light';
+      root.classList.toggle('dark', dark);
     };
     apply();
     if (value !== 'systeem') return;
