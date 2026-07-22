@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, type LessonProgressRow } from './db';
 import type { PanValue } from '../content/types';
+import { isIOS, isStandalone } from '../lib/install';
 
 /**
  * Koers — datahooks en helpers
@@ -133,6 +134,9 @@ export function useSettings() {
     ready: rows !== undefined,
     get: (key: string, fallback = ''): string => map.get(key) ?? fallback,
     set: async (key: string, value: string): Promise<void> => {
+      const appearanceChanged =
+        (key === 'theme' && (map.get(key) ?? 'systeem') !== value) ||
+        (key === 'design' && (map.get(key) ?? 'noordzeemist') !== value);
       if (key === 'theme' || key === 'design') {
         try {
           localStorage.setItem(`koers-${key}`, value);
@@ -141,6 +145,10 @@ export function useSettings() {
         }
       }
       await db.settings.put({ key, value });
+      // WebKit op iOS/iPadOS 26 ververst de PWA-statusbalk niet betrouwbaar
+      // na een live kleurwissel. Eenmalig herladen laat de vroege head-script
+      // de opgeslagen appkleur toepassen voordat iOS de bovenbalk vastlegt.
+      if (appearanceChanged && isIOS() && isStandalone()) window.location.reload();
     }
   };
 }
@@ -165,16 +173,29 @@ export function useApplyTheme(): void {
     const apply = () => {
       const dark = value === 'donker' || (value === 'systeem' && window.matchMedia('(prefers-color-scheme: dark)').matches);
       const root = document.documentElement;
-      // Geef WebKit naast onze CSS-class ook de browserkleur door. Zonder dit
-      // signaal kan de iOS-statusbalk licht blijven na een live themawissel.
-      root.style.colorScheme = dark ? 'dark' : 'light';
+      const activeScheme = dark ? 'dark' : 'light';
+      // Gebruik precies één actieve browserkleur. `light dark` liet iOS bij
+      // een expliciet licht app-thema alsnog de donkere systeemkleur kiezen.
+      root.style.colorScheme = activeScheme;
       root.classList.toggle('dark', dark);
+      let meta = document.querySelector<HTMLMetaElement>('#koers-color-scheme');
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.id = 'koers-color-scheme';
+        meta.name = 'color-scheme';
+        document.head.appendChild(meta);
+      }
+      meta.content = activeScheme;
     };
     apply();
     if (value !== 'systeem') return;
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
-    mq.addEventListener('change', apply);
-    return () => mq.removeEventListener('change', apply);
+    const handleSystemThemeChange = () => {
+      apply();
+      if (isIOS() && isStandalone()) window.location.reload();
+    };
+    mq.addEventListener('change', handleSystemThemeChange);
+    return () => mq.removeEventListener('change', handleSystemThemeChange);
   }, [row]);
 }
 
