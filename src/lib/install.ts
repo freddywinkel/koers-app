@@ -67,9 +67,13 @@ export async function promptInstall(): Promise<InstallOutcome> {
   const event = deferredPrompt;
   deferredPrompt = null; // het event is eenmalig bruikbaar
   emit();
-  await event.prompt();
-  const choice = await event.userChoice;
-  return choice.outcome;
+  try {
+    await event.prompt();
+    const choice = await event.userChoice;
+    return choice.outcome;
+  } catch {
+    return 'unavailable';
+  }
 }
 
 /** iPhone / iPad (incl. iPadOS dat zich als Mac voordoet met touch). */

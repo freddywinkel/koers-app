@@ -15,14 +15,14 @@
   --sand: #fcfcfa;
   --raised: #ffffff;
   --ink: #2f4340;
-  --ink-soft: #63746f;
+  --ink-soft: #596a65;
   --euca: #5e8577;
   --euca-deep: #496b5f;
   --euca-tint: rgba(94, 133, 119, 0.15);
   --apricot: #d9a88b;
   --apricot-ink: #2f4340;
   --apricot-soft: #f5e7db;
-  --ap-deep: #a9714c;
+  --ap-deep: #76503a;
   --apricot-border: rgba(217, 168, 139, 0.45);
   --line: rgba(47, 67, 64, 0.08);
   --pan-tile: #edf1ec;
@@ -103,6 +103,29 @@ input[type='time'],
 input[type='date'] {
   min-width: 0;
   max-width: 100%;
+}
+
+/* Duidelijke toetsenbordfocus op alle ontwerpen. Labels met een visueel
+   verborgen radio/file-input krijgen dezelfde ring rond de hele keuze. */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible,
+.choice-option:has(input:focus-visible) {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* ---------- Herbruikbare Noordzeemist-componenten ---------- */

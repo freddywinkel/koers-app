@@ -1,6 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, type FlashcardStateRow } from '../db/db';
-import { startOfDay } from '../db/hooks';
+import { addLocalDays, differenceInCalendarDays, startOfLocalDay } from './calendar';
 
 /**
  * srs.ts — spaced-repetition-engine voor flashcards (SM-2-achtig)
@@ -29,13 +29,12 @@ export const GRADE_LABELS: Record<Grade, string> = {
   3: 'Makkelijk'
 };
 
-const DAY_MS = 24 * 60 * 60 * 1000;
 const START_EASE = 2.5;
 const MIN_EASE = 1.3;
 
 /** Beginstatus van een nieuwe kaart: meteen 'due', ease 2.5. */
 export function newState(flashcardId: string, now: number = Date.now()): FlashcardStateRow {
-  return { flashcardId, due: startOfDay(now), interval: 0, ease: START_EASE, reps: 0 };
+  return { flashcardId, due: startOfLocalDay(now), interval: 0, ease: START_EASE, reps: 0 };
 }
 
 /**
@@ -69,7 +68,7 @@ export function scheduleNext(
     }
   }
 
-  return { flashcardId, due: startOfDay(now) + interval * DAY_MS, interval, ease, reps };
+  return { flashcardId, due: addLocalDays(now, interval), interval, ease, reps };
 }
 
 /** Beoordeel een kaart en sla de nieuwe status op (idempotent, één rij per kaart). */
@@ -125,7 +124,7 @@ export function useNextDue(allIds: string[]): number | null | undefined {
 
 /** Vriendelijke Nederlandse aanduiding: 'morgen', 'over 3 dagen', 'over 2 weken'. */
 export function formatDueHint(ts: number, now: number = Date.now()): string {
-  const days = Math.round((startOfDay(ts) - startOfDay(now)) / DAY_MS);
+  const days = differenceInCalendarDays(ts, now);
   if (days <= 0) return 'later vandaag';
   if (days === 1) return 'morgen';
   if (days < 7) return `over ${days} dagen`;

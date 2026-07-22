@@ -6,8 +6,10 @@
   "description": "Koers — Nederlandse zelfhulp-cursus (ACT + VERS), 12 weken, local-first PWA",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "build:pages": "vite build --mode gh-pages",
+    "typecheck": "tsc --noEmit",
+    "test:product": "node --test scripts/product-regression.test.mjs && node --import tsx --test scripts/product-behavior.test.ts",
+    "build": "npm run typecheck && vite build",
+    "build:pages": "npm run typecheck && npm run test:product && vite build --mode gh-pages",
     "preview": "vite preview",
     "icons": "python scripts/generate_icons.py",
     "audio:generate": "tsx scripts/generate-guided-audio.ts"
@@ -25,14 +27,15 @@
   "devDependencies": {
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
-    "@vitejs/plugin-react": "^4.3.4",
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.49",
+    "@vitejs/plugin-react": "^6.0.4",
+    "autoprefixer": "^10.5.4",
+    "fake-indexeddb": "^6.2.5",
     "ffmpeg-static": "^5.2.0",
+    "postcss": "^8.5.22",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.20.6",
     "typescript": "~5.6.3",
-    "vite": "^5.4.11",
-    "vite-plugin-pwa": "^0.21.2"
+    "vite": "^8.1.5",
+    "vite-plugin-pwa": "^1.3.0"
   }
 }

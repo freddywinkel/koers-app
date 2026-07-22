@@ -87,10 +87,12 @@ export default function Signaleringsplan() {
       {/* Intro */}
       <p className="sub px-1">
         Vul dit plan in op een rustig moment — dan heb je het bij de hand als het moeilijker wordt. Begin je later een
-        nieuw plan, dan blijft het vorige hieronder bewaard.
+        nieuw plan, dan blijft het vorige hieronder bewaard. In de lessen heet dit ook het Emotiehanteringsplan (EHP).
+        In Koers bedoelen we daarmee dit Signaleringsplan.
       </p>
 
       {/* Huidig plan — editor */}
+      <h2 className="card-title px-1">Huidig signaleringsplan</h2>
       {plan && planId !== null ? (
         <PlanEditor key={plan.id} plan={plan} showSaved={showSaved} onSave={handleSave} />
       ) : (

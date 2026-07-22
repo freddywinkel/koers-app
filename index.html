@@ -23,7 +23,10 @@
           'zand-salie': { light: '#F7F3EC', dark: '#26211C' },
           'terracotta-linnen': { light: '#FAF5EE', dark: '#2B221C' }
         };
-        let mode = 'licht';
+        // De app-instelling gebruikt 'systeem' als standaard. Houd dezelfde
+        // standaard al vóór React/Dexie laden, zodat een eerste start op een
+        // donker apparaat niet kort licht wordt (of de iOS-balk licht vastlegt).
+        let mode = 'systeem';
         let design = 'noordzeemist';
         try {
           const savedMode = localStorage.getItem('koers-theme');

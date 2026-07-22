@@ -43,7 +43,7 @@ export const week06: Week = {
       },
       reflection: 'Aandacht verplaatsen werkt niet altijd meteen. Dat zegt niets over jou. Het is een spier: langzaam sterker, niet in één dag.',
       assignment: 'Oefen deze week drie keer met je aandachtsmenu. Kies bewust: nu kijk ik even naar iets anders.',
-      relatedSkillIds: ['ademanker'],
+      relatedSkillIds: ['aandacht-verplaatsen'],
       flashcardIds: ['fc-w06-l01-a', 'fc-w06-l01-b', 'fc-w06-l01-c']
     },
     {

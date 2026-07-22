@@ -1,9 +1,22 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db/db';
-import { clearAllData, exportAllData, useDoneLessonIds, useSettings, useStreak } from '../db/hooks';
+import {
+  clearAllData,
+  exportAllData,
+  importAllData,
+  useDoneLessonIds,
+  useSettings,
+  useStreak,
+  type ImportMode
+} from '../db/hooks';
 import { allLessons } from '../content/helpers';
-import { useState } from 'react';
-import { getPermissionState, requestNotificationPermission, type PermissionState } from '../lib/reminders';
+import { useEffect, useState, type ChangeEvent } from 'react';
+import {
+  getPermissionState,
+  REMINDER_SETTINGS_EVENT,
+  requestNotificationPermission,
+  type PermissionState
+} from '../lib/reminders';
 import { PIN_HASH_KEY } from '../lib/pin';
 import { PinLockScreen, PinSetup } from '../components/PinLock';
 import { isIOS, isStandalone, promptInstall, useCanInstall } from '../lib/install';
@@ -11,6 +24,8 @@ import VersionCard from '../components/VersionCard';
 import DesignPicker from '../components/DesignPicker';
 
 type ThemeChoice = 'systeem' | 'licht' | 'donker';
+type StorageStatus = 'checking' | 'persistent' | 'best-effort' | 'unsupported';
+type ImportFeedback = { kind: 'success' | 'error'; text: string };
 const THEMES: { value: ThemeChoice; label: string }[] = [
   { value: 'systeem', label: 'Systeem' },
   { value: 'licht', label: 'Licht' },
@@ -38,7 +53,9 @@ export default function Profiel() {
 
   async function handleEnableNotifications() {
     // Stap 2 van de tweestaps-flow: de uitlegkaart (stap 1) is al zichtbaar.
-    setPermission(await requestNotificationPermission());
+    const nextPermission = await requestNotificationPermission();
+    setPermission(nextPermission);
+    if (nextPermission === 'granted') window.dispatchEvent(new Event(REMINDER_SETTINGS_EVENT));
   }
 
   /* -------------------------------- Pincode ------------------------------ */
@@ -61,8 +78,48 @@ export default function Profiel() {
 
   async function handleInstall() {
     const outcome = await promptInstall();
-    if (outcome === 'accepted') setInstallMsg('Mooi — Koers staat nu op je beginscherm.');
+    if (outcome === 'accepted') setInstallMsg('De installatie is gestart. Open Koers straks vanaf je beginscherm.');
     else if (outcome === 'dismissed') setInstallMsg('Geen probleem — later kan altijd nog, via het menu van je browser.');
+    else setInstallMsg('De installatieprompt is niet meer beschikbaar. Gebruik het menu van je browser om Koers te installeren.');
+  }
+
+  /* --------------------------- Lokale opslag ----------------------------- */
+  const [storageStatus, setStorageStatus] = useState<StorageStatus>('checking');
+  const [storageMsg, setStorageMsg] = useState('');
+  const [exportMsg, setExportMsg] = useState('');
+  const [pendingImport, setPendingImport] = useState<{ name: string; json: string } | null>(null);
+  const [importFeedback, setImportFeedback] = useState<ImportFeedback | null>(null);
+  const [importBusy, setImportBusy] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    if (!navigator.storage?.persisted) {
+      setStorageStatus('unsupported');
+      return;
+    }
+    void navigator.storage.persisted().then((persistent) => {
+      if (active) setStorageStatus(persistent ? 'persistent' : 'best-effort');
+    }).catch(() => {
+      if (active) setStorageStatus('unsupported');
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  async function handleProtectStorage() {
+    if (!navigator.storage?.persist) return;
+    try {
+      const persistent = await navigator.storage.persist();
+      setStorageStatus(persistent ? 'persistent' : 'best-effort');
+      setStorageMsg(
+        persistent
+          ? 'Je browser geeft Koers nu extra bescherming tegen automatisch opschonen.'
+          : 'Je browser kon geen extra bescherming geven. Bewaar daarom af en toe een export buiten de app.'
+      );
+    } catch {
+      setStorageMsg('Extra opslagbescherming aanvragen lukte niet. Een export buiten de app blijft de veiligste reservekopie.');
+    }
   }
 
   async function handleExport() {
@@ -74,6 +131,54 @@ export default function Profiel() {
     a.download = `koers-export-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
+    setExportMsg('De export is gedownload. Bewaar het bestand op een plek die alleen jij kunt openen.');
+  }
+
+  async function handleImportFile(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.currentTarget.files?.[0];
+    event.currentTarget.value = '';
+    setPendingImport(null);
+    setImportFeedback(null);
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      setImportFeedback({ kind: 'error', text: 'Dit bestand is groter dan 10 MB en kan niet veilig worden ingelezen.' });
+      return;
+    }
+    try {
+      setPendingImport({ name: file.name, json: await file.text() });
+    } catch {
+      setImportFeedback({ kind: 'error', text: 'Het gekozen bestand kon niet worden gelezen.' });
+    }
+  }
+
+  async function handleImport(mode: ImportMode) {
+    if (!pendingImport || importBusy) return;
+    const confirmed = window.confirm(
+      mode === 'replace'
+        ? 'Huidige gegevens vervangen? Alle lokale Koers-gegevens worden eerst gewist en daarna uit dit bestand teruggezet. Gegevens die niet in de export staan gaan definitief verloren. Doorgaan?'
+        : 'Gegevens samenvoegen? De huidige gegevens blijven staan, maar records met dezelfde interne sleutel kunnen door de export worden overschreven. Maak zo nodig eerst een nieuwe export. Doorgaan?'
+    );
+    if (!confirmed) return;
+
+    setImportBusy(true);
+    setImportFeedback(null);
+    try {
+      const summary = await importAllData(pendingImport.json, mode);
+      const action = mode === 'replace' ? 'teruggezet' : 'samengevoegd';
+      setImportFeedback({
+        kind: 'success',
+        text: `${summary.totalRows} ${summary.totalRows === 1 ? 'rij is' : 'rijen zijn'} veilig ${action}.`
+      });
+      setPendingImport(null);
+      setDeleted(false);
+    } catch (error) {
+      setImportFeedback({
+        kind: 'error',
+        text: error instanceof Error ? error.message : 'Terugzetten lukte niet. Je huidige gegevens zijn niet aangepast.'
+      });
+    } finally {
+      setImportBusy(false);
+    }
   }
 
   async function handleDelete() {
@@ -129,26 +234,31 @@ export default function Profiel() {
         <h2 className="card-title">Instellingen</h2>
 
         <p className="sub mt-3">Uiterlijk</p>
-        <div className="mt-1.5 flex flex-wrap gap-2" role="radiogroup" aria-label="Kleurmodus">
+        <fieldset className="mt-1.5 flex min-w-0 flex-wrap gap-2">
+          <legend className="sr-only">Kleurmodus</legend>
           {THEMES.map((t) => {
             const active = theme === t.value;
             return (
-              <button
+              <label
                 key={t.value}
-                type="button"
-                role="radio"
-                aria-checked={active}
-                onClick={() => void set('theme', t.value)}
                 className={[
-                  'min-h-[44px] min-w-0 flex-1 rounded-2xl border text-sm font-extrabold',
+                  'choice-option flex min-h-[44px] min-w-0 flex-1 cursor-pointer items-center justify-center rounded-2xl border text-sm font-extrabold',
                   active ? 'border-euca-deep bg-eucatint text-euca-deep' : 'border-line bg-dune text-ink'
                 ].join(' ')}
               >
+                <input
+                  className="sr-only"
+                  type="radio"
+                  name="kleurmodus"
+                  value={t.value}
+                  checked={active}
+                  onChange={() => void set('theme', t.value)}
+                />
                 {t.label}
-              </button>
+              </label>
             );
           })}
-        </div>
+        </fieldset>
 
         <p className="sub mt-4">Ontwerp</p>
         <DesignPicker />
@@ -159,12 +269,16 @@ export default function Profiel() {
         <div className="mt-4 min-w-0">
           <label className="flex min-w-0 items-center justify-between gap-3">
             <span className="sub min-w-0 flex-1">Herinneringstijd voor je check-in</span>
-            <input
-              className="input-soft min-w-0 w-[132px] max-w-full flex-none"
-              type="time"
-              value={get('herinnering-tijd', '19:00')}
-              onChange={(e) => void set('herinnering-tijd', e.target.value)}
-            />
+              <input
+                className="input-soft min-w-0 w-[132px] max-w-full flex-none"
+                type="time"
+                value={get('herinnering-tijd', '19:00')}
+                onChange={(e) => {
+                  void set('herinnering-tijd', e.target.value).then(() => {
+                    window.dispatchEvent(new Event(REMINDER_SETTINGS_EVENT));
+                  });
+                }}
+              />
           </label>
         </div>
 
@@ -253,8 +367,8 @@ export default function Profiel() {
         ) : (
           <>
             <p className="sub mt-1.5">
-              Zet Koers op je beginscherm. Zo blijven je gegevens goed bewaard en open je de app als een
-              echte app.
+              Zet Koers op je beginscherm om de app snel en schermvullend te openen. Je gegevens blijven lokaal in
+              deze browser; installatie is geen automatische back-up.
             </p>
 
             {canInstallNow && (
@@ -262,11 +376,11 @@ export default function Profiel() {
                 <button type="button" className="btn-primary mt-3" onClick={() => void handleInstall()}>
                   Installeer de app
                 </button>
-                {installMsg && <p className="sub mt-2">{installMsg}</p>}
               </>
             )}
+            {installMsg && <p className="sub mt-2" role="status">{installMsg}</p>}
 
-            {ios && !canInstallNow && (
+            {ios && !canInstallNow && !installMsg && (
               <div className="mt-3 rounded-2xl bg-dune p-4">
                 <p className="text-sm font-extrabold text-ink">Zo doe je dat op je iPhone of iPad</p>
                 <ol className="mt-1.5 list-decimal pl-5 text-sm leading-[1.6] text-ink-soft">
@@ -277,7 +391,7 @@ export default function Profiel() {
               </div>
             )}
 
-            {!ios && !canInstallNow && (
+            {!ios && !canInstallNow && !installMsg && (
               <>
                 <div className="mt-3 rounded-2xl bg-dune p-4">
                   <p className="text-sm font-extrabold text-ink">iPhone / iPad (Safari)</p>
@@ -307,11 +421,79 @@ export default function Profiel() {
       <section className="card" aria-label="Jouw gegevens">
         <h2 className="card-title">Jouw gegevens</h2>
         <p className="sub mt-1.5">
-          Alles wat je hier invult blijft op dit apparaat. Er is geen account en er wordt niets verstuurd.
+          Alles wat je hier invult blijft in deze browser. Er is geen account, cloudsynchronisatie of automatische
+          reservekopie. Download af en toe een export en bewaar die privé. Zo&apos;n Koers-export kun je hier later
+          terugzetten of samenvoegen. Je app-pincode blijft alleen op dit apparaat en staat nooit in de export.
         </p>
+        {storageStatus === 'persistent' && (
+          <p className="mt-3 rounded-2xl bg-eucatint px-4 py-3 text-[13.5px] font-semibold text-euca-deep">
+            Lokale opslag heeft extra bescherming tegen automatisch opschonen door je browser.
+          </p>
+        )}
+        {storageStatus === 'best-effort' && (
+          <div className="mt-3 rounded-2xl bg-dune p-4">
+            <p className="sub">
+              Je browser bewaart de gegevens op basis van beschikbare ruimte. Een export buiten de app blijft de veiligste reservekopie.
+            </p>
+            <button type="button" className="btn-secondary mt-3 w-full" onClick={() => void handleProtectStorage()}>
+              Vraag extra opslagbescherming
+            </button>
+          </div>
+        )}
+        {storageStatus === 'unsupported' && (
+          <p className="sub mt-3">Deze browser kan geen extra opslagbescherming bevestigen. Maak daarom geregeld een export.</p>
+        )}
+        {storageMsg && <p className="sub mt-2" role="status">{storageMsg}</p>}
         <button type="button" className="btn-secondary mt-3.5 w-full" onClick={() => void handleExport()}>
           Exporteer alles als JSON-bestand
         </button>
+        {exportMsg && <p className="sub mt-2" role="status">{exportMsg}</p>}
+        <label className="choice-option btn-secondary mt-2.5 w-full cursor-pointer">
+          Kies een Koers-export om terug te zetten
+          <input
+            className="sr-only"
+            type="file"
+            accept="application/json,.json"
+            onChange={(event) => void handleImportFile(event)}
+            disabled={importBusy}
+          />
+        </label>
+        {pendingImport && (
+          <div className="mt-3 rounded-2xl bg-dune p-4">
+            <p className="text-sm font-extrabold text-ink">Gekozen bestand</p>
+            <p className="sub mt-1 break-all">{pendingImport.name}</p>
+            <p className="sub mt-2">
+              Samenvoegen houdt je huidige gegevens; vervangen wist ze eerst. Koers accepteert alleen gevalideerde
+              exports met bekende gegevenstabellen. Je huidige app-pincode blijft bij beide keuzes behouden.
+            </p>
+            <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+              <button
+                type="button"
+                className="btn-secondary w-full"
+                disabled={importBusy}
+                onClick={() => void handleImport('merge')}
+              >
+                {importBusy ? 'Bezig…' : 'Samenvoegen'}
+              </button>
+              <button
+                type="button"
+                className="flex min-h-[44px] w-full items-center justify-center rounded-2xl bg-apricot-soft px-4 py-2.5 text-sm font-extrabold text-ap-deep disabled:opacity-60"
+                disabled={importBusy}
+                onClick={() => void handleImport('replace')}
+              >
+                {importBusy ? 'Bezig…' : 'Alles vervangen'}
+              </button>
+            </div>
+          </div>
+        )}
+        {importFeedback && (
+          <p
+            className={importFeedback.kind === 'error' ? 'mt-2 text-[13.5px] font-semibold text-ap-deep' : 'sub mt-2'}
+            role={importFeedback.kind === 'error' ? 'alert' : 'status'}
+          >
+            {importFeedback.text}
+          </p>
+        )}
         <button
           type="button"
           className="mt-2.5 flex min-h-[44px] w-full items-center justify-center rounded-2xl bg-apricot-soft px-4 py-2.5 text-sm font-extrabold text-ap-deep"
@@ -319,7 +501,7 @@ export default function Profiel() {
         >
           Verwijder alle gegevens
         </button>
-        {deleted && <p className="sub mt-2">Je gegevens zijn verwijderd. Je begint met een schone lei — helemaal oké.</p>}
+        {deleted && <p className="sub mt-2" role="status">Je gegevens zijn verwijderd. Je begint met een schone lei — helemaal oké.</p>}
       </section>
 
       {/* Demo/test van de app-gate vanuit de pincode-instelling */}

@@ -18,7 +18,7 @@ export const week07: Week = {
       weekId: 'w07',
       order: 1,
       kind: 'lesson',
-      title: 'Wat is jou belangrijk?',
+      title: 'Wat is voor jou belangrijk?',
       minutes: 6,
       tags: ['Waarden'],
       intro: [
@@ -42,7 +42,7 @@ export const week07: Week = {
       },
       reflection: 'Er is geen goed of fout antwoord. Wat jij belangrijk vindt, telt. Ook als het klein of gewoon lijkt.',
       assignment: 'Kijk deze week bij twee gewone momenten: voelt dit belangrijk voor mij? Schrijf telkens één woord op.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['waarden-verhelderen'],
       flashcardIds: ['w07-l01-f1', 'w07-l01-f2']
     },
     {
@@ -74,7 +74,7 @@ export const week07: Week = {
       },
       reflection: 'Voelt iets als "moeten"? Dan is het misschien een doel van een ander. Jouw eigen waarden voelen van binnen goed, ook als het spannend is.',
       assignment: 'Schrijf bij één waarde twee kleine doelen. Ze mogen heel klein zijn. Klein is juist goed.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['waarden-verhelderen'],
       flashcardIds: ['w07-l02-f1', 'w07-l02-f2']
     },
     {
@@ -94,7 +94,7 @@ export const week07: Week = {
         title: 'Je kompas vinden in zes stappen',
         steps: [
           { n: 1, title: 'Kom rustig aan', text: 'Ga rustig zitten. Voel je voeten op de grond. Adem een paar keer rustig in en uit.', seconds: 40 },
-          { n: 2, title: 'Je tachtigste verjaardag', text: 'Stel je voor: je bent tachtig. Er is een feestje. Mensen die jij lief vindt, zijn er.', seconds: 45 },
+          { n: 2, title: 'Kijk naar wat telt', text: 'Stel je voor: je bent tachtig en mensen die jij lief vindt vieren je verjaardag. Voelt dat verdrietig of onveilig? Kies dan dit rustigere beeld: iemand die je vertrouwt vertelt vandaag wat die in jou waardeert.', seconds: 45 },
           { n: 3, title: 'Wat zeggen ze?', text: 'Iemand houdt een kort praatje over jou. Wat wil jij dat die persoon zegt? Waar stond jij voor in je leven?', seconds: 90 },
           { n: 4, title: 'Kies je woorden', text: 'Schrijf drie dingen op die je hoorde. Bijvoorbeeld: liefdevol, eerlijk, moedig, betrouwbaar. Dat zijn jouw waarden.', seconds: 60 },
           { n: 5, title: 'Kijk waar je staat', text: 'Denk aan vier delen van je leven: werk, familie en vrienden, gezondheid, vrije tijd. Bij welk deel leef je je waarden al? Bij welk deel nog weinig?', seconds: 75 },
@@ -103,7 +103,7 @@ export const week07: Week = {
       },
       reflection: 'Deze oefening kan veel losmaken. Dankbaarheid, maar ook verdriet. Alles mag er zijn. Het eerlijk bekijken is al een stap.',
       assignment: 'Bewaar je drie woorden. Zet ze ergens waar je ze vaak ziet. Bijvoorbeeld op een briefje op de koelkast.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['waarden-verhelderen'],
       flashcardIds: ['w07-l03-f1', 'w07-l03-f2', 'w07-l03-f3']
     },
     {
@@ -128,7 +128,7 @@ export const week07: Week = {
       },
       reflection: 'Elke blik op je kompas is oefenen. Je hoeft de richting niet perfect te volgen. Kijken is al genoeg.',
       assignment: 'Vertel deze week één persoon over één van je waarden. Alleen als dat goed voelt.',
-      relatedSkillIds: [],
+      relatedSkillIds: ['waarden-verhelderen'],
       flashcardIds: ['w07-l04-f1', 'w07-l04-f2']
     }
   ]
@@ -146,7 +146,7 @@ export const week07Flashcards: Flashcard[] = [
     id: 'w07-l01-f2',
     lessonId: 'w07-l01',
     front: 'Hoe vind je een waarde in je dagelijks leven?',
-    back: 'Kijk naar momenten die goed of betekenisvol voelden. Vraag: wat zat daar in dat mij belangrijk is? Dat wijst naar een waarde.'
+    back: 'Kijk naar momenten die goed of betekenisvol voelden. Vraag: wat zat daarin dat voor mij belangrijk is? Dat wijst naar een waarde.'
   },
   {
     id: 'w07-l02-f1',
@@ -164,7 +164,7 @@ export const week07Flashcards: Flashcard[] = [
     id: 'w07-l03-f1',
     lessonId: 'w07-l03',
     front: 'Hoe werkt de oefening met je tachtigste verjaardag?',
-    back: 'Je stelt je voor dat je tachtig bent en dat iemand over jou spreekt. Wat je die persoon hoort zeggen, laat zien wat jij echt belangrijk vindt.'
+    back: 'Je kunt je tachtigste verjaardag voorstellen, of kiezen voor iemand die vandaag vertelt wat die in jou waardeert. De woorden die je hoopt te horen wijzen naar wat jij belangrijk vindt.'
   },
   {
     id: 'w07-l03-f2',

@@ -7,7 +7,7 @@ import { db, type GSchemaRow } from '../db/db';
  * Gebaseerd op het werkblad "Het G-schema" (psycholoogtogo.nl) dat de
  * gebruiker heeft aangeleverd. Deel 1 onderzoekt de situatie
  * (Gebeurtenis, Gedachten, Gevoel, Gedrag, Gevolgen), Deel 2 daagt de
- * gedachte uit en formuleert een helpender alternatief.
+ * gedachte uit en bedenkt een helpender alternatief.
  *
  * Elke invulling wordt opgeslagen als record in `db.gSchemas` met een
  * aanmaakdatum, zodat eerdere G-schema's altijd terug te lezen zijn.
@@ -42,9 +42,9 @@ export const GSCHEMA_DEEL1: GSchemaVeldDef[] = [
   {
     key: 'gedachten',
     title: 'Gedachten',
-    prompt: 'Wat waren mijn automatische gedachten? Kies hieruit je belangrijkste kerngedachten.',
+    prompt: 'Wat waren mijn automatische gedachten? Kies hieruit je belangrijkste gedachte.',
     placeholder: 'Bijvoorbeeld: ik kan dit niet, niemand begrijpt me …',
-    percentageLabel: 'Hoe sterk geloof ik deze kerngedachten?'
+    percentageLabel: 'Hoe sterk geloof ik deze belangrijkste gedachte?'
   },
   {
     key: 'gevoel',
@@ -72,19 +72,19 @@ export const GSCHEMA_DEEL2: GSchemaVeldDef[] = [
     key: 'uitdagen',
     title: 'Uitdagen',
     prompt:
-      'Klopt deze gedachte? Wat is het bewijs voor en tegen? Kan ik er op een andere manier naar kijken? Is dit realistisch en helpend om te denken?',
+      'Klopt deze gedachte? Wat is het bewijs voor en tegen? Kan ik er op een andere manier naar kijken? Welke gedachte past beter bij de feiten en helpt mij meer?',
     placeholder: 'Bijvoorbeeld: bewijs voor …, bewijs tegen …'
   },
   {
     key: 'nieuwe-gedachten',
     title: 'Nieuwe gedachten',
-    prompt: 'Formuleer een meer realistische, helpende gedachte.',
+    prompt: 'Bedenk een gedachte die beter bij de feiten past en meer helpt.',
     placeholder: 'Bijvoorbeeld: dit is moeilijk, en ik heb eerder …'
   },
   {
     key: 'nieuw-gedrag',
     title: 'Nieuw gedrag',
-    prompt: 'Formuleer meer helpend gedrag. Hoe zou je willen reageren?',
+    prompt: 'Bedenk gedrag dat meer helpt. Hoe zou je willen reageren?',
     placeholder: 'Bijvoorbeeld: de volgende keer neem ik eerst drie ademhalingen en …'
   }
 ];
@@ -104,6 +104,88 @@ export async function saveGSchema(
 ): Promise<number> {
   const now = Date.now();
   return db.gSchemas.add({ createdAt: now, updatedAt: now, fields, percentages });
+}
+
+export interface GSchemaDraft {
+  fields: Record<string, string>;
+  percentages: Record<string, number>;
+  updatedAt: number;
+}
+
+const GSCHEMA_DRAFT_KEY = 'concept-gschema';
+const GSCHEMA_DRAFT_RECOVERY_KEY = 'koers-concept-gschema-recovery';
+
+function parseGSchemaDraft(value: string | null | undefined): GSchemaDraft | null {
+  if (!value) return null;
+  try {
+    const parsed = JSON.parse(value) as Partial<GSchemaDraft>;
+    if (!parsed.fields || typeof parsed.fields !== 'object') return null;
+    const fields = Object.fromEntries(
+      Object.entries(parsed.fields).filter((entry): entry is [string, string] => typeof entry[1] === 'string')
+    );
+    const percentages = Object.fromEntries(
+      Object.entries(parsed.percentages ?? {}).filter(
+        (entry): entry is [string, number] => typeof entry[1] === 'number' && Number.isFinite(entry[1])
+      )
+    );
+    return { fields, percentages, updatedAt: typeof parsed.updatedAt === 'number' ? parsed.updatedAt : 0 };
+  } catch {
+    return null;
+  }
+}
+
+function writeRecoveryDraft(draft: GSchemaDraft): void {
+  try {
+    localStorage.setItem(GSCHEMA_DRAFT_RECOVERY_KEY, JSON.stringify(draft));
+  } catch {
+    // IndexedDB blijft beschikbaar als localStorage niet mag.
+  }
+}
+
+/**
+ * Synchroon hersteljournaal voor tekst die nog vóór de IndexedDB-hydratie is
+ * ingevoerd. Dit wordt bij iedere wijziging bijgewerkt; de gewone conceptopslag
+ * blijft gedebounced.
+ */
+export function cacheGSchemaDraftForRecovery(
+  fields: Record<string, string>,
+  percentages: Record<string, number>
+): void {
+  writeRecoveryDraft({ fields, percentages, updatedAt: Date.now() });
+}
+
+/** Lees een tussentijds opgeslagen concept; ongeldige oude data wordt genegeerd. */
+export async function loadGSchemaDraft(): Promise<GSchemaDraft | null> {
+  const row = await db.settings.get(GSCHEMA_DRAFT_KEY);
+  const indexedDraft = parseGSchemaDraft(row?.value);
+  let recoveryDraft: GSchemaDraft | null = null;
+  try {
+    recoveryDraft = parseGSchemaDraft(localStorage.getItem(GSCHEMA_DRAFT_RECOVERY_KEY));
+  } catch {
+    // Alleen de IndexedDB-versie gebruiken als localStorage niet mag.
+  }
+  if (!indexedDraft) return recoveryDraft;
+  if (!recoveryDraft) return indexedDraft;
+  return recoveryDraft.updatedAt >= indexedDraft.updatedAt ? recoveryDraft : indexedDraft;
+}
+
+/** Bewaar de huidige invoer als één atomair conceptrecord. */
+export async function saveGSchemaDraft(
+  fields: Record<string, string>,
+  percentages: Record<string, number>
+): Promise<void> {
+  const draft: GSchemaDraft = { fields, percentages, updatedAt: Date.now() };
+  writeRecoveryDraft(draft);
+  await db.settings.put({ key: GSCHEMA_DRAFT_KEY, value: JSON.stringify(draft) });
+}
+
+export async function clearGSchemaDraft(): Promise<void> {
+  try {
+    localStorage.removeItem(GSCHEMA_DRAFT_RECOVERY_KEY);
+  } catch {
+    // IndexedDB blijft de bron van waarheid als localStorage niet mag.
+  }
+  await db.settings.delete(GSCHEMA_DRAFT_KEY);
 }
 
 /** Datumnotatie voor records, bv. "12 mei 2026". */

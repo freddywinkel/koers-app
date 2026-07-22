@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { flashcards, getFlashcards } from '../content/flashcards';
+import { getFlashcards } from '../content/flashcards';
 import { getLesson, lessonCrumb } from '../content/helpers';
+import { useDoneLessonIds } from '../db/hooks';
+import { getEligibleFlashcardIds } from '../lib/flashcardEligibility';
 import { formatDueHint, getDueFlashcards, getNextDue, gradeCard, GRADE_LABELS, type Grade } from '../lib/srs';
 import type { Flashcard } from '../content/types';
 
@@ -15,9 +17,6 @@ import type { Flashcard } from '../content/types';
  * met een hint voor de volgende kaart.
  */
 
-/** Alle flashcard-ids uit de contentlaag (stabiele moduleconstante). */
-const ALL_IDS = flashcards.map((f) => f.id);
-
 const GRADE_ORDER: Grade[] = [0, 1, 2, 3];
 
 /** Rustige kleuren per beoordeling — nergens rood, ook 'Opnieuw' blijft warm. */
@@ -29,17 +28,25 @@ const GRADE_CLASSES: Record<Grade, string> = {
 };
 
 export default function FlashcardDeck() {
+  const doneLessonIds = useDoneLessonIds();
+  const eligibleIds = useMemo(
+    () => (doneLessonIds ? getEligibleFlashcardIds(doneLessonIds) : []),
+    [doneLessonIds]
+  );
   // null = laden; [] = niets aan de beurt
   const [queue, setQueue] = useState<Flashcard[] | null>(null);
   const [nextDue, setNextDue] = useState<number | null>(null);
 
   useEffect(() => {
+    if (doneLessonIds === undefined) return;
     let alive = true;
+    setQueue(null);
+    setNextDue(null);
     void (async () => {
-      const ids = await getDueFlashcards(ALL_IDS);
+      const ids = await getDueFlashcards(eligibleIds);
       if (!alive) return;
       if (ids.length === 0) {
-        const nd = await getNextDue(ALL_IDS);
+        const nd = await getNextDue(eligibleIds);
         if (!alive) return;
         setNextDue(nd);
       }
@@ -48,7 +55,7 @@ export default function FlashcardDeck() {
     return () => {
       alive = false;
     };
-  }, []);
+  }, [doneLessonIds, eligibleIds]);
 
   return (
     <div className="screen-stack">
@@ -70,7 +77,7 @@ export default function FlashcardDeck() {
           De kaarten worden klaargelegd…
         </p>
       ) : queue.length === 0 ? (
-        <AllDone nextDue={nextDue} />
+        <AllDone nextDue={nextDue} hasEligibleCards={eligibleIds.length > 0} />
       ) : (
         <Deck initial={queue} />
       )}
@@ -79,7 +86,7 @@ export default function FlashcardDeck() {
 }
 
 /** Warme leegstaat: alles is herhaald (of er is nog geen kaart klaar). */
-function AllDone({ nextDue }: { nextDue: number | null }) {
+function AllDone({ nextDue, hasEligibleCards }: { nextDue: number | null; hasEligibleCards: boolean }) {
   return (
     <section className="card flex flex-col items-center gap-3 py-9 text-center">
       <span className="grid h-14 w-14 place-items-center rounded-full bg-eucatint text-euca-deep" aria-hidden="true">
@@ -87,12 +94,15 @@ function AllDone({ nextDue }: { nextDue: number | null }) {
           <path d="M5 13.5l5.5 5.5L21 7.5" />
         </svg>
       </span>
-      <h1 className="font-display text-[26px] font-semibold leading-[1.2] tracking-[-0.01em]">Alles herhaald</h1>
+      <h1 className="font-display text-[26px] font-semibold leading-[1.2] tracking-[-0.01em]">
+        {hasEligibleCards ? 'Alles herhaald' : 'Nog geen kaarten'}
+      </h1>
       <p className="sub max-w-[300px]">
-        Lekker bezig. Er ligt nu niets klaar om te herhalen.
-        {nextDue !== null
-          ? ` De volgende kaart komt ${formatDueHint(nextDue)} weer terug.`
-          : ' Nieuwe lessen brengen vanzelf nieuwe kaarten mee.'}
+        {hasEligibleCards
+          ? `Lekker bezig. Er ligt nu niets klaar om te herhalen.${
+              nextDue !== null ? ` De volgende kaart komt ${formatDueHint(nextDue)} weer terug.` : ''
+            }`
+          : 'Rond eerst een cursusles af. De kaarten uit die les verschijnen daarna vanzelf.'}
       </p>
       <Link to="/oefenen" className="btn-primary mt-2 !w-auto px-6">
         Terug naar oefenen
@@ -160,7 +170,14 @@ function Deck({ initial }: { initial: Flashcard[] }) {
         <p className="sub">
           Kaart {Math.min(doneCount + 1, total)} van {total}
         </p>
-        <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-dune">
+        <div
+          className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-dune"
+          role="progressbar"
+          aria-label="Voortgang van deze herhaalronde"
+          aria-valuemin={0}
+          aria-valuemax={total}
+          aria-valuenow={doneCount}
+        >
           <div
             className="h-full rounded-full bg-euca transition-all duration-500"
             style={{ width: `${Math.round((doneCount / total) * 100)}%` }}
@@ -174,20 +191,30 @@ function Deck({ initial }: { initial: Flashcard[] }) {
           type="button"
           onClick={() => setFlipped((f) => !f)}
           aria-pressed={flipped}
-          aria-label={flipped ? 'Antwoord, tik om de vraag te zien' : 'Vraag, tik om het antwoord te zien'}
+          aria-label={
+            flipped
+              ? `Antwoord: ${card.back}. Activeer om de vraag te zien.`
+              : `Vraag: ${card.front}. Activeer om het antwoord te zien.`
+          }
           className={[
             'relative block h-[280px] w-full transition-transform duration-500 [transform-style:preserve-3d]',
             flipped ? '[transform:rotateY(180deg)]' : ''
           ].join(' ')}
         >
           {/* Voorkant: vraag */}
-          <div className="absolute inset-0 flex flex-col overflow-y-auto overscroll-contain rounded-card border border-line bg-sand p-6 text-left shadow-card [backface-visibility:hidden]">
+          <div
+            aria-hidden={flipped}
+            className="absolute inset-0 flex flex-col overflow-y-auto overscroll-contain rounded-card border border-line bg-sand p-6 text-left shadow-card [backface-visibility:hidden]"
+          >
             <p className="eyebrow">Vraag</p>
             <p className="mt-3 flex-1 font-display text-[21px] font-medium leading-[1.35] text-ink">{card.front}</p>
             <p className="sub mt-3">Tik om de kaart om te draaien</p>
           </div>
           {/* Achterkant: antwoord */}
-          <div className="absolute inset-0 flex flex-col overflow-y-auto overscroll-contain rounded-card border border-euca/25 bg-eucatint p-6 text-left shadow-card [backface-visibility:hidden] [transform:rotateY(180deg)]">
+          <div
+            aria-hidden={!flipped}
+            className="absolute inset-0 flex flex-col overflow-y-auto overscroll-contain rounded-card border border-euca/25 bg-eucatint p-6 text-left shadow-card [backface-visibility:hidden] [transform:rotateY(180deg)]"
+          >
             <p className="eyebrow">Antwoord</p>
             <p className="mt-3 flex-1 text-[15.5px] leading-[1.6] text-ink">{card.back}</p>
             {lesson && (
@@ -201,7 +228,7 @@ function Deck({ initial }: { initial: Flashcard[] }) {
 
       {/* Beoordeling — pas zichtbaar als het antwoord om ligt */}
       {flipped ? (
-        <div className="grid grid-cols-2 gap-2.5" aria-label="Hoe ging het?">
+        <div className="grid grid-cols-2 gap-2.5" role="group" aria-label="Hoe ging het?">
           {GRADE_ORDER.map((grade) => (
             <button
               key={grade}

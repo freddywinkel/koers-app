@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { audioSessions } from '../content/audio';
+import { navigateBackOr } from '../lib/navigation';
 
 /** Overzicht van alle geleide audio-oefeningen. */
 export default function AudioList() {
@@ -10,7 +11,7 @@ export default function AudioList() {
       <div className="flex items-center gap-3 px-0.5 pt-1">
         <button
           type="button"
-          onClick={() => navigate(-1)}
+          onClick={() => navigateBackOr(navigate, '/oefenen')}
           aria-label="Terug"
           className="grid h-10 w-10 flex-none place-items-center rounded-[14px] border border-line bg-sand text-ink"
         >

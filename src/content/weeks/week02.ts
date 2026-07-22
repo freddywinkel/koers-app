@@ -105,7 +105,7 @@ export const week02: Week = {
         ]
       },
       reflection: 'Wat viel je op? Misschien werd je rustig, misschien juist niet. Allebei is goed. Het opmerken ís de oefening.',
-      assignment: 'Oefen deze week elke dag 2 minuten met je adem. Bijvoorbeeld bij het koffiezetten of voor het slapen gaan.',
+      assignment: 'Oefen deze week elke dag 2 minuten met je adem. Bijvoorbeeld bij het koffiezetten of voor het slapengaan.',
       relatedSkillIds: ['ademanker'],
       flashcardIds: ['fc-w02-l03-a', 'fc-w02-l03-b']
     },
@@ -125,10 +125,10 @@ export const week02: Week = {
       exercise: {
         title: 'Gronden met je zintuigen (5-4-3-2-1)',
         steps: [
-          { n: 1, title: 'Adem rustig', text: 'Ga zitten of staan. Neem één kalme ademhaling. Je hoeft niets weg te duwen.', seconds: 20 },
+          { n: 1, title: 'Adem rustig', text: 'Ga zitten of staan. Haal één keer rustig adem. Je hoeft niets weg te duwen.', seconds: 20 },
           { n: 2, title: 'Vijf dingen zien', text: 'Kijk om je heen. Noem vijf dingen die je ziet. Klein is prima.', seconds: 45 },
-          { n: 3, title: 'Vier dingen horen', text: 'Luister. Noem vier geluiden. Dichtbij of ver weg, het maakt niet uit.', seconds: 40 },
-          { n: 4, title: 'Drie dingen voelen', text: 'Voel drie dingen: de stoel, je kleding, de grond onder je voeten.', seconds: 40 },
+          { n: 3, title: 'Vier dingen voelen', text: 'Voel vier dingen: de stoel, je kleding, de grond onder je voeten of de lucht op je huid.', seconds: 40 },
+          { n: 4, title: 'Drie dingen horen', text: 'Luister. Noem drie geluiden. Dichtbij of ver weg, het maakt niet uit.', seconds: 40 },
           { n: 5, title: 'Twee dingen ruiken', text: 'Ruik rustig. Noem twee geuren. Ruik je niets? Ruik dan aan je koffie of je handen.', seconds: 30 },
           { n: 6, title: 'Eén ding proeven', text: 'Proef één ding. Een slokje water, of gewoon de smaak in je mond.', seconds: 20 }
         ]

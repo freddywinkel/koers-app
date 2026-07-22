@@ -8,11 +8,11 @@
 export const onboarding: { titel: string; tekst: string }[] = [
   {
     titel: 'Welkom bij Koers',
-    tekst: 'Dit is een cursus van 12 weken. Je leert rustiger omgaan met moeilijke gevoelens en gedachten. De oefeningen komen uit methoden waarvan bewezen is dat ze werken, vertaald naar gewone taal. Geen ingewikkelde woorden, wel veel oefenen.'
+    tekst: 'Dit is een cursus van 12 weken. Je leert rustiger omgaan met moeilijke gevoelens en gedachten. De oefeningen zijn gebaseerd op ACT en VERS, methoden die in de zorg worden gebruikt, vertaald naar gewone taal. Geen ingewikkelde woorden, wel veel oefenen.'
   },
   {
     titel: 'Zo werken de weken',
-    tekst: 'Elke week heeft een eigen thema, zoals adem, gedachten of waarden. Een les duurt 3 tot 7 minuten. Je doet korte oefeningen en een kleine opdracht om in je week te doen. Alles mag in je eigen tempo. Een week langer doen is helemaal goed.'
+    tekst: 'Elke week heeft een eigen thema, zoals adem, gedachten of waarden. Een les duurt meestal 3 tot 12 minuten. Sommige oefeningen vragen wat meer tijd. Alles mag in je eigen tempo. Een week langer doen is helemaal goed.'
   },
   {
     titel: 'Het pannetjesmodel',
@@ -20,7 +20,7 @@ export const onboarding: { titel: string; tekst: string }[] = [
   },
   {
     titel: 'Alles blijft op je telefoon',
-    tekst: 'Wat je hier schrijft en invult, blijft op je telefoon. Er is geen account en er wordt niets verstuurd. Jij bepaalt wat je deelt en met wie. De app werkt ook zonder internet.'
+    tekst: 'Wat je hier schrijft en invult, blijft op je telefoon. Er is geen account en er wordt niets verstuurd. Jij bepaalt wat je deelt en met wie. De lessen, check-ins en audio die je hebt bewaard werken zonder internet. Spotify en audio die je nog niet hebt bewaard hebben internet nodig.'
   },
   {
     titel: 'Goed om te weten',

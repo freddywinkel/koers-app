@@ -155,18 +155,40 @@ export const EHP_SECTIONS: EhpSectionDef[] = [
     ]
   },
   {
+    key: 'als-dan',
+    title: 'Mijn als-dan-plannen',
+    intro: 'Deze zinnen helpen je om bij een vroeg signaal meteen een passende stap te zetten.',
+    fields: [
+      {
+        key: 'als-dan-1',
+        prompt: 'Als-dan-zin 1',
+        placeholder: 'Als ik merk dat …, dan …'
+      },
+      {
+        key: 'als-dan-2',
+        prompt: 'Als-dan-zin 2',
+        placeholder: 'Als ik merk dat …, dan …'
+      },
+      {
+        key: 'als-dan-3',
+        prompt: 'Als-dan-zin 3',
+        placeholder: 'Als ik merk dat …, dan …'
+      }
+    ]
+  },
+  {
     key: 'professioneel',
     title: 'Professionele hulp',
     fields: [
       {
         key: 'professioneel',
         prompt:
-          'Deze hulplijnen zijn er altijd — ook ’s nachts, ook anoniem. Je mag deze tekst aanpassen aan je eigen situatie.',
+          '113 is dag en nacht gratis en anoniem bereikbaar. Voor je huisarts, de huisartsen-spoedpost en 112 gelden de routes hieronder. Je mag deze tekst aanpassen aan je eigen situatie.',
         placeholder: 'Hulplijnen en hulpverleners …',
         prefill:
-          '113 Zelfmoordpreventie: bel 113 of 0800-0113 (gratis, dag en nacht). Chatten kan via 113.nl.\n' +
-          'Huisarts of huisartsenpost: overdag je eigen huisarts, ’s avonds en in het weekend de huisartsenpost.\n' +
-          '112: bij direct gevaar.'
+          '113 Zelfmoordpreventie: denk je aan zelfdoding of maak je je zorgen om iemand? Bel 113 of 0800-0113, of chat via 113.nl/chat. Dag en nacht, gratis en anoniem. Bij direct gevaar bel je 112.\n' +
+          'Huisarts of huisartsen-spoedpost: bij een psychische crisis of als je snel een arts nodig hebt zonder direct levensgevaar. Bel op werkdagen overdag je eigen huisarts. Bel ’s avonds, ’s nachts, in het weekend of op een feestdag de huisartsen-spoedpost.\n' +
+          '112: bel meteen als jij of iemand anders in direct gevaar is, of als je denkt dat er levensgevaar is.'
       }
     ]
   }

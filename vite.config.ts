@@ -15,7 +15,6 @@ export default defineConfig(({ mode }) => ({
     react(),
     VitePWA({
       registerType: 'prompt',
-      includeAssets: ['favicon.svg', 'icons/*.png'],
       manifest: {
         name: 'Koers',
         short_name: 'Koers',
@@ -23,7 +22,6 @@ export default defineConfig(({ mode }) => ({
         lang: 'nl',
         dir: 'ltr',
         display: 'standalone',
-        orientation: 'portrait',
         start_url: './',
         scope: './',
         theme_color: '#F2F4F1', // Noordzeemist · Mist
@@ -37,6 +35,12 @@ export default defineConfig(({ mode }) => ({
       workbox: {
         // Precache app-shell, fonts (woff2 via @fontsource) en alle statische assets.
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        // De drie manifest-iconen worden door vite-plugin-pwa zelf toegevoegd;
+        // sluit ze uit van de glob zodat Workbox elke URL maar één keer krijgt.
+        globIgnores: ['**/icons/icon-192.png', '**/icons/icon-512.png', '**/icons/icon-maskable-512.png'],
+        // Open een bestaande of nieuwe Koers-client wanneer iemand op een
+        // dagelijkse herinnering tikt. Het script wordt vanuit public/ gekopieerd.
+        importScripts: ['notification-handler.js'],
         navigateFallback: 'index.html',
         runtimeCaching: [
           {

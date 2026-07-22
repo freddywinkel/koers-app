@@ -84,7 +84,7 @@ toevoegen — de renderer slaat ze netjes over.
 - **Geen cursief**, geen uitroeptekens als styling. Rustige toon.
 - Metaforen: concreet en alledaags (pannen op het fornuis, weer, stromend
   water, passagiers op een bus). Eén beeld per les, niet door elkaar.
-- Tijdsindicaties realistisch: les 3–7 min, oefening 3–12 min.
+- Tijdsindicaties realistisch: les of oefening meestal 3–12 min.
 
 ## Pannetjesmodel-woorden (vaste woordenschat)
 

@@ -124,7 +124,7 @@ export const skillLibrary: SkillCard[] = [
       'Een gedachte is een verhaaltje in je hoofd, geen feit en geen bevel. Je kunt ernaar kijken zonder erin mee te gaan.',
     steps: [
       'Merk de gedachte op, bijvoorbeeld: "Niemand vindt mij aardig."',
-      'Zet ervoor: "Ik heb de gedachte dat niemand mij aardig vindt."',
+      'Zet ervoor: "Ik merk de gedachte dat niemand mij aardig vindt."',
       'Bedank je hoofd: "Dank je wel, hoofd, voor dit verhaal."',
       'Geef het verhaal een naam: "O, het niet-goed-genoeg-verhaal."',
       'Zing de gedachte in je hoofd op een gek deuntje.'
@@ -203,8 +203,8 @@ export const skillLibrary: SkillCard[] = [
       'Als het te veel wordt, brengen je zintuigen je terug naar nu. Benoem rustig wat je ziet, hoort en voelt.',
     steps: [
       'Noem 5 dingen die je ziet.',
-      'Noem 4 dingen die je hoort.',
-      'Noem 3 dingen die je voelt (de stoel, je kleding, de vloer).',
+      'Noem 4 dingen die je voelt (de stoel, je kleding, de vloer, de lucht).',
+      'Noem 3 dingen die je hoort.',
       'Noem 2 dingen die je ruikt.',
       'Noem 1 ding dat je proeft.'
     ]
@@ -215,12 +215,12 @@ export const skillLibrary: SkillCard[] = [
     panMin: 4,
     panMax: 5,
     summary:
-      'Iets kouds op je gezicht geeft je lichaam een stevige schok. Daardoor kan je hartslag zakken en de storm iets minderen.',
+      'Een korte koele prikkel kan je aandacht naar je lijf brengen. Doe dit alleen als kou lichamelijk veilig voelt; kies bij twijfel een andere grondoefening.',
     steps: [
-      'Pak iets kouds: een bak koud water, een ijsklontje of een koud pakje.',
-      'Houd het tegen je wangen en rond je ogen, of houd je gezicht kort in het water.',
-      'Houd het 15 tot 30 seconden vast. Adem rustig door.',
-      'Herhaal het een paar keer als dat nodig is.',
+      'Kies deze oefening alleen als kou lichamelijk veilig voelt. Twijfel je? Gebruik dan 5-4-3-2-1.',
+      'Pak een koele doek of een koel pakje, gewikkeld in stof. Gebruik niets dat pijnlijk koud is.',
+      'Houd het kort tegen je wangen. Blijf gewoon ademen.',
+      'Stop meteen bij pijn, duizeligheid, benauwdheid of een naar gevoel.',
       'Merk op: zakt de intensiteit een klein beetje?'
     ]
   },
@@ -230,11 +230,12 @@ export const skillLibrary: SkillCard[] = [
     panMin: 3,
     panMax: 5,
     summary:
-      'Hevige emoties zijn energie in je lijf. Kort en stevig bewegen geeft die energie een uitweg.',
+      'Kort bewegen kan helpen om spanning kwijt te raken. Kies alleen beweging die lichamelijk veilig en passend voor je is.',
     steps: [
-      'Kies iets stevigs: snelwandelen, traplopen, op de plaats rennen.',
+      'Kies dit alleen als stevig bewegen lichamelijk veilig voor je is. Kies anders rustig wandelen of gronden.',
+      'Kies iets dat past: snelwandelen, rustig traplopen of op de plaats bewegen.',
       'Doe het één tot drie minuten, tot je voelt dat je lijf werkt.',
-      'Stop en voel je hartslag en je adem.',
+      'Stop meteen bij pijn, duizeligheid, benauwdheid of als het niet goed voelt.',
       'Laat je adem daarna langzaam zakken.',
       'Kijk: in welke pan zit je nu?'
     ]
@@ -245,12 +246,12 @@ export const skillLibrary: SkillCard[] = [
     panMin: 2,
     panMax: 5,
     summary:
-      'Een lange, zachte uitademing zegt tegen je lichaam: het is veilig. Zo kan het vuur onder de pan lager.',
+      'Een rustige, iets langere uitademing kan spanning helpen verlagen. Forceer je adem niet en stop als het niet prettig voelt.',
     steps: [
-      'Adem in door je neus en tel tot vier.',
-      'Adem langzaam uit en tel tot zes of acht.',
+      'Adem rustig in op een manier die vanzelf gaat. Tel eventueel tot vier.',
+      'Adem zacht uit en maak de uitademing alleen iets langer als dat prettig voelt.',
       'Maak de uitademing zacht en lang, alsof je door een rietje blaast.',
-      'Herhaal dit tien keer, in je eigen tempo.',
+      'Word je duizelig, benauwd of onrustiger? Stop en adem weer normaal.',
       'Voel je handen en voeten: is daar iets meer rust?'
     ]
   },
@@ -260,13 +261,13 @@ export const skillLibrary: SkillCard[] = [
     panMin: 2,
     panMax: 4,
     summary:
-      'Roep een plek op waar je je veilig voelt, echt of verzonnen. Die plek in je hoofd helpt je lijf tot rust komen.',
+      'Roep een rustige of neutrale plek op, echt of verzonnen. Jij kiest het beeld, houdt je ogen open als je wilt en mag altijd stoppen.',
     steps: [
-      'Doe je ogen dicht of kijk zacht naar beneden.',
-      'Kies je plek: een strand, een bos, een kamer — ergens waar je je geborgen voelt.',
+      'Houd je ogen open of kijk zacht naar beneden, wat voor jou prettig voelt.',
+      'Kies een rustige of neutrale plek: een strand, een bos of een verzonnen kamer.',
       'Kijk rond in je hoofd: welke kleuren, hoe valt het licht?',
       'Wat hoor je daar? Wat ruik je? Hoe voelt de lucht?',
-      'Blijf een minuut of twee en neem dat gevoel mee terug.'
+      'Voelt het beeld niet goed? Stop, kijk om je heen en voel je voeten op de grond.'
     ]
   },
 
