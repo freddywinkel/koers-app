@@ -140,8 +140,9 @@ export default function Les() {
       {/* Beeldkaart */}
       {lesson.metaphorCard && (
         <section className="card overflow-hidden !p-0">
-          <div className="h-[148px] bg-dune dark:opacity-90">
+          <div className="metaphor-art-frame relative overflow-hidden bg-dune">
             <MetaphorArt art={lesson.metaphorCard.art} />
+            <span className="metaphor-art-scrim" aria-hidden="true" />
           </div>
           <div className="px-[18px] pb-[18px] pt-[15px]">
             <p className="eyebrow">Beeld om te onthouden</p>

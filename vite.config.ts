@@ -39,7 +39,7 @@ export default defineConfig(({ mode }) => ({
       },
       workbox: {
         // Precache app-shell, fonts (woff2 via @fontsource) en alle statische assets.
-        globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        globPatterns: ['**/*.{js,css,html,svg,png,webp,woff2}'],
         // De drie manifest-iconen worden door vite-plugin-pwa zelf toegevoegd;
         // sluit ze uit van de glob zodat Workbox elke URL maar één keer krijgt.
         globIgnores: ['**/icons/icon-192.png', '**/icons/icon-512.png', '**/icons/icon-maskable-512.png'],
