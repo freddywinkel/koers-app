@@ -1,4 +1,4 @@
-import { Link, useLocation, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router';
 import { getWeek, KIND_LABELS } from '../content/helpers';
 import { useDoneLessonIds } from '../db/hooks';
 import { useAllWeeksOpen, useIsWeekUnlocked } from '../lib/courseHooks';

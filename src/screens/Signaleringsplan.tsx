@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type ChangeEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import type { SignaleringsplanRow } from '../db/db';
 import {
   SIGNALERINGSPLAN_SECTIONS,
@@ -75,7 +75,7 @@ export default function Signaleringsplan() {
     <div className="screen-stack">
       {/* Header */}
       <header className="min-w-0 px-1 pt-2">
-        <Link to="/steun" className="text-[13px] font-bold text-euca-deep">
+        <Link to="/steun" className="inline-flex min-h-[44px] items-center text-[13px] font-bold text-euca-deep">
           ← Terug naar Steun
         </Link>
         <p className="eyebrow mt-2.5">Steun</p>

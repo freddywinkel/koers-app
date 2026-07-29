@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router';
 import type { ReactNode } from 'react';
 
 interface TabDef {
@@ -24,7 +24,7 @@ const TABS: TabDef[] = [
   {
     to: '/',
     label: 'Vandaag',
-    prefixes: ['/'],
+    prefixes: ['/', '/check-in'],
     icon: (
       <svg {...ICON_PROPS} aria-hidden="true">
         <path d="M3.5 10.3 11 4l7.5 6.3M5.8 9.2V18h10.4V9.2" />
@@ -77,7 +77,7 @@ export default function TabBar() {
       aria-label="Hoofdnavigatie"
     >
       {TABS.map((tab) => {
-        const active = tab.to === '/' ? pathname === '/' : tab.prefixes.some((p) => pathname.startsWith(p));
+        const active = tab.to === '/' ? tab.prefixes.includes(pathname) : tab.prefixes.some((p) => pathname.startsWith(p));
         return (
           <Link
             key={tab.to}

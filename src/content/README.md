@@ -52,7 +52,7 @@ Bekijk hem in de app op `/les/w02-l03`.
   metaphorCard: {             // optioneel — het "beeld om te onthouden"
     title: 'Touwtrekken met een monster',
     text: '1–3 zinnen.',
-    art: 'mist'               // 'mist' | 'golf' | 'stroom'
+    art: 'drop-the-rope'      // kies de tekstgetrouwe id uit METAPHOR_ART_IDS
   },
   exercise: {                 // optioneel — bij kind 'oefening' verplicht
     title: 'Naam van de oefening',

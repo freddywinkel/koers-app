@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
+import type { Table } from 'dexie';
 import {
   db,
   type CheckinRow,
@@ -232,6 +233,7 @@ export function useApplyTheme(): void {
 /* ------------------------------ Databeheer ------------------------------- */
 
 const BACKUP_VERSION = 1;
+const MAX_BACKUP_CHARACTERS = 10_000_000;
 const BACKUP_TABLES = [
   'checkins',
   'lessonProgress',
@@ -426,7 +428,26 @@ function readRows<T>(
   return value as T[];
 }
 
+function assertUniqueKeys<T>(
+  rows: readonly T[],
+  tableName: BackupTableName,
+  getKey: (row: T) => string | number | undefined
+): void {
+  const seen = new Set<string | number>();
+  for (let index = 0; index < rows.length; index += 1) {
+    const key = getKey(rows[index]);
+    if (key === undefined) continue;
+    if (seen.has(key)) {
+      throw new Error(`Tabel '${tableName}' bevat een dubbele sleutel '${key}' op positie ${index + 1}.`);
+    }
+    seen.add(key);
+  }
+}
+
 function validateBackup(json: string): ValidatedBackup {
+  if (json.length > MAX_BACKUP_CHARACTERS) {
+    throw new Error('Dit exportbestand is te groot om veilig te importeren.');
+  }
   let parsed: unknown;
   try {
     parsed = JSON.parse(json);
@@ -445,11 +466,7 @@ function validateBackup(json: string): ValidatedBackup {
   if (unknownKey) throw new Error(`Onbekende tabel of eigenschap '${unknownKey}' gevonden.`);
   const presentTables = new Set(BACKUP_TABLES.filter((name) => Object.prototype.hasOwnProperty.call(parsed, name)));
   if (presentTables.size === 0) throw new Error('Deze Koers-export bevat geen gegevens-tabellen.');
-  const portableSettings = readRows(parsed, 'settings', isSettingRow).filter(
-    (setting) => !DEVICE_ONLY_SETTING_KEYS.has(setting.key)
-  );
-
-  return {
+  const backup: ValidatedBackup = {
     exportedAt: parsed.exportedAt,
     presentTables,
     checkins: readRows(parsed, 'checkins', isCheckinRow),
@@ -457,11 +474,24 @@ function validateBackup(json: string): ValidatedBackup {
     flashcardStates: readRows(parsed, 'flashcardStates', isFlashcardStateRow),
     practiceLogs: readRows(parsed, 'practiceLogs', isPracticeLogRow),
     ehpSections: readRows(parsed, 'ehpSections', isEhpSectionRow),
-    settings: portableSettings,
+    settings: readRows(parsed, 'settings', isSettingRow),
     measureResults: readRows(parsed, 'measureResults', isMeasureResultRow),
     signaleringsplannen: readRows(parsed, 'signaleringsplannen', isSignaleringsplanRow),
     gSchemas: readRows(parsed, 'gSchemas', isGSchemaRow)
   };
+
+  assertUniqueKeys(backup.checkins, 'checkins', (row) => row.id);
+  assertUniqueKeys(backup.lessonProgress, 'lessonProgress', (row) => row.lessonId);
+  assertUniqueKeys(backup.flashcardStates, 'flashcardStates', (row) => row.flashcardId);
+  assertUniqueKeys(backup.practiceLogs, 'practiceLogs', (row) => row.id);
+  assertUniqueKeys(backup.ehpSections, 'ehpSections', (row) => row.key);
+  assertUniqueKeys(backup.settings, 'settings', (row) => row.key);
+  assertUniqueKeys(backup.measureResults, 'measureResults', (row) => row.id);
+  assertUniqueKeys(backup.signaleringsplannen, 'signaleringsplannen', (row) => row.id);
+  assertUniqueKeys(backup.gSchemas, 'gSchemas', (row) => row.id);
+  backup.settings = backup.settings.filter((setting) => !DEVICE_ONLY_SETTING_KEYS.has(setting.key));
+
+  return backup;
 }
 
 function syncAppearanceCache(settings: SettingRow[], mode: ImportMode): void {
@@ -474,6 +504,30 @@ function syncAppearanceCache(settings: SettingRow[], mode: ImportMode): void {
   } catch {
     // IndexedDB blijft de bron van waarheid als localStorage niet mag.
   }
+}
+
+function withoutAutoIds<T extends { id?: number }>(rows: readonly T[]): T[] {
+  return rows.map((row) => {
+    const copy = { ...row };
+    delete copy.id;
+    return copy;
+  });
+}
+
+async function importAutoIncrementRows<T extends { id?: number }>(
+  table: Table<T, number>,
+  rows: readonly T[],
+  mode: ImportMode
+): Promise<void> {
+  if (rows.length === 0) return;
+  if (mode === 'merge') {
+    // Auto-increment-ID's zijn lokale database-identiteit, geen draagbare
+    // recordidentiteit. Nieuwe sleutels voorkomen dat een export bestaande
+    // records op dit apparaat stil overschrijft.
+    await table.bulkAdd(withoutAutoIds(rows));
+    return;
+  }
+  await table.bulkPut(rows);
 }
 
 /** Exporteer alle tabellen als één JSON-object (voor download op Profiel). */
@@ -494,9 +548,10 @@ export async function exportAllData(): Promise<string> {
 }
 
 /**
- * Herstel een gevalideerde Koers-export. `merge` werkt bestaande sleutels bij;
- * `replace` wist eerst alle bekende tabellen. De profielpagina bevestigt beide
- * mutaties expliciet voordat deze helper wordt aangeroepen.
+ * Herstel een gevalideerde Koers-export. `merge` voegt records met een lokale
+ * auto-ID onder een nieuwe sleutel toe en werkt inhoudelijk gesleutelde rijen
+ * bij; `replace` wist eerst alle bekende tabellen. De profielpagina bevestigt
+ * beide mutaties expliciet voordat deze helper wordt aangeroepen.
  */
 export async function importAllData(json: string, mode: ImportMode): Promise<ImportSummary> {
   if (mode !== 'merge' && mode !== 'replace') throw new Error('Onbekende importmodus.');
@@ -522,18 +577,26 @@ export async function importAllData(json: string, mode: ImportMode): Promise<Imp
       if (mode === 'replace') {
         for (const table of db.tables) await table.clear();
       }
-      if (backup.presentTables.has('checkins')) await db.checkins.bulkPut(backup.checkins);
+      if (backup.presentTables.has('checkins')) {
+        await importAutoIncrementRows(db.checkins, backup.checkins, mode);
+      }
       if (backup.presentTables.has('lessonProgress')) await db.lessonProgress.bulkPut(backup.lessonProgress);
       if (backup.presentTables.has('flashcardStates')) await db.flashcardStates.bulkPut(backup.flashcardStates);
-      if (backup.presentTables.has('practiceLogs')) await db.practiceLogs.bulkPut(backup.practiceLogs);
+      if (backup.presentTables.has('practiceLogs')) {
+        await importAutoIncrementRows(db.practiceLogs, backup.practiceLogs, mode);
+      }
       if (backup.presentTables.has('ehpSections')) await db.ehpSections.bulkPut(backup.ehpSections);
       if (backup.presentTables.has('settings')) await db.settings.bulkPut(backup.settings);
       if (mode === 'replace' && deviceOnlySettings.length > 0) await db.settings.bulkPut(deviceOnlySettings);
-      if (backup.presentTables.has('measureResults')) await db.measureResults.bulkPut(backup.measureResults);
-      if (backup.presentTables.has('signaleringsplannen')) {
-        await db.signaleringsplannen.bulkPut(backup.signaleringsplannen);
+      if (backup.presentTables.has('measureResults')) {
+        await importAutoIncrementRows(db.measureResults, backup.measureResults, mode);
       }
-      if (backup.presentTables.has('gSchemas')) await db.gSchemas.bulkPut(backup.gSchemas);
+      if (backup.presentTables.has('signaleringsplannen')) {
+        await importAutoIncrementRows(db.signaleringsplannen, backup.signaleringsplannen, mode);
+      }
+      if (backup.presentTables.has('gSchemas')) {
+        await importAutoIncrementRows(db.gSchemas, backup.gSchemas, mode);
+      }
     }
   );
 

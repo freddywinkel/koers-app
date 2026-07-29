@@ -29,7 +29,7 @@ export const week07: Week = {
       metaphorCard: {
         title: 'Het kompas',
         text: 'Een kompas zegt niet waar je bent. Het wijst alleen de richting. Zo werken waarden ook: ze sturen je, elke dag opnieuw.',
-        art: 'mist'
+        art: 'values-compass'
       },
       exercise: {
         title: 'Kijken naar je dag',
@@ -62,7 +62,7 @@ export const week07: Week = {
       metaphorCard: {
         title: 'De poolster',
         text: 'Zeelieden bereiken de poolster nooit. Toch varen ze er al eeuwen op. Zo is een waarde: je arriveert er niet, maar hij wijst je de weg.',
-        art: 'stroom'
+        art: 'north-star'
       },
       exercise: {
         title: 'Van waarde naar doel',

@@ -96,7 +96,7 @@ function rememberFiredDay(value: string): void {
 /** Toon de melding: via de service worker als die er is (beter op mobiel), anders klassiek. */
 async function showReminder(): Promise<void> {
   const appBase = new URL(import.meta.env.BASE_URL, window.location.origin);
-  const appUrl = new URL('#/', appBase).href;
+  const appUrl = new URL('#/check-in', appBase).href;
   const iconUrl = new URL('icons/icon-192.png', appBase).href;
   const options: NotificationOptions = {
     body: translate(REMINDER_BODY),

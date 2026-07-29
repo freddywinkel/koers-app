@@ -1,4 +1,5 @@
 import { useLiveQuery } from 'dexie-react-hooks';
+import { Link } from 'react-router';
 import { db } from '../db/db';
 import {
   clearAllData,
@@ -392,6 +393,26 @@ export default function Profiel() {
               </button>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Snelle check-in vanaf dezelfde geïnstalleerde PWA-opslag. */}
+      <section className="card" aria-label="Snelle check-in vanaf je beginscherm">
+        <h2 className="card-title">Snelle check-in vanaf je beginscherm</h2>
+        <p className="sub mt-1.5">
+          Koers is ingesteld om vanaf het bestaande app-icoon direct de korte check-in te openen. Kies een pan, schrijf
+          eventueel een zin en sla op. Je ziet dezelfde check-in daarna ook bij Vandaag.
+        </p>
+        <Link to="/check-in" className="btn-primary mt-3 w-full">
+          Open snelle check-in
+        </Link>
+        <div className="mt-3 rounded-2xl bg-dune p-4">
+          <p className="text-sm font-extrabold text-ink">Waarom geen apart iPhone-widget?</p>
+          <p className="sub mt-1">
+            Een PWA-widget of Safari-snelkoppeling kan niet betrouwbaar bij de lokale gegevens van de geïnstalleerde
+            Koers-app. Gebruik daarom je bestaande Koers-icoon en installeer geen tweede kopie; zo blijven je pan en
+            notitie samen in één lokale app.
+          </p>
         </div>
       </section>
 

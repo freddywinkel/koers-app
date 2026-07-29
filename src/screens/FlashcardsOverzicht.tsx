@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { getLesson, getWeek } from '../content/helpers';
 import type { Flashcard } from '../content/types';
 import FlashcardView from '../components/FlashcardView';

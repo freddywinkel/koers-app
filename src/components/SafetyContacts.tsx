@@ -1,4 +1,5 @@
-import { crisisContacts } from '../content/crisis';
+import { crisisContacts, getCrisisActionHref } from '../content/crisis';
+import { getLanguage } from '../i18n';
 
 interface SafetyContactsProps {
   /** Compacte variant voor het openbare deel van het pincode-scherm. */
@@ -11,6 +12,8 @@ interface SafetyContactsProps {
  * worden getoond.
  */
 export default function SafetyContacts({ compact = false }: SafetyContactsProps) {
+  const language = getLanguage();
+
   return (
     <section
       className={compact ? 'rounded-2xl border border-ap-border bg-apricot-soft p-4' : 'card border-ap-border'}
@@ -43,7 +46,7 @@ export default function SafetyContacts({ compact = false }: SafetyContactsProps)
                   return (
                     <a
                       key={action.label}
-                      href={action.href}
+                      href={getCrisisActionHref(action, language)}
                       target={external ? '_blank' : undefined}
                       rel={external ? 'noreferrer' : undefined}
                       aria-label={external ? `${action.label} (opent in een nieuw tabblad)` : undefined}

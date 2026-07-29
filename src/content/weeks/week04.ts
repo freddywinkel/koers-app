@@ -34,7 +34,7 @@ export const week04: Week = {
       metaphorCard: {
         title: 'Passagiers op de bus',
         text: 'Jij bestuurt de bus van je leven. Achterin zitten luidruchtige passagiers: gedachten die roepen welke kant je op moet. Je kunt ze er niet uitzetten. Maar jij houdt het stuur vast.',
-        art: 'mist'
+        art: 'bus-passengers'
       },
       exercise: {
         title: 'Eén gedachte bekijken',
@@ -120,7 +120,7 @@ export const week04: Week = {
       metaphorCard: {
         title: 'Bladeren op de stroom',
         text: 'Je zit op de oever van een stroompje. Gedachten zijn bladeren op het water. Ze komen aangedreven en drijven voorbij. Jij blijft op de oever en kijkt.',
-        art: 'stroom'
+        art: 'leaves-on-stream'
       },
       exercise: {
         title: 'Bladeren op de stroom in 5 stappen',

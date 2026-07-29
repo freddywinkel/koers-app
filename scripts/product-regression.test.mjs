@@ -17,17 +17,36 @@ test('het manifest staat tabletrotatie toe en precachet assets niet dubbel', asy
   const config = await read('vite.config.ts');
   assert.doesNotMatch(config, /orientation\s*:/);
   assert.doesNotMatch(config, /includeAssets\s*:/);
+  assert.match(config, /id:\s*'\.\/'/);
+  assert.match(config, /start_url:\s*'\.\/#\/check-in'/);
   assert.match(config, /globIgnores:\s*\[/);
   assert.match(config, /importScripts:\s*\['notification-handler\.js'\]/);
 });
 
-test('herinneringen gebruiken de Pages-basis, bewaren dezelfde-dagstatus en openen de app', async () => {
+test('herinneringen gebruiken de Pages-basis, bewaren dezelfde-dagstatus en openen de snelle check-in', async () => {
   const reminders = await read('src/lib/reminders.ts');
   const handler = await read('public/notification-handler.js');
   assert.match(reminders, /import\.meta\.env\.BASE_URL/);
   assert.match(reminders, /koers-reminder-last-fired/);
+  assert.match(reminders, /#\/check-in/);
   assert.match(handler, /notificationclick/);
+  assert.match(handler, /#\/check-in/);
   assert.match(handler, /clients\.openWindow/);
+});
+
+test('de PWA-snelle check-in gebruikt dezelfde dagopslag en vermijdt een tweede iPhone-installatie', async () => {
+  const app = await read('src/App.tsx');
+  const quickCheckin = await read('src/screens/QuickCheckin.tsx');
+  const profile = await read('src/screens/Profiel.tsx');
+  const tabBar = await read('src/components/TabBar.tsx');
+  assert.match(app, /path="\/check-in"/);
+  assert.match(app, /<RequireOnboarding>/);
+  assert.match(quickCheckin, /useTodayCheckin\(\)/);
+  assert.match(quickCheckin, /saveCheckin\(\{ pan, note \}\)/);
+  assert.match(quickCheckin, /doneLessonIds\.has\('w01-l03'\)/);
+  assert.match(profile, /Open snelle check-in/);
+  assert.match(profile, /installeer geen tweede kopie/);
+  assert.match(tabBar, /prefixes: \['\/', '\/check-in'\]/);
 });
 
 test('toetsenbordfocus en bewegingsvoorkeur hebben een globaal vangnet', async () => {

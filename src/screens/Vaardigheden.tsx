@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router';
 import { skills } from '../content/skills';
 import type { PanValue } from '../content/types';
 import { PAN_LABELS } from '../components/PanIcon';

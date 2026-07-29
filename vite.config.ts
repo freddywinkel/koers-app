@@ -22,7 +22,12 @@ export default defineConfig(({ mode }) => ({
         lang: 'nl',
         dir: 'ltr',
         display: 'standalone',
-        start_url: './',
+        // Houd de identiteit stabiel als de startpagina verandert. De bestaande
+        // Koers-installatie blijft zo dezelfde app en dezelfde lokale opslag.
+        id: './',
+        // Vanaf het app-icoon zo snel mogelijk naar de check-in. De route stuurt
+        // nieuwe gebruikers eerst gewoon door de onboarding.
+        start_url: './#/check-in',
         scope: './',
         theme_color: '#F2F4F1', // Noordzeemist · Mist
         background_color: '#F2F4F1', // Noordzeemist · Mist (splash)

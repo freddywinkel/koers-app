@@ -1,4 +1,4 @@
-import type { NavigateFunction } from 'react-router-dom';
+import type { NavigateFunction } from 'react-router';
 
 /**
  * Ga terug binnen de app. Een rechtstreeks geopende deep link heeft geen

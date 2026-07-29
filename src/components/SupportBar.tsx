@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 /**
  * "Steun nu" — persistente, kalme crisis-toegang direct boven de tab bar.

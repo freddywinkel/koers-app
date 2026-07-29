@@ -27,7 +27,7 @@ export const week05: Week = {
       metaphorCard: {
         title: 'Het schaakbord',
         text: 'Op een schaakbord vechten witte en zwarte stukken. Jouw gedachten en gevoelens zijn die stukken. Jij bent het bord: je voelt alles, maar geen stuk kan het bord breken.',
-        art: 'stroom'
+        art: 'chessboard-self'
       },
       exercise: {
         title: 'Even meekijken',
@@ -60,7 +60,7 @@ export const week05: Week = {
       metaphorCard: {
         title: 'De hemel en het weer',
         text: 'Weer kan veranderen: bewolking, regen, zon. De hemel is in dit beeld de ruimte eromheen. Zo kun je ook naar gevoelens kijken: ze zijn er, maar ze zijn niet alles wat jij bent.',
-        art: 'mist'
+        art: 'sky-and-weather'
       },
       exercise: {
         title: 'Van "ik ben" naar "ik voel"',

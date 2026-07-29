@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router';
 import MetaphorArt from '../components/MetaphorArt';
 import FlashcardView from '../components/FlashcardView';
 import { getLesson, getWeek, lessonCrumb } from '../content/helpers';
