@@ -97,6 +97,22 @@ body {
   overflow-wrap: break-word;
 }
 
+.metaphor-art-frame {
+  aspect-ratio: 177 / 74;
+}
+
+.metaphor-art-scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 24, 22, 0.16);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dark .metaphor-art-scrim {
+  opacity: 1;
+}
+
 .app-shell {
   isolation: isolate;
 }

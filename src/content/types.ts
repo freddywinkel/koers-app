@@ -25,7 +25,7 @@ export interface ExerciseStep {
 
 /**
  * Beeldkaart ("beeld om te onthouden") — een metafoor die de kern van de les
- * samenvat. `art` verwijst naar een ingebouwde illustratie-variant.
+ * samenvat. `art` verwijst naar een lokaal opgeslagen, offline illustratiebeeld.
  */
 export const METAPHOR_ART_IDS = [
   'stove-pans',
@@ -61,7 +61,7 @@ export interface MetaphorCard {
   title: string;
   /** 1–3 korte zinnen. */
   text: string;
-  /** Tekstgetrouwe, ingebouwde illustratie. */
+  /** Tekstgetrouwe, lokaal opgeslagen illustratie. */
   art: MetaphorArtId;
 }
 
