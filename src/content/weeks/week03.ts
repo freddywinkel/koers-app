@@ -32,7 +32,7 @@ export const week03: Week = {
       metaphorCard: {
         title: 'Drijfzand',
         text: 'Wie in drijfzand spartelt, zakt dieper weg. Plat gaan liggen helpt: je verdeelt je gewicht en je blijft drijven. Zo werkt het ook met pijnlijke gevoelens. Hoe harder je vecht, hoe dieper je wegzakt.',
-        art: 'stroom'
+        art: 'quicksand-float'
       },
       exercise: {
         title: 'Even toestaan',
@@ -64,7 +64,7 @@ export const week03: Week = {
       metaphorCard: {
         title: 'Touwtrekken met een monster',
         text: 'Je trekt aan een touw. Aan de andere kant trekt een groot monster. Hoe harder jij trekt, hoe harder het monster trekt. Er is ook een andere optie: het touw laten vallen. Het monster blijft, maar de strijd stopt.',
-        art: 'mist'
+        art: 'drop-the-rope'
       },
       exercise: {
         title: 'De witte-ijsbeertest',

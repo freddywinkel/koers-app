@@ -1,5 +1,5 @@
 import { Suspense, useEffect, useRef, useState } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router';
 import TabBar from './TabBar';
 
 /**
@@ -68,10 +68,10 @@ export default function AppShell() {
   }, [pathname]);
 
   return (
-    <div className="fixed inset-0 mx-auto flex w-full max-w-5xl flex-col bg-mist">
+    <div className="app-shell fixed inset-0 mx-auto flex w-full max-w-5xl flex-col bg-mist">
       <main
         ref={mainRef}
-        className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain pt-[env(safe-area-inset-top)]"
+        className="app-main min-h-0 flex-1 overflow-y-auto overscroll-y-contain pt-[env(safe-area-inset-top)]"
       >
         <Suspense
           fallback={

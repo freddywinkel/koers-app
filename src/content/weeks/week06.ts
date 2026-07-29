@@ -30,7 +30,7 @@ export const week06: Week = {
       metaphorCard: {
         title: 'De lamp van je aandacht',
         text: 'Je aandacht is een lamp met een richtknop. Je kunt hem richten op wat piekt, of bewust op iets rustigs. Jij houdt de knop vast.',
-        art: 'stroom'
+        art: 'attention-lamp'
       },
       exercise: {
         title: 'Je aandachtsmenu maken',
@@ -78,7 +78,7 @@ export const week06: Week = {
       order: 3,
       kind: 'oefening',
       title: 'Je favoriete oefeningen',
-      minutes: 8,
+      minutes: 10,
       tags: ['Herhaling'],
       intro: [
         'In vijf weken heb je veel oefeningen geprobeerd. Sommige pasten goed bij jou, andere minder. Dat is precies de bedoeling.',

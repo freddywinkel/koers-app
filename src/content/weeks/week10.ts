@@ -32,7 +32,7 @@ export const week10: Week = {
       metaphorCard: {
         title: 'Acht beekjes, één rivier',
         text: 'Je energie is een rivier, gevoed door acht beekjes. Stroomt er een tijd geen water in een beekje, dan staat het water laag. Kijken welk beekje water nodig heeft: dat is deze week.',
-        art: 'stroom'
+        art: 'eight-streams-river'
       },
       exercise: {
         title: 'Jouw domeinenkaart',
@@ -64,7 +64,7 @@ export const week10: Week = {
       metaphorCard: {
         title: 'De vloedlijn',
         text: 'Op het strand zie je de vloedlijn: tot daar komt de zee, en niet verder. Zo mag jij ook een lijn trekken. Rustig en duidelijk.',
-        art: 'golf'
+        art: 'tide-line'
       },
       exercise: {
         title: 'Een vriendelijke nee oefenen',
@@ -96,7 +96,7 @@ export const week10: Week = {
       metaphorCard: {
         title: 'Eb en vloed',
         text: 'Balans is als eb en vloed: geven en nemen wisselen elkaar af. Jij plant ze allebei in je week: geven én nemen.',
-        art: 'golf'
+        art: 'ebb-and-flow'
       },
       exercise: {
         title: 'Eén klein stapje inplannen',

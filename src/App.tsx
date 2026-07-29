@@ -1,5 +1,5 @@
 import { Component, lazy, Suspense, useEffect, type ErrorInfo, type ReactNode } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router';
 import AppShell from './components/AppShell';
 import { PinGate } from './components/PinLock';
 import UpdatePrompt from './components/UpdatePrompt';
@@ -23,6 +23,7 @@ const OefeningenLijst = lazy(() => import('./screens/OefeningenLijst'));
 const FlashcardsOverzicht = lazy(() => import('./screens/FlashcardsOverzicht'));
 const FlashcardDeck = lazy(() => import('./components/FlashcardDeck'));
 const Profiel = lazy(() => import('./screens/Profiel'));
+const QuickCheckin = lazy(() => import('./screens/QuickCheckin'));
 const Crisis = lazy(() => import('./screens/Crisis'));
 const Signaleringsplan = lazy(() => import('./screens/Signaleringsplan'));
 const GSchema = lazy(() => import('./screens/GSchema'));
@@ -112,6 +113,14 @@ export default function App() {
               element={
                 <RequireOnboarding>
                   <Vandaag />
+                </RequireOnboarding>
+              }
+            />
+            <Route
+              path="/check-in"
+              element={
+                <RequireOnboarding>
+                  <QuickCheckin />
                 </RequireOnboarding>
               }
             />

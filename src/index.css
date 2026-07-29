@@ -97,6 +97,23 @@ body {
   overflow-wrap: break-word;
 }
 
+.app-shell {
+  isolation: isolate;
+}
+
+.app-main {
+  background:
+    radial-gradient(circle at 92% 3%, var(--euca-tint), transparent 19rem),
+    linear-gradient(180deg, var(--mist), var(--mist));
+}
+
+@media (min-width: 1024px) {
+  .app-shell {
+    border-inline: 1px solid var(--line);
+    box-shadow: 0 0 52px rgba(47, 67, 64, 0.09);
+  }
+}
+
 /* iOS geeft tijd-/datumvelden een eigen minimale breedte waardoor ze uit een
    smalle kaart kunnen lopen — forceer ze binnen hun container. */
 input[type='time'],
@@ -167,5 +184,297 @@ main h1[tabindex='-1']:focus {
   }
   .input-soft {
     @apply min-h-[44px] w-full rounded-2xl border border-line bg-raised px-4 py-2.5 text-base text-ink placeholder:text-ink-soft placeholder:opacity-60;
+  }
+}
+
+/* ---------- Koers Kompas ---------- */
+
+.today-heading {
+  order: 0;
+}
+
+.today-next {
+  order: 1;
+}
+
+.today-checkin {
+  order: 2;
+}
+
+.today-streak {
+  order: 3;
+}
+
+.today-recent {
+  order: 4;
+}
+
+.route-hero,
+.course-overview {
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(94, 133, 119, 0.22);
+  background:
+    radial-gradient(circle at 92% 5%, var(--euca-tint), transparent 13rem),
+    linear-gradient(135deg, var(--sand) 36%, var(--raised));
+}
+
+.route-hero::after,
+.course-overview::after {
+  position: absolute;
+  inset: auto -2.75rem -3.5rem auto;
+  width: 10rem;
+  height: 10rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  content: '';
+  pointer-events: none;
+}
+
+.route-hero-copy,
+.course-overview-copy,
+.route-progress,
+.route-meta,
+.route-hero > .btn-primary {
+  position: relative;
+  z-index: 1;
+}
+
+.route-hero-copy {
+  max-width: calc(100% - 3.75rem);
+}
+
+.route-compass,
+.course-compass {
+  position: absolute;
+  z-index: 1;
+  width: 4.5rem;
+  height: 4.5rem;
+  top: 0.75rem;
+  right: 0.75rem;
+  filter: drop-shadow(0 9px 14px rgba(47, 67, 64, 0.1));
+}
+
+.route-crumb {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.route-progress {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 1rem;
+}
+
+.route-progress-label {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.35rem 1rem;
+  color: var(--ink-soft);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.route-progress-label > :last-child {
+  color: var(--euca-deep);
+}
+
+.route-progress-track,
+.course-week-progress {
+  display: block;
+  width: 100%;
+  height: 0.45rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--dune);
+}
+
+.route-progress-track > span,
+.course-week-progress > span {
+  display: block;
+  height: 100%;
+  min-width: 0.35rem;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--euca-deep), var(--euca));
+}
+
+.route-progress-track > span[style*='width: 0%'],
+.course-week-progress > span[style*='width: 0%'] {
+  min-width: 0;
+}
+
+.route-hero > .btn-primary {
+  max-width: 20rem;
+}
+
+.course-overview {
+  min-height: 12.5rem;
+  padding-right: 5.5rem;
+}
+
+.course-overview-copy {
+  max-width: 42rem;
+}
+
+.course-overview .route-progress {
+  max-width: 32rem;
+}
+
+.course-route-grid {
+  display: grid;
+  gap: 0.875rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.course-route-item {
+  min-width: 0;
+}
+
+.course-week-card {
+  position: relative;
+  min-height: 7.25rem;
+  height: 100%;
+}
+
+.course-week-card.is-current {
+  border-color: var(--euca);
+  box-shadow: var(--lift-shadow);
+}
+
+.course-week-card.is-current::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0.3rem;
+  border-radius: 22px 0 0 22px;
+  background: var(--euca);
+  content: '';
+}
+
+.course-week-card.is-complete .course-week-number {
+  color: var(--btn-ink);
+  background: var(--btn-bg);
+}
+
+.course-week-card.is-locked {
+  box-shadow: none;
+}
+
+@media (min-width: 768px) {
+  .today-screen {
+    display: grid;
+    grid-template-columns: minmax(0, 1.42fr) minmax(16rem, 0.78fr);
+    grid-template-areas:
+      'heading heading'
+      'next next'
+      'checkin streak'
+      'checkin recent';
+    align-items: start;
+  }
+
+  .today-heading {
+    grid-area: heading;
+  }
+
+  .today-next {
+    grid-area: next;
+    min-height: 13rem;
+    padding: 1.5rem 8.5rem 1.5rem 1.5rem;
+  }
+
+  .today-checkin {
+    grid-area: checkin;
+  }
+
+  .today-streak {
+    grid-area: streak;
+  }
+
+  .today-recent {
+    grid-area: recent;
+  }
+
+  .route-hero-copy {
+    max-width: 40rem;
+  }
+
+  .route-compass {
+    top: 1.15rem;
+    right: 1.35rem;
+    width: 6.75rem;
+    height: 6.75rem;
+  }
+
+  .route-hero .route-progress {
+    max-width: 34rem;
+  }
+
+  .course-overview {
+    min-height: 14rem;
+    padding: 1.6rem 9.5rem 1.6rem 1.6rem;
+  }
+
+  .course-compass {
+    top: 1.15rem;
+    right: 1.5rem;
+    width: 7.25rem;
+    height: 7.25rem;
+  }
+
+  .course-route-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .course-week-card {
+    min-height: 8.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .profile-shortcut {
+    width: 3.25rem;
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  .profile-shortcut-label {
+    display: none;
+  }
+
+  .route-compass,
+  .course-compass {
+    width: 3.75rem;
+    height: 3.75rem;
+  }
+
+  .course-overview {
+    padding-right: 4.25rem;
+  }
+
+  .course-week-card {
+    gap: 0.65rem;
+  }
+
+  .course-week-number {
+    width: 2.65rem;
+    height: 2.65rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .course-week-card.is-locked {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    row-gap: 0.55rem;
+  }
+
+  .course-week-card.is-locked > .chip {
+    grid-column: 2;
+    justify-self: start;
   }
 }

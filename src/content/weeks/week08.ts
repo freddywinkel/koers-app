@@ -29,7 +29,7 @@ export const week08: Week = {
       metaphorCard: {
         title: 'De wandeltocht',
         text: 'Een lange wandeling begint met één stap. En daarna weer één. Omwegen en rusten horen erbij. Je blijft gewoon op pad.',
-        art: 'mist'
+        art: 'long-walk'
       },
       exercise: {
         title: 'Klein maken',
@@ -62,7 +62,7 @@ export const week08: Week = {
       metaphorCard: {
         title: 'De moerasoversteek',
         text: 'Niemand loopt voor zijn plezier door een moeras. Maar ligt er aan de overkant iets dat ertoe doet? Dan ga je. De modder hoort bij de weg.',
-        art: 'stroom'
+        art: 'marsh-crossing'
       },
       exercise: {
         title: 'Je barrière zien aankomen',

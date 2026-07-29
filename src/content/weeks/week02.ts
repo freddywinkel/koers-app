@@ -30,7 +30,7 @@ export const week02: Week = {
       metaphorCard: {
         title: 'De automatische piloot',
         text: 'Vaak doe je dingen op de automatische piloot: je eet, loopt of luistert terwijl je hoofd ergens anders is. Aandacht oefenen is even terug in de cockpit stappen.',
-        art: 'mist'
+        art: 'autopilot-cockpit'
       },
       exercise: {
         title: 'Eén minuut hier',
@@ -62,7 +62,7 @@ export const week02: Week = {
       metaphorCard: {
         title: 'De verslaggever in je hoofd',
         text: 'Een verslaggever geeft alleen door wat er gebeurt. Zo kun jij ook naar binnen kijken: benoemen wat er is, zonder er een oordeel aan te hangen.',
-        art: 'mist'
+        art: 'mind-reporter'
       },
       exercise: {
         title: 'Observeren en benoemen',
@@ -93,7 +93,7 @@ export const week02: Week = {
       metaphorCard: {
         title: 'De golf en het strand',
         text: 'Je adem is als een golf: hij komt en gaat vanzelf. Jij hoeft niets te sturen. Je mag op het strand zitten en gewoon kijken.',
-        art: 'golf'
+        art: 'breath-wave'
       },
       exercise: {
         title: 'Adem volgen in 4 stappen',

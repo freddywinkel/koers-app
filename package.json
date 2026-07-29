@@ -4,12 +4,16 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Koers — Nederlandse zelfhulp-cursus (ACT + VERS), 12 weken, local-first PWA",
+  "engines": {
+    "node": ">=22.22.0"
+  },
   "scripts": {
     "dev": "vite",
     "typecheck": "tsc --noEmit",
-    "test:product": "node --test scripts/product-regression.test.mjs && node --import tsx --test scripts/product-behavior.test.ts",
+    "test:product": "node --test scripts/product-regression.test.mjs scripts/notification-handler.test.mjs && node --import tsx --test scripts/product-behavior.test.ts scripts/audio-integrity.test.ts scripts/metaphor-content.test.tsx",
+    "test:artifact": "node --test scripts/release-artifact.test.mjs",
     "build": "npm run typecheck && vite build",
-    "build:pages": "npm run typecheck && npm run test:product && vite build --mode gh-pages",
+    "build:pages": "npm run typecheck && npm run test:product && vite build --mode gh-pages && npm run test:artifact",
     "preview": "vite preview",
     "icons": "python scripts/generate_icons.py",
     "audio:generate": "tsx scripts/generate-guided-audio.ts"
@@ -20,13 +24,13 @@
     "@fontsource/nunito-sans": "^5.2.5",
     "dexie": "^4.0.11",
     "dexie-react-hooks": "^1.1.7",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-router-dom": "^6.30.0"
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-router": "8.3.0"
   },
   "devDependencies": {
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "^6.0.4",
     "autoprefixer": "^10.5.4",
     "fake-indexeddb": "^6.2.5",
@@ -37,5 +41,9 @@
     "typescript": "~5.6.3",
     "vite": "^8.1.5",
     "vite-plugin-pwa": "^1.3.0"
+  },
+  "overrides": {
+    "@trickfilm400/rollup-plugin-off-main-thread": "4.0.0-pre2",
+    "brace-expansion": "5.0.8"
   }
 }

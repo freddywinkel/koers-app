@@ -27,12 +27,42 @@ export interface ExerciseStep {
  * Beeldkaart ("beeld om te onthouden") — een metafoor die de kern van de les
  * samenvat. `art` verwijst naar een ingebouwde illustratie-variant.
  */
+export const METAPHOR_ART_IDS = [
+  'stove-pans',
+  'autopilot-cockpit',
+  'mind-reporter',
+  'breath-wave',
+  'quicksand-float',
+  'drop-the-rope',
+  'bus-passengers',
+  'leaves-on-stream',
+  'chessboard-self',
+  'sky-and-weather',
+  'attention-lamp',
+  'values-compass',
+  'north-star',
+  'long-walk',
+  'marsh-crossing',
+  'clear-sea',
+  'row-to-shore',
+  'mist-path',
+  'eight-streams-river',
+  'tide-line',
+  'ebb-and-flow',
+  'milk-warning',
+  'self-manual',
+  'ready-coat',
+  'skilled-traveler'
+] as const;
+
+export type MetaphorArtId = (typeof METAPHOR_ART_IDS)[number];
+
 export interface MetaphorCard {
   title: string;
   /** 1–3 korte zinnen. */
   text: string;
-  /** Illustratie-variant; standaard 'mist'. */
-  art?: 'mist' | 'golf' | 'stroom';
+  /** Tekstgetrouwe, ingebouwde illustratie. */
+  art: MetaphorArtId;
 }
 
 /** Geleide oefening binnen een les. */

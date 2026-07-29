@@ -30,7 +30,7 @@ export const week09: Week = {
       metaphorCard: {
         title: 'Heldere zee',
         text: 'Na storm is het water troebel. Pas als de golven zakken, wordt de zee weer helder. Zo is het ook met problemen: eerst rust, dan pas kijken.',
-        art: 'golf'
+        art: 'clear-sea'
       },
       exercise: {
         title: 'Eerst de pan, dan het probleem',
@@ -62,7 +62,7 @@ export const week09: Week = {
       metaphorCard: {
         title: 'Rondjes zwemmen of roeien',
         text: 'Piekeren is zwemmen in rondjes in de stroom: veel beweging, nergens heen. Oplossen is roeien naar de oever. Kleine slagen, één richting.',
-        art: 'stroom'
+        art: 'row-to-shore'
       },
       exercise: {
         title: 'Piekeren of oplossen?',
@@ -95,7 +95,7 @@ export const week09: Week = {
       metaphorCard: {
         title: 'Een pad door de mist',
         text: 'Je hoeft de hele weg niet te zien. Alleen de volgende stap. Stap voor stap kom je door de mist heen.',
-        art: 'mist'
+        art: 'mist-path'
       },
       exercise: {
         title: 'Het zevenstappenplan doorlopen',

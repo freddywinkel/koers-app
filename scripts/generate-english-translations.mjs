@@ -28,8 +28,16 @@ async function sourceFiles(dir) {
 
 function looksUserFacing(value) {
   if (!/[A-Za-zÀ-ÿ]/.test(value) || value.length < 2) return false;
+  if (/^(?:\.{0,2}\/|https?:|tel:|#\/|[A-Za-z]:\\)/.test(value)) return false;
   if (/^(?:\/[a-z0-9_./:-]+|#[a-f0-9]+)$/i.test(value)) return false;
+  if (/^[Mm]\d[\d ,.A-Za-z-]*$/.test(value) || value === '_blank') return false;
+  if (/^[a-z0-9]+(?:[-_:./][a-z0-9]+)+$/.test(value)) return false;
   if (/^(?:flex|grid|block|inline|hidden|relative|absolute|fixed|sticky|rounded|border|bg-|text-|px-|py-|pt-|pb-|pl-|pr-|mt-|mb-|ml-|mr-|gap-|min-|max-|w-|h-|items-|justify-|font-|leading-|tracking-|transition|duration|hover:|focus:|active:|dark:)/.test(value)) return false;
+  const tokens = value.split(/\s+/);
+  const utilityTokens = tokens.filter((token) =>
+    /^(?:!?-?[a-z]+:)*(?:flex|grid|block|inline|hidden|relative|absolute|fixed|sticky|rounded|border|bg-|text-|px-|py-|pt-|pb-|pl-|pr-|mt-|mb-|ml-|mr-|gap-|min-|max-|w-|h-|items-|justify-|font-|leading-|tracking-|transition|duration|shadow|opacity|overflow|place-|col-|row-|inset-|z-|cursor|select|sr-only)/.test(token)
+  );
+  if (tokens.length > 1 && utilityTokens.length / tokens.length >= 0.5) return false;
   if (/^(?:button|page|status|alert|polite|dialog|navigation|main|none|auto|system|light|dark|success|error|checking|persistent|unsupported|default|granted|denied|replace|merge|open|done|lesson)$/i.test(value)) return false;
   if (/^[a-z]+(?:[A-Z][A-Za-z0-9]*)+$/.test(value)) return false;
   return true;

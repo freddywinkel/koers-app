@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
+import KoersCompass from '../components/KoersCompass';
 import PanSelector from '../components/PanSelector';
 import { PAN_LABELS } from '../components/PanIcon';
 import StreakRing from '../components/StreakRing';
+import { curriculum } from '../content/curriculum';
 import {
   useDoneLessonIds,
   useRecentCheckins,
@@ -60,6 +62,12 @@ export default function Vandaag() {
   const { get } = useSettings();
   const next = useNextCourseLesson();
   const panCheckinUnlocked = doneLessonIds?.has('w01-l03') ?? false;
+  const totalLessonCount = curriculum.reduce((sum, week) => sum + week.lessons.length, 0);
+  const completedLessonCount = curriculum.reduce(
+    (sum, week) => sum + week.lessons.filter((lesson) => doneLessonIds?.has(lesson.id)).length,
+    0
+  );
+  const courseProgress = totalLessonCount > 0 ? Math.round((completedLessonCount / totalLessonCount) * 100) : 0;
 
   const [note, setNote] = useState('');
   const [noteStatus, setNoteStatus] = useState<'idle' | 'pending' | 'saved' | 'error'>('idle');
@@ -165,10 +173,63 @@ export default function Vandaag() {
     .join('')
     .slice(0, 2);
 
+  const nextLessonCard = !next.ready ? null : next.lesson ? (
+    <section className="card route-hero today-next" aria-label="Volgende les">
+      <KoersCompass className="route-compass" />
+      <div className="route-hero-copy">
+        <p className="eyebrow">Volgende les</p>
+        <p className="route-crumb mt-2">{lessonCrumb(next.lesson)}</p>
+        <h2 className="card-title mt-1">{next.lesson.title}</h2>
+      </div>
+      <div className="route-progress">
+        <div className="route-progress-label">
+          <span>{completedLessonCount} van {totalLessonCount} lessen afgerond</span>
+          <span>{courseProgress}%</span>
+        </div>
+        <span
+          className="route-progress-track"
+          role="progressbar"
+          aria-label="Voortgang"
+          aria-valuemin={0}
+          aria-valuemax={totalLessonCount}
+          aria-valuenow={completedLessonCount}
+        >
+          <span style={{ width: `${courseProgress}%` }} />
+        </span>
+      </div>
+      <div className="route-meta mt-3 flex flex-wrap gap-2">
+        {next.lesson.minutes && <span className="chip">± {next.lesson.minutes} min</span>}
+        {(next.lesson.tags ?? []).map((t) => (
+          <span key={t} className="chip chip-warm">
+            {t}
+          </span>
+        ))}
+      </div>
+      <Link to={`/les/${next.lesson.id}`} className="btn-primary mt-3.5">
+        {next.lesson.order === 1 && !next.allDone && next.week?.number === 1 ? 'Begin hier' : 'Ga verder'}
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M3 9h12m-5-5 5 5-5 5" />
+        </svg>
+      </Link>
+    </section>
+  ) : (
+    <section className="card route-hero today-next" aria-label="Klaar voor vandaag">
+      <KoersCompass className="route-compass" />
+      <div className="route-hero-copy">
+        <h2 className="card-title">Klaar voor vandaag</h2>
+        <p className="sub mt-1.5">
+          {next.allDone
+            ? 'Je hebt alle lessen van de cursus afgerond. Knap gedaan — oefenen blijft altijd open voor je.'
+            : 'Alles wat open is, heb je gedaan. Rustig aan: zodra de volgende week opengaat, vind je hier je nieuwe les.'}
+        </p>
+      </div>
+    </section>
+  );
+
   return (
-    <div className="screen-stack">
+    <div className="screen-stack today-screen">
       {/* Begroeting + profielsnelkoppeling */}
-      <header className="flex min-w-0 items-start justify-between gap-3 px-1 pt-2">
+      <header className="today-heading flex min-w-0 items-start justify-between gap-3 px-1 pt-2">
         <div className="min-w-0 flex-1">
           <p className="eyebrow">{dateLabel()}</p>
           <h1 className="mt-1.5 font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">
@@ -185,7 +246,7 @@ export default function Vandaag() {
         <Link
           to="/profiel"
           aria-label="Profiel openen"
-          className="flex min-h-12 flex-none items-center gap-2 rounded-2xl border border-euca-deep/25 bg-eucatint px-3.5 text-euca-deep shadow-sm transition-transform active:scale-[0.98]"
+          className="profile-shortcut flex min-h-12 flex-none items-center gap-2 rounded-2xl border border-euca-deep/25 bg-eucatint px-3.5 text-euca-deep shadow-sm transition-transform active:scale-[0.98]"
         >
           <span className="grid h-7 w-7 place-items-center rounded-full bg-sand/70" aria-hidden="true">
             {initialen ? (
@@ -206,12 +267,15 @@ export default function Vandaag() {
               </svg>
             )}
           </span>
-          <span className="text-sm font-extrabold">Profiel</span>
+          <span className="profile-shortcut-label text-sm font-extrabold">Profiel</span>
         </Link>
       </header>
 
+      {/* Duidelijke volgende stap — volgt ook in de DOM direct op de paginakop. */}
+      {nextLessonCard}
+
       {/* Check-in · pannetjesmodel */}
-      <section className="card" aria-label="Dagelijkse check-in">
+      <section className="card today-checkin" aria-label="Dagelijkse check-in">
         <h2 className="card-title">Welke pan ben je nu?</h2>
         <p className="sub mt-1">
           {panCheckinUnlocked ? 'Tik op de pan die bij dit moment past.' : 'Het pannetjesmodel komt later in Week 1 aan bod.'}
@@ -292,62 +356,8 @@ export default function Vandaag() {
         )}
       </section>
 
-      {panCheckinUnlocked && recentCheckins !== undefined && previousCheckins.length > 0 && (
-        <section className="card !p-0" aria-labelledby="recente-checkins-heading">
-          <div className="px-[18px] pb-2 pt-[18px]">
-            <h2 id="recente-checkins-heading" className="card-title">Recente check-ins</h2>
-            <p className="sub mt-1">Zo kun je rustig terugkijken naar de afgelopen dagen.</p>
-          </div>
-          <ul className="divide-y divide-line">
-            {previousCheckins.map((row) => (
-              <li key={row.id ?? row.ts} className="px-[18px] py-3">
-                <div className="flex items-center justify-between gap-3">
-                  <span className="text-[13px] font-bold text-ink-soft">{checkinDateLabel(row.ts)}</span>
-                  <span className="chip chip-warm">Pan {row.pan} · {PAN_LABELS[row.pan]}</span>
-                </div>
-                {row.note?.trim() && (
-                  <p className="mt-1.5 whitespace-pre-wrap text-sm leading-body text-ink">{row.note}</p>
-                )}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {/* Volgende les — eerste onafgeronde les van de vroegste ontgrendelde week */}
-      {next.ready &&
-        (next.lesson ? (
-          <section className="card" aria-label="Volgende les">
-            <p className="eyebrow">{lessonCrumb(next.lesson)}</p>
-            <h2 className="card-title mt-1">{next.lesson.title}</h2>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {next.lesson.minutes && <span className="chip">± {next.lesson.minutes} min</span>}
-              {(next.lesson.tags ?? []).map((t) => (
-                <span key={t} className="chip chip-warm">
-                  {t}
-                </span>
-              ))}
-            </div>
-            <Link to={`/les/${next.lesson.id}`} className="btn-primary mt-3.5">
-              {next.lesson.order === 1 && !next.allDone && next.week?.number === 1 ? 'Begin hier' : 'Ga verder'}
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M3 9h12m-5-5 5 5-5 5" />
-              </svg>
-            </Link>
-          </section>
-        ) : (
-          <section className="card" aria-label="Klaar voor vandaag">
-            <h2 className="card-title">Klaar voor vandaag</h2>
-            <p className="sub mt-1.5">
-              {next.allDone
-                ? 'Je hebt alle lessen van de cursus afgerond. Knap gedaan — oefenen blijft altijd open voor je.'
-                : 'Alles wat open is, heb je gedaan. Rustig aan: zodra de volgende week opengaat, vind je hier je nieuwe les.'}
-            </p>
-          </section>
-        ))}
-
       {/* Streak — vergevend */}
-      <section className="card flex items-center gap-[15px]" aria-label="Dagen op rij">
+      <section className="card today-streak flex items-center gap-[15px]" aria-label="Dagen op rij">
         <StreakRing count={streak.count} />
         <div className="min-w-0 flex-1">
           {streak.count > 0 ? (
@@ -373,6 +383,29 @@ export default function Vandaag() {
           )}
         </div>
       </section>
+
+      {panCheckinUnlocked && recentCheckins !== undefined && previousCheckins.length > 0 && (
+        <section className="card today-recent !p-0" aria-labelledby="recente-checkins-heading">
+          <div className="px-[18px] pb-2 pt-[18px]">
+            <h2 id="recente-checkins-heading" className="card-title">Recente check-ins</h2>
+            <p className="sub mt-1">Zo kun je rustig terugkijken naar de afgelopen dagen.</p>
+          </div>
+          <ul className="divide-y divide-line">
+            {previousCheckins.map((row) => (
+              <li key={row.id ?? row.ts} className="px-[18px] py-3">
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-[13px] font-bold text-ink-soft">{checkinDateLabel(row.ts)}</span>
+                  <span className="chip chip-warm">Pan {row.pan} · {PAN_LABELS[row.pan]}</span>
+                </div>
+                {row.note?.trim() && (
+                  <p className="mt-1.5 whitespace-pre-wrap text-sm leading-body text-ink">{row.note}</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
     </div>
   );
 }

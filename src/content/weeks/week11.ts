@@ -28,7 +28,7 @@ export const week11: Week = {
       metaphorCard: {
         title: 'Melk op het vuur',
         text: 'Melk kookt niet in één keer over. Eerst komt er stoom. Dan kleine belletjes aan de rand. Wie goed kijkt, ziet het aankomen. Zo is het ook met je gevoelens.',
-        art: 'mist'
+        art: 'milk-warning'
       },
       exercise: {
         title: 'Je signalen in beeld',
@@ -60,7 +60,7 @@ export const week11: Week = {
       metaphorCard: {
         title: 'Een gebruiksaanwijzing van jezelf',
         text: 'Je Signaleringsplan is een gebruiksaanwijzing die je aan jezelf en aan anderen geeft. Op een moeilijke dag hoef je niet alles opnieuw te bedenken. Je pakt het plan erbij.',
-        art: 'mist'
+        art: 'self-manual'
       },
       exercise: {
         title: 'Je Signaleringsplan stap voor stap opbouwen',

@@ -11,7 +11,14 @@ export const crisisIntro: string =
 export interface CrisisAction {
   label: string;
   href: string;
+  /** Optionele taal-specifieke bestemming voor de Engelse app. */
+  hrefEn?: string;
   kind: 'tel' | 'link';
+}
+
+/** Kies de officiële hulppagina die past bij de actieve app-taal. */
+export function getCrisisActionHref(action: CrisisAction, language: 'nl' | 'en'): string {
+  return language === 'en' && action.hrefEn ? action.hrefEn : action.href;
 }
 
 export interface CrisisContact {
@@ -46,6 +53,7 @@ export const crisisContacts: CrisisContact[] = [
       {
         label: 'Bekijk wie je moet bellen',
         href: 'https://www.thuisarts.nl/spoed-wie-bel-je',
+        hrefEn: 'https://www.thuisarts.nl/dutch-healthcare/in-case-of-emergency',
         kind: 'link'
       }
     ]

@@ -56,7 +56,7 @@ export const week12: Week = {
       metaphorCard: {
         title: 'De jas hangt klaar',
         text: 'Je kunt slecht weer niet verbieden. Maar je kunt wel een jas klaarhangen. Voorbereiden betekent niet dat je regen verwacht. Het betekent dat je weet waar je jas hangt.',
-        art: 'mist'
+        art: 'ready-coat'
       },
       exercise: {
         title: 'Je als-dan-plannen',
@@ -126,7 +126,7 @@ export const week12: Week = {
       metaphorCard: {
         title: 'Een vaardige reiziger',
         text: 'Je bent niet klaar met reizen. Je hebt nu een kaart, een kompas en een jas. Waar je ook gaat: je gereedschap reist mee.',
-        art: 'stroom'
+        art: 'skilled-traveler'
       },
       exercise: {
         title: 'Zacht afsluiten',

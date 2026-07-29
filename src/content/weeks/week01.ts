@@ -47,7 +47,7 @@ export const week01: Week = {
       metaphorCard: {
         title: 'Pannetjes op het fornuis',
         text: 'Je gevoelens zijn als pannetjes melk. Ze warmen stap voor stap op: Rustig, Rimpelt, Borrelt, Pruttelt, Kookt over. Jij leert het vuur op tijd lager te zetten.',
-        art: 'mist'
+        art: 'stove-pans'
       },
       reflection: 'Iedereen zit weleens in elke pan. Ook in pan 4 of 5. Daar is niets mis mee. Het gaat erom dat je leert merken waar je zit.',
       assignment: 'Let deze week eens op: in welke pan zit je op rustige momenten? En op drukke momenten? Alleen maar kijken, verder niets.',

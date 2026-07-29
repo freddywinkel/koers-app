@@ -25,6 +25,26 @@ const MANUAL_TRANSLATIONS: Readonly<Record<string, string>> = {
   Pruttelt: 'Simmering',
   'Kookt over': 'Boiling over',
   'Welke pan ben je nu?': 'Which pressure-cooker level are you at right now?',
+  'Snelle check-in': 'Quick check-in',
+  'Snelle check-in wordt klaargelegd…': 'Preparing your quick check-in…',
+  'Kies je pan en schrijf eventueel één zin. Dit wordt direct bij Vandaag opgeslagen.':
+    'Choose your pressure-cooker level and optionally write one sentence. It is saved directly to Today.',
+  Sluiten: 'Close',
+  'Bezig met opslaan…': 'Saving…',
+  'Opslaan in Koers': 'Save in Koers',
+  'Opgeslagen in Koers': 'Saved in Koers',
+  'Je pan en notitie staan nu ook bij Vandaag ·': 'Your level and note are now also shown in Today ·',
+  'Opslaan lukte niet. Je invoer blijft staan; probeer het nog een keer.':
+    'Saving failed. Your entry is still here; please try again.',
+  'Je check-in van vandaag staat al klaar. Opslaan werkt diezelfde check-in bij.':
+    "Today's check-in is already here. Saving will update that same check-in.",
+  'Snelle check-in vanaf je beginscherm': 'Quick check-in from your Home Screen',
+  'Koers is ingesteld om vanaf het bestaande app-icoon direct de korte check-in te openen. Kies een pan, schrijf eventueel een zin en sla op. Je ziet dezelfde check-in daarna ook bij Vandaag.':
+    'Koers is set to open the short check-in directly from the existing app icon. Choose a level, optionally write one sentence and save. You will see the same check-in in Today.',
+  'Open snelle check-in': 'Open quick check-in',
+  'Waarom geen apart iPhone-widget?': 'Why is there no separate iPhone widget?',
+  'Een PWA-widget of Safari-snelkoppeling kan niet betrouwbaar bij de lokale gegevens van de geïnstalleerde Koers-app. Gebruik daarom je bestaande Koers-icoon en installeer geen tweede kopie; zo blijven je pan en notitie samen in één lokale app.':
+    'A PWA widget or Safari shortcut cannot reliably access the installed Koers app’s local data. Use your existing Koers icon and do not install a second copy; this keeps your level and note together in one local app.',
   'Over jou & de app': 'About you & the app',
   'Versie & updates': 'Version & updates',
   'Wil je ze toch aan? Dat kan via de site-instellingen van je browser (meestal het slotje naast het webadres). Je herinneringstijd bewaren we alvast.':
@@ -49,7 +69,9 @@ const MANUAL_TRANSLATIONS: Readonly<Record<string, string>> = {
   'Heb je een psychische crisis of snel een arts nodig, maar is er geen direct levensgevaar? Bel op werkdagen overdag je eigen huisarts. Bel ’s avonds, ’s nachts, in het weekend of op een feestdag de huisartsen-spoedpost.':
     'Are you in a mental health crisis or do you need a doctor quickly, but there is no immediate danger to life? Call your own GP during weekday daytime hours. In the evening, at night, on weekends or public holidays, call the out-of-hours GP service.',
   'Huisarts of huisartsen-spoedpost: bij een psychische crisis of als je snel een arts nodig hebt zonder direct levensgevaar. Bel op werkdagen overdag je eigen huisarts. Bel ’s avonds, ’s nachts, in het weekend of op een feestdag de huisartsen-spoedpost.':
-    'GP or out-of-hours GP service: if you are in a mental health crisis or need a doctor quickly without immediate danger to life. Call your own GP during weekday daytime hours. In the evening, at night, on weekends or public holidays, call the out-of-hours GP service.'
+    'GP or out-of-hours GP service: if you are in a mental health crisis or need a doctor quickly without immediate danger to life. Call your own GP during weekday daytime hours. In the evening, at night, on weekends or public holidays, call the out-of-hours GP service.',
+  'Voorbereiden is geen negativiteit. Het is juist vriendelijk voor de jij van later. Die hoeft dan alleen het plan te volgen.':
+    'Preparing is not negative. It is a kindness to your future self, who can simply follow the plan.'
 };
 
 function normalize(value: string): string {

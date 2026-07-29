@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type ChangeEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import {
   GSCHEMA_DEEL1,
   GSCHEMA_DEEL2,

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 
 /** Vriendelijke Nederlandse 404. */
 export default function NotFound() {

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { getFlashcards } from '../content/flashcards';
 import { getLesson, lessonCrumb } from '../content/helpers';
 import { useDoneLessonIds } from '../db/hooks';
