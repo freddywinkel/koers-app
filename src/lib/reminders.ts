@@ -98,10 +98,11 @@ async function showReminder(): Promise<void> {
   const appBase = new URL(import.meta.env.BASE_URL, window.location.origin);
   const appUrl = new URL('#/check-in', appBase).href;
   const iconUrl = new URL('icons/icon-192.png', appBase).href;
+  const badgeUrl = new URL('icons/notification-badge.png', appBase).href;
   const options: NotificationOptions = {
     body: translate(REMINDER_BODY),
     icon: iconUrl,
-    badge: iconUrl,
+    badge: badgeUrl,
     data: { url: appUrl },
     tag: 'vv-dagelijkse-checkin', // vervangt een eerdere melding ipv stapelen
     silent: true

@@ -11,6 +11,9 @@ test('de eerste weergave volgt het systeemthema met precies een browserkleur', a
   assert.equal((html.match(/name="theme-color"/g) ?? []).length, 1);
   assert.match(html, /viewport-fit=cover/);
   assert.doesNotMatch(html, /maximum-scale|user-scalable/);
+  assert.match(html, /rel="apple-touch-icon" sizes="180x180"/);
+  assert.match(html, /icons\/apple-touch-icon-v2\.png/);
+  assert.match(html, /rel="icon" type="image\/svg\+xml"/);
 });
 
 test('het manifest staat tabletrotatie toe en precachet assets niet dubbel', async () => {
@@ -29,6 +32,8 @@ test('herinneringen gebruiken de Pages-basis, bewaren dezelfde-dagstatus en open
   assert.match(reminders, /import\.meta\.env\.BASE_URL/);
   assert.match(reminders, /koers-reminder-last-fired/);
   assert.match(reminders, /#\/check-in/);
+  assert.match(reminders, /icons\/notification-badge\.png/);
+  assert.match(reminders, /badge:\s*badgeUrl/);
   assert.match(handler, /notificationclick/);
   assert.match(handler, /#\/check-in/);
   assert.match(handler, /clients\.openWindow/);

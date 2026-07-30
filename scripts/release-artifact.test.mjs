@@ -4,6 +4,7 @@ import test from 'node:test';
 
 const distRoot = new URL('../dist/', import.meta.url);
 const readDist = (path) => readFile(new URL(path, distRoot), 'utf8');
+const readDistBuffer = (path) => readFile(new URL(path, distRoot));
 const metaphorFiles = [
   'attention-lamp.webp',
   'autopilot-cockpit.webp',
@@ -35,6 +36,16 @@ const metaphorFiles = [
 async function assetFiles(extension) {
   const entries = await readdir(new URL('assets/', distRoot));
   return entries.filter((entry) => entry.endsWith(extension));
+}
+
+async function pngMetadata(path) {
+  const bytes = await readDistBuffer(path);
+  assert.equal(bytes.subarray(1, 4).toString('ascii'), 'PNG', `${path} is geen PNG`);
+  return {
+    width: bytes.readUInt32BE(16),
+    height: bytes.readUInt32BE(20),
+    colorType: bytes[25]
+  };
 }
 
 test('de gebouwde Pages-manifest houdt één Koers-installatie en opent de snelle check-in', async () => {
@@ -90,6 +101,7 @@ test('service worker en notificatiehandler verwijzen naar de verse app-shell en 
   const [worker, handler] = await Promise.all([readDist('sw.js'), readDist('notification-handler.js')]);
 
   assert.match(worker, /notification-handler\.js/);
+  assert.match(worker, /icons\/notification-badge\.png/);
   assert.match(worker, /index\.html/);
   assert.match(worker, /manifest\.webmanifest/);
   const precachedMetaphors = [...worker.matchAll(/metaphors\/([a-z0-9-]+\.webp)/g)]
@@ -109,10 +121,30 @@ test('service worker en notificatiehandler verwijzen naar de verse app-shell en 
 });
 
 test('alle essentiële iconen zijn niet-leeg in het release-artifact', async () => {
-  for (const icon of ['icon-192.png', 'icon-512.png', 'icon-maskable-512.png']) {
+  const expectedIcons = [
+    { icon: 'icon-192.png', size: 192, colorType: 6 },
+    { icon: 'icon-512.png', size: 512, colorType: 6 },
+    { icon: 'icon-maskable-512.png', size: 512, colorType: 2 },
+    { icon: 'apple-touch-icon-v2.png', size: 180, colorType: 2 },
+    { icon: 'notification-badge.png', size: 96, colorType: 6 }
+  ];
+
+  for (const { icon, size, colorType } of expectedIcons) {
     const info = await stat(new URL(`icons/${icon}`, distRoot));
     assert.ok(info.size > 1_000, `${icon} is onverwacht klein`);
+    assert.deepEqual(
+      await pngMetadata(`icons/${icon}`),
+      { width: size, height: size, colorType },
+      `${icon} heeft onverwachte PNG-eigenschappen`
+    );
   }
+
+  const html = await readDist('index.html');
+  assert.match(html, /rel="apple-touch-icon"[^>]+sizes="180x180"/);
+  assert.match(html, /icons\/apple-touch-icon-v2\.png/);
+  assert.match(html, /favicon\.svg/);
+  const favicon = await stat(new URL('favicon.svg', distRoot));
+  assert.ok(favicon.size > 500, 'favicon.svg is onverwacht klein');
 });
 
 test('alle 25 geoptimaliseerde geheugenbeelden staan in het release-artifact', async () => {
