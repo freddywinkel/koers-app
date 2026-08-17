@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import test, { after, beforeEach } from 'node:test';
 import { curriculum } from '../src/content/curriculum';
 import { allLessons } from '../src/content/helpers';
+import { getSkill } from '../src/content/skills';
 import { db } from '../src/db/db';
 import { exportAllData, importAllData, saveCheckin } from '../src/db/hooks';
 import { addLocalDays, differenceInCalendarDays, startOfLocalDay } from '../src/lib/calendar';
@@ -56,6 +57,22 @@ test('alle oefeningen zijn vindbaar en flashcards volgen alleen afgeronde lessen
   const eligible = getEligibleFlashcards(new Set([completedLesson.id]));
   assert.ok(eligible.length > 0);
   assert.ok(eligible.every((card) => card.lessonId === completedLesson.id));
+});
+
+test('week 4 les 2 legt gedachten uitdagen uit voordat de weekopdracht ernaar verwijst', () => {
+  const lesson = allLessons().find((candidate) => candidate.id === 'w04-l02');
+  assert.ok(lesson);
+
+  const explanation = lesson.intro.join(' ');
+  assert.match(explanation, /is dit een feit, mijn uitleg of een voorspelling/);
+  assert.match(explanation, /feiten vóór en tegen/);
+  assert.match(explanation, /eerlijke gedachte die bij alle feiten past/);
+  assert.ok(lesson.relatedSkillIds.includes('gedachten-uitdagen'));
+  assert.match(lesson.assignment ?? '', /Open dan onderaan "Gedachten uitdagen" en volg de vijf stappen/);
+
+  const practice = getSkill('gedachten-uitdagen');
+  assert.ok(practice);
+  assert.equal(practice.steps.length, 5);
 });
 
 test('kalenderrekenen telt lokale dagen zonder vaste 24-uursaanname', () => {

@@ -61,8 +61,8 @@ export const week04: Week = {
       intro: [
         'In de vorige les zag je: een gedachte is een zin, geen feit. Nu leer je drie snelle manieren om afstand te nemen. Ze duren elk maar een paar seconden.',
         'Eén: zet er een zin voor. "Ik merk de gedachte dat..." Twee: bedank je brein. "Bedankt, brein, voor die melding." Drie: geef het verhaal een naam. "Ah, het niet-goed-genoeg-verhaal is weer op visite."',
-        'Soms wil je meer dan alleen afstand. Dan is er een tweede vaardigheid, uit VERS: gedachten uitdagen. Daarbij kijk je als een detective na of een gedachte klopt. Wat zijn de feiten voor en tegen? Wat zou je tegen een lieve vriend of vriendin zeggen?',
-        'De volgorde is belangrijk. Eerst afstand nemen, dan eventueel nakijken. Ga je meteen discussiëren met een gedachte, dan wordt het al snel weer touwtrekken. Defusie is je eerste stap. Uitdagen is een extra gereedschap, voor gedachten over feiten die je kunt controleren.'
+        'Soms wil je meer dan alleen afstand. Bij een controleerbare gedachte kun je "gedachten uitdagen", een vaardigheid uit VERS. Schrijf de gedachte op en vraag: is dit een feit, mijn uitleg of een voorspelling? Zoek daarna de feiten vóór en tegen, bedenk wat je tegen een lieve vriend of vriendin zou zeggen en maak een eerlijke gedachte die bij alle feiten past.',
+        'De volgorde is belangrijk. Eerst afstand nemen, dan eventueel nakijken. Ga je meteen discussiëren met een gedachte, dan wordt het al snel weer touwtrekken. Defusie is je eerste stap. Uitdagen is extra gereedschap voor controleerbare feiten. De volledige oefening staat onderaan bij "Past bij deze les".'
       ],
       exercise: {
         title: 'Melk, melk, melk',
@@ -74,8 +74,8 @@ export const week04: Week = {
         ]
       },
       reflection: 'Voelde het gek? Dat hoort erbij. Woorden zijn klanken tot wij er verhalen van maken. Daar zit je vrijheid.',
-      assignment: 'Probeer deze week bij een lastige gedachte één van de drie snelle stappen: de zin ervoor, bedank je brein, of een naam voor het verhaal. Gaat de gedachte over een controleerbaar feit? Dan mag je hem ook als detective nakijken.',
-      relatedSkillIds: ['defusie-afstand-van-gedachten'],
+      assignment: 'Probeer deze week bij een lastige gedachte één van de drie snelle stappen: de zin ervoor, bedank je brein, of een naam voor het verhaal. Gaat het om een controleerbare gedachte en wil je verder kijken? Open dan onderaan "Gedachten uitdagen" en volg de vijf stappen.',
+      relatedSkillIds: ['defusie-afstand-van-gedachten', 'gedachten-uitdagen'],
       flashcardIds: ['w04-l02-f1', 'w04-l02-f2', 'w04-l02-f3']
     },
     {
