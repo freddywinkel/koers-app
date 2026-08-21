@@ -60,10 +60,10 @@ export const skillLibrary: SkillCard[] = [
       'Onderzoek een gedachte die je pijn doet. Je kijkt rustig of hij klopt en of hij je verder helpt.',
     steps: [
       'Schrijf de gedachte op, precies zoals hij in je hoofd klinkt.',
-      'Vraag: is dit een feit of mijn uitleg van de feiten?',
+      'Kijk of je een denkpatroon herkent. Eén gedachte kan bij meerdere patronen passen.',
+      'Vraag: wat zijn de feiten voor en tegen? Wat is uitleg of een voorspelling?',
       'Vraag: wat zou ik zeggen tegen een vriend die dit denkt?',
-      'Bedenk een gedachte die ook kan kloppen en meer helpt.',
-      'Kies welke gedachte je meeneemt in je dag.'
+      'Bedenk een gedachte die bij alle feiten past en kies wat je ermee wilt doen.'
     ]
   },
   {

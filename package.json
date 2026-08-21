@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "vite",
     "typecheck": "tsc --noEmit",
-    "test:product": "node --test scripts/product-regression.test.mjs scripts/notification-handler.test.mjs && node --import tsx --test scripts/product-behavior.test.ts scripts/audio-integrity.test.ts scripts/metaphor-content.test.tsx",
+    "test:product": "node --test scripts/product-regression.test.mjs scripts/notification-handler.test.mjs && node --import tsx --test scripts/product-behavior.test.ts scripts/audio-integrity.test.ts scripts/metaphor-content.test.tsx scripts/theory-content.test.ts",
     "test:artifact": "node --test scripts/release-artifact.test.mjs",
     "build": "npm run typecheck && vite build",
     "build:pages": "npm run typecheck && npm run test:product && vite build --mode gh-pages && npm run test:artifact",

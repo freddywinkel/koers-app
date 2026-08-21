@@ -97,6 +97,18 @@ test('de daadwerkelijke productie-bundle bevat de snelle check-inroute en gebrui
   assert.match(bundle, /w01-l03/);
 });
 
+test('de productie-bundle bevat de volledige offline theorieroute', async () => {
+  const scripts = await assetFiles('.js');
+  const bundle = (await Promise.all(scripts.map((entry) => readDist(`assets/${entry}`)))).join('\n');
+
+  assert.match(bundle, /\/theorie\/?:theoryId|\/theorie\/:theoryId/);
+  assert.match(bundle, /Theorie & begrippen/);
+  assert.match(bundle, /w01-t01/);
+  assert.match(bundle, /w12-t02/);
+  assert.match(bundle, /psychological-flexibility/);
+  assert.match(bundle, /emotion-management-plan/);
+});
+
 test('service worker en notificatiehandler verwijzen naar de verse app-shell en check-in', async () => {
   const [worker, handler] = await Promise.all([readDist('sw.js'), readDist('notification-handler.js')]);
 

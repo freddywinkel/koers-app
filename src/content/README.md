@@ -49,6 +49,21 @@ Bekijk hem in de app op `/les/w02-l03`.
     'Eerste alinea …',
     'Tweede alinea …'
   ],
+  theorySections: [{         // optioneel — verdiepende begrippenlijst
+    id: 'denkpatronen',
+    title: 'Veelvoorkomende denkpatronen',
+    intro: ['Korte context …'],
+    items: [{
+      id: 'zwart-witdenken',
+      title: 'Zwart-witdenken',
+      alsoCalled: 'alles-of-nietsdenken',
+      text: 'Uitleg in gewone taal …',
+      example: 'Een kort, herkenbaar voorbeeld …'
+    }],
+    takeaway: 'Wat de lezer ermee kan doen …',
+    caution: 'Belangrijke begrenzing voor veilig gebruik …',
+    source: 'Korte bronbasis …'
+  }],
   metaphorCard: {             // optioneel — het "beeld om te onthouden"
     title: 'Touwtrekken met een monster',
     text: '1–3 zinnen.',
@@ -108,9 +123,34 @@ oefeningen blijven laag (1–3). Stappen: 3–6 stuks, elk één actie.
 ## Checklist per les
 
 - [ ] intro gevuld (2–4 alinea's, B1, je-vorm)
+- [ ] theorie, als die er is, gebruikt korte inklapbare begrippen met eigen voorbeelden en een bronbasis
 - [ ] kind klopt met de inhoud (uitleg = lesson, doe-oefening = oefening)
 - [ ] oefening heeft stappen met korte koppen
 - [ ] reflection normaliseert ("allebei is goed")
 - [ ] assignment is klein en haalbaar ("2 minuten per dag")
 - [ ] minutes/tags ingevuld
 - [ ] skill- en flashcard-ids bestaan echt in skills.ts/flashcards.ts
+
+## Losse theorieroute
+
+De 24 lessen in `theory/lessons.ts` staan bewust **niet** in `Week.lessons`.
+Ze gebruiken IDs `wNN-t01` en `wNN-t02` en worden in `Week.tsx` alleen
+visueel tussen de 51 bestaande kernlessen gezet. Hierdoor blijven oude
+voortgang, percentages en ontgrendeling ongewijzigd. Theorie wordt in dezelfde
+lokale `lessonProgress`-tabel als gelezen bewaard, maar telt alleen mee in de
+aparte theorieteller.
+
+`theory/actConcepts.ts` en `theory/versConcepts.ts` vormen samen de canonieke
+begrippenbibliotheek. Een begrip heeft altijd:
+
+- handmatig geschreven Nederlands én Engels;
+- een gewone en verdiepende uitleg;
+- een dagelijks voorbeeld;
+- een expliciet misverstand (`Dit betekent niet …`);
+- één of meer publieke bronnen en een primaire theorieles;
+- waar nodig een veiligheidsnotitie.
+
+Nieuwe psychologische termen mogen niet alleen als los woord in een les staan:
+voeg eerst het begrip aan deze catalogus toe en koppel het daarna via
+`conceptIds`. `scripts/theory-content.test.ts` bewaakt de volledige koppeling,
+tweetaligheid, bronverwijzingen en de onveranderde kernroute.

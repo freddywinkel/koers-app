@@ -10,7 +10,8 @@ import {
   useStreak,
   type ImportMode
 } from '../db/hooks';
-import { allLessons } from '../content/helpers';
+import { courseProgress } from '../content/helpers';
+import { theoryProgress } from '../content/theory';
 import { useEffect, useState, type ChangeEvent } from 'react';
 import {
   getPermissionState,
@@ -46,7 +47,9 @@ export default function Profiel() {
 
   const theme = (get('theme', 'systeem') || 'systeem') as ThemeChoice;
   const language = (get('language', getLanguage()) || 'nl') as AppLanguage;
-  const totalLessons = allLessons().length;
+  const doneIds = done ?? new Set<string>();
+  const core = courseProgress(doneIds);
+  const theory = theoryProgress(doneIds);
 
   async function handleLanguageChange(nextLanguage: AppLanguage) {
     if (nextLanguage === language) return;
@@ -210,12 +213,18 @@ export default function Profiel() {
       {/* Voortgang */}
       <section className="card" aria-label="Voortgang">
         <h2 className="card-title">Je voortgang</h2>
-        <div className="mt-3 grid grid-cols-3 gap-2.5 text-center">
+        <div className="mt-3 grid grid-cols-2 gap-2.5 text-center sm:grid-cols-4">
           <div className="rounded-2xl bg-dune px-2 py-3">
             <p className="font-display text-[22px] font-semibold text-ink">
-              {done?.size ?? 0}<span className="text-sm text-ink-soft">/{totalLessons}</span>
+              {core.done}<span className="text-sm text-ink-soft">/{core.total}</span>
             </p>
             <p className="text-[11.5px] font-bold text-ink-soft">lessen</p>
+          </div>
+          <div className="rounded-2xl bg-apricot-soft px-2 py-3">
+            <p className="font-display text-[22px] font-semibold text-ink">
+              {theory.done}<span className="text-sm text-ink-soft">/{theory.total}</span>
+            </p>
+            <p className="text-[11.5px] font-bold text-ink-soft">theorie</p>
           </div>
           <div className="rounded-2xl bg-dune px-2 py-3">
             <p className="font-display text-[22px] font-semibold text-ink">{checkinCount ?? 0}</p>

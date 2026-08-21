@@ -4,7 +4,6 @@ import KoersCompass from '../components/KoersCompass';
 import PanSelector from '../components/PanSelector';
 import { PAN_LABELS } from '../components/PanIcon';
 import StreakRing from '../components/StreakRing';
-import { curriculum } from '../content/curriculum';
 import {
   useDoneLessonIds,
   useRecentCheckins,
@@ -14,7 +13,7 @@ import {
   useStreak,
   useSettings
 } from '../db/hooks';
-import { lessonCrumb } from '../content/helpers';
+import { courseProgress as getCourseProgress, lessonCrumb } from '../content/helpers';
 import { getSkill } from '../content/skills';
 import type { PanValue } from '../content/types';
 import { useNextCourseLesson } from '../lib/courseHooks';
@@ -62,12 +61,7 @@ export default function Vandaag() {
   const { get } = useSettings();
   const next = useNextCourseLesson();
   const panCheckinUnlocked = doneLessonIds?.has('w01-l03') ?? false;
-  const totalLessonCount = curriculum.reduce((sum, week) => sum + week.lessons.length, 0);
-  const completedLessonCount = curriculum.reduce(
-    (sum, week) => sum + week.lessons.filter((lesson) => doneLessonIds?.has(lesson.id)).length,
-    0
-  );
-  const courseProgress = totalLessonCount > 0 ? Math.round((completedLessonCount / totalLessonCount) * 100) : 0;
+  const coreProgress = getCourseProgress(doneLessonIds ?? new Set<string>());
 
   const [note, setNote] = useState('');
   const [noteStatus, setNoteStatus] = useState<'idle' | 'pending' | 'saved' | 'error'>('idle');
@@ -183,18 +177,18 @@ export default function Vandaag() {
       </div>
       <div className="route-progress">
         <div className="route-progress-label">
-          <span>{completedLessonCount} van {totalLessonCount} lessen afgerond</span>
-          <span>{courseProgress}%</span>
+          <span>{coreProgress.done} van {coreProgress.total} lessen afgerond</span>
+          <span>{coreProgress.percent}%</span>
         </div>
         <span
           className="route-progress-track"
           role="progressbar"
           aria-label="Voortgang"
           aria-valuemin={0}
-          aria-valuemax={totalLessonCount}
-          aria-valuenow={completedLessonCount}
+          aria-valuemax={coreProgress.total}
+          aria-valuenow={coreProgress.done}
         >
-          <span style={{ width: `${courseProgress}%` }} />
+          <span style={{ width: `${coreProgress.percent}%` }} />
         </span>
       </div>
       <div className="route-meta mt-3 flex flex-wrap gap-2">

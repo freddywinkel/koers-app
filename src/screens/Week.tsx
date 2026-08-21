@@ -1,6 +1,8 @@
 import { Link, useLocation, useParams } from 'react-router';
 import { getWeek, KIND_LABELS } from '../content/helpers';
+import { getTheoryLessonsForWeek, getWeekLearningPath, localize } from '../content/theory';
 import { useDoneLessonIds } from '../db/hooks';
+import { getLanguage } from '../i18n';
 import { useAllWeeksOpen, useIsWeekUnlocked } from '../lib/courseHooks';
 import { getBlockingLesson, isLessonUnlocked, isWeekComplete } from '../lib/unlock';
 import NotFound from './NotFound';
@@ -24,6 +26,7 @@ export default function Week() {
   const location = useLocation();
   const weekComplete = (location.state as { weekComplete?: boolean } | null)?.weekComplete === true;
   const allWeeksOpen = useAllWeeksOpen();
+  const language = getLanguage();
 
   // Hook altijd aanroepen (ook als week niet bestaat) met een veilige fallback.
   const unlocked = useIsWeekUnlocked(week ?? { id: '', number: 0, title: '', lessons: [] });
@@ -32,6 +35,11 @@ export default function Week() {
   if (done === undefined) return <p className="card sub" role="status">Je voortgang wordt geladen…</p>;
   const doneSet = done ?? new Set<string>();
   const doneCount = week.lessons.filter((l) => doneSet.has(l.id)).length;
+  const weekTheory = getTheoryLessonsForWeek(week.id);
+  const theoryDoneCount = weekTheory.filter((lesson) => doneSet.has(lesson.id)).length;
+  const theoryCopy = language === 'en'
+    ? { theory: 'Theory', read: 'read', library: 'All theory & terms', route: 'Core route', optional: 'optional · does not block' }
+    : { theory: 'Theorie', read: 'gelezen', library: 'Alle theorie & begrippen', route: 'Kernroute', optional: 'vrijblijvend · blokkeert niet' };
   const actuallyComplete = isWeekComplete(week, doneSet);
 
   if (!unlocked) {
@@ -87,6 +95,12 @@ export default function Week() {
         <h1 className="hyphens-auto font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">{week.title}</h1>
         {week.tagline && <p className="sub mt-1.5">{week.tagline}</p>}
         <p className="sub mt-1">{`${doneCount} van ${week.lessons.length} lessen afgerond`}</p>
+        <p className="sub" data-no-translate>
+          {theoryCopy.theory}: {theoryDoneCount} / {weekTheory.length} {theoryCopy.read} · {theoryCopy.optional}
+        </p>
+        <Link to="/theorie" className="mt-2 inline-flex text-sm font-extrabold text-euca-deep underline decoration-euca/40 underline-offset-2" data-no-translate>
+          {theoryCopy.library}
+        </Link>
       </header>
 
       {weekComplete && actuallyComplete && (
@@ -100,7 +114,42 @@ export default function Week() {
         </section>
       )}
 
-      {week.lessons.map((lesson) => {
+      {getWeekLearningPath(week).map((pathItem) => {
+        if (pathItem.kind === 'theory') {
+          const theoryLesson = pathItem.lesson;
+          const isRead = doneSet.has(theoryLesson.id);
+          return (
+            <Link
+              key={theoryLesson.id}
+              to={`/theorie/${theoryLesson.id}`}
+              className="card flex items-center gap-3.5 border-ap-border transition-transform active:scale-[0.99]"
+              data-no-translate
+            >
+              <span
+                className={[
+                  'grid h-10 w-10 flex-none place-items-center rounded-[14px] font-display text-lg font-semibold',
+                  isRead ? 'bg-eucatint text-euca-deep' : 'bg-apricot-soft text-ap-deep'
+                ].join(' ')}
+                aria-hidden="true"
+              >
+                {isRead ? (
+                  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="m3.5 9.5 3.5 3.5 7.5-8" /></svg>
+                ) : (
+                  'T'
+                )}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[15px] font-bold text-ink">{localize(theoryLesson.title, language)}</span>
+                <span className="mt-1.5 flex flex-wrap items-center gap-2">
+                  <span className="chip chip-warm !px-2.5 !py-[4px] !text-[11px]">{theoryCopy.theory} {theoryLesson.order}</span>
+                  <span className="sub">± {theoryLesson.minutes} min{isRead ? ` · ${theoryCopy.read}` : ''}</span>
+                </span>
+              </span>
+              <svg className="flex-none text-ink-soft" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6.5 3.5 11 9l-4.5 5.5" /></svg>
+            </Link>
+          );
+        }
+        const lesson = pathItem.lesson;
         const isDone = doneSet.has(lesson.id);
         const accessible = isLessonUnlocked(lesson, doneSet, allWeeksOpen);
         const blockingLesson = getBlockingLesson(lesson, doneSet);

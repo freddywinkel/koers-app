@@ -47,6 +47,21 @@ export function weekProgress(week: Week, done: Set<string>): WeekProgress {
   return { total: week.lessons.length, done: week.lessons.filter((l) => done.has(l.id)).length };
 }
 
+export interface CourseProgress extends WeekProgress {
+  percent: number;
+}
+
+/** Kernvoortgang over de bestaande cursus; onbekende en theorie-IDs tellen bewust niet mee. */
+export function courseProgress(done: Set<string>): CourseProgress {
+  const lessons = allLessons();
+  const completed = lessons.filter((lesson) => done.has(lesson.id)).length;
+  return {
+    total: lessons.length,
+    done: completed,
+    percent: lessons.length > 0 ? Math.round((completed / lessons.length) * 100) : 0
+  };
+}
+
 export const KIND_LABELS: Record<Lesson['kind'], string> = {
   lesson: 'Les',
   oefening: 'Oefening',

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import MetaphorArt from '../components/MetaphorArt';
 import FlashcardView from '../components/FlashcardView';
+import LessonTheorySection from '../components/LessonTheorySection';
 import { getLesson, getWeek, lessonCrumb } from '../content/helpers';
 import { getFlashcards } from '../content/flashcards';
 import { getSkill } from '../content/skills';
@@ -163,6 +164,11 @@ export default function Les() {
           ))}
         </div>
       )}
+
+      {/* Verdiepende theorie */}
+      {(lesson.theorySections ?? []).map((section, index) => (
+        <LessonTheorySection key={section.id} section={section} headingId={`theory-${lesson.id}-${section.id}-${index}`} />
+      ))}
 
       {/* Oefening */}
       {lesson.exercise && (

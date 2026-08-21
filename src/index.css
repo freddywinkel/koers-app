@@ -138,6 +138,19 @@ input[type='date'] {
   max-width: 100%;
 }
 
+details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.theory-disclosure-icon {
+  display: inline-block;
+  transition: transform 160ms ease;
+}
+
+details[open] .theory-disclosure-icon {
+  transform: rotate(180deg);
+}
+
 /* Duidelijke toetsenbordfocus op alle ontwerpen. Labels met een visueel
    verborgen radio/file-input krijgen dezelfde ring rond de hele keuze. */
 :where(a, button, input, select, textarea, [tabindex]):focus-visible,
