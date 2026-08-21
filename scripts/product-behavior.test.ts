@@ -4,8 +4,15 @@ import test, { after, beforeEach } from 'node:test';
 import { curriculum } from '../src/content/curriculum';
 import { allLessons } from '../src/content/helpers';
 import { getSkill } from '../src/content/skills';
+import { theoryLessons } from '../src/content/theory';
+import {
+  THINKING_PATTERNS,
+  THINKING_PATTERNS_ENGLISH_OVERRIDES,
+  thinkingPatternsTheorySection
+} from '../src/content/thinkingErrors';
 import { db } from '../src/db/db';
-import { exportAllData, importAllData, saveCheckin } from '../src/db/hooks';
+import { exportAllData, importAllData, markLessonDone, saveCheckin } from '../src/db/hooks';
+import { LANGUAGE_STORAGE_KEY, translate } from '../src/i18n';
 import { addLocalDays, differenceInCalendarDays, startOfLocalDay } from '../src/lib/calendar';
 import { getEligibleFlashcards } from '../src/lib/flashcardEligibility';
 import { isLessonUnlocked, isWeekUnlocked } from '../src/lib/unlock';
@@ -59,7 +66,22 @@ test('alle oefeningen zijn vindbaar en flashcards volgen alleen afgeronde lessen
   assert.ok(eligible.every((card) => card.lessonId === completedLesson.id));
 });
 
-test('week 4 les 2 legt gedachten uitdagen uit voordat de weekopdracht ernaar verwijst', () => {
+test('een theorieles gebruikt de bestaande lokale voortgang zonder kernlessen te veranderen', async () => {
+  const theoryLesson = theoryLessons[0];
+  assert.ok(theoryLesson);
+  await markLessonDone(theoryLesson.id);
+
+  assert.deepEqual(await db.lessonProgress.get(theoryLesson.id), {
+    lessonId: theoryLesson.id,
+    status: 'done',
+    completedAt: (await db.lessonProgress.get(theoryLesson.id))?.completedAt
+  });
+  assert.equal(allLessons().length, 51);
+  assert.equal(curriculum[0].lessons.some((lesson) => lesson.id === theoryLesson.id), false);
+  assert.equal(isWeekUnlocked(curriculum[1], new Set([theoryLesson.id])), false);
+});
+
+test('week 4 les 2 legt gedachten uitdagen uit en bevat de volledige praktische theorielijst', () => {
   const lesson = allLessons().find((candidate) => candidate.id === 'w04-l02');
   assert.ok(lesson);
 
@@ -69,10 +91,60 @@ test('week 4 les 2 legt gedachten uitdagen uit voordat de weekopdracht ernaar ve
   assert.match(explanation, /eerlijke gedachte die bij alle feiten past/);
   assert.ok(lesson.relatedSkillIds.includes('gedachten-uitdagen'));
   assert.match(lesson.assignment ?? '', /Open dan onderaan "Gedachten uitdagen" en volg de vijf stappen/);
+  assert.equal(lesson.minutes, 12);
+  assert.equal(lesson.supportCta?.to, '/steun/g-schema');
+
+  assert.deepEqual(lesson.theorySections, [thinkingPatternsTheorySection]);
+  const theory = lesson.theorySections?.[0];
+  assert.ok(theory);
+  assert.match(theory.intro.join(' '), /geen vaste lijst met alle denkfouten/);
+  assert.match(theory.caution ?? '', /bewijst niet dat je gedachte onwaar is/);
+  assert.deepEqual(
+    theory.items.map((item) => item.title),
+    [
+      'Zwart-witdenken',
+      'Overgeneraliseren',
+      'Negatief filter',
+      'Het positieve wegwuiven',
+      'Gedachten lezen',
+      'De toekomst invullen',
+      'Rampdenken',
+      'Redeneren vanuit gevoel',
+      'Moeten-denken',
+      'Etiketten plakken',
+      'Personaliseren',
+      'Vergroten en verkleinen'
+    ]
+  );
+  assert.equal(theory.items.length, 12);
+  assert.equal(new Set(theory.items.map((item) => item.id)).size, theory.items.length);
+  assert.ok(theory.items.every((item) => item.text.trim() && item.example?.trim()));
+
+  assert.deepEqual(
+    curriculum.find((week) => week.id === 'w04')?.lessons.map((candidate) => candidate.id),
+    ['w04-l01', 'w04-l02', 'w04-l03', 'w04-l04', 'w04-l05'],
+    'bestaande les-id’s en voortgang blijven ongewijzigd'
+  );
 
   const practice = getSkill('gedachten-uitdagen');
   assert.ok(practice);
   assert.equal(practice.steps.length, 5);
+  assert.match(practice.steps.join(' '), /denkpatroon herkent/);
+
+  localStorage.setItem(LANGUAGE_STORAGE_KEY, 'en');
+  const theoryStrings = [
+    theory.title,
+    ...theory.intro,
+    theory.takeaway,
+    theory.caution,
+    theory.source,
+    ...theory.items.flatMap((item) => [item.title, item.alsoCalled, item.text, item.example])
+  ].filter((value): value is string => Boolean(value));
+  for (const source of theoryStrings) {
+    assert.ok(THINKING_PATTERNS_ENGLISH_OVERRIDES[source], `curated English ontbreekt voor: ${source}`);
+    assert.notEqual(translate(source), source, `Engelse taalstand vertaalt niet: ${source}`);
+  }
+  assert.equal(THINKING_PATTERNS.length, theory.items.length);
 });
 
 test('kalenderrekenen telt lokale dagen zonder vaste 24-uursaanname', () => {

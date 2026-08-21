@@ -71,6 +71,36 @@ export interface Exercise {
   steps: ExerciseStep[];
 }
 
+/** Eén begrip binnen een compacte theorielijst. */
+export interface TheoryItem {
+  /** Stabiele sleutel voor rendering, tests en eventuele toekomstige deeplinks. */
+  id: string;
+  /** Korte naam die ook zichtbaar blijft wanneer de uitleg is ingeklapt. */
+  title: string;
+  /** Optionele tweede, veelgebruikte naam voor hetzelfde begrip. */
+  alsoCalled?: string;
+  /** Uitleg in gewone taal, bij voorkeur 1–3 korte zinnen. */
+  text: string;
+  /** Herkenbaar, niet-diagnostisch voorbeeld. */
+  example?: string;
+}
+
+/** Verdiepende theorie die als een rustige uitklaplijst in een les verschijnt. */
+export interface TheorySection {
+  /** Stabiele sleutel binnen de les. */
+  id: string;
+  title: string;
+  /** Korte context voordat de begrippenlijst begint. */
+  intro: string[];
+  items: TheoryItem[];
+  /** Kern die de theorie aan de toepassing in de les koppelt. */
+  takeaway?: string;
+  /** Begrenzing die verkeerd of onveilig gebruik van de theorie voorkomt. */
+  caution?: string;
+  /** Korte, zichtbare bronverantwoording; geen vervanging voor brononderzoek. */
+  source?: string;
+}
+
 /**
  * Eén les binnen een week.
  * Stub-lessen hebben alleen id/weekId/order/kind/title (+ eventueel minutes/tags);
@@ -91,6 +121,8 @@ export interface Lesson {
   tags?: string[];
   /** Inleiding: losse alinea's, elk 1–3 zinnen. Leeg bij stubs. */
   intro: string[];
+  /** Optionele verdiepende theorie met inklapbare begrippen en voorbeelden. */
+  theorySections?: TheorySection[];
   metaphorCard?: MetaphorCard;
   exercise?: Exercise;
   /** Nabespreking: normaliserend, zonder oordeel. 1–3 zinnen. */

@@ -1,4 +1,5 @@
 import { AUDIO_ENGLISH_OVERRIDES } from './content/audioEnglish';
+import { THINKING_PATTERNS_ENGLISH_OVERRIDES } from './content/thinkingErrors';
 
 export type AppLanguage = 'nl' | 'en';
 
@@ -71,7 +72,17 @@ const MANUAL_TRANSLATIONS: Readonly<Record<string, string>> = {
   'Huisarts of huisartsen-spoedpost: bij een psychische crisis of als je snel een arts nodig hebt zonder direct levensgevaar. Bel op werkdagen overdag je eigen huisarts. Bel ’s avonds, ’s nachts, in het weekend of op een feestdag de huisartsen-spoedpost.':
     'GP or out-of-hours GP service: if you are in a mental health crisis or need a doctor quickly without immediate danger to life. Call your own GP during weekday daytime hours. In the evening, at night, on weekends or public holidays, call the out-of-hours GP service.',
   'Voorbereiden is geen negativiteit. Het is juist vriendelijk voor de jij van later. Die hoeft dan alleen het plan te volgen.':
-    'Preparing is not negative. It is a kindness to your future self, who can simply follow the plan.'
+    'Preparing is not negative. It is a kindness to your future self, who can simply follow the plan.',
+  Theorie: 'Theory',
+  theorie: 'theory',
+  'Open een naam voor uitleg en een voorbeeld.': 'Open a name to see an explanation and example.',
+  'Ook genoemd:': 'Also called:',
+  'Voorbeeld:': 'Example:',
+  'Onthoud dit': 'Remember this',
+  Belangrijk: 'Important',
+  'Oefen met het G-schema': 'Practise with the thought record',
+  'Kies één gedachte en onderzoek haar rustig. Je schema blijft lokaal bewaard, zodat je het later kunt teruglezen.':
+    'Choose one thought and examine it calmly. Your record is stored locally, so you can read it again later.'
 };
 
 function normalize(value: string): string {
@@ -148,7 +159,7 @@ export function translate(value: string): string {
   if (getLanguage() !== 'en') return value;
   const key = normalize(value);
   if (!key) return value;
-  return MANUAL_TRANSLATIONS[key] ?? AUDIO_ENGLISH_OVERRIDES[key] ?? englishTranslations[key] ?? translateDynamic(key) ?? value;
+  return MANUAL_TRANSLATIONS[key] ?? THINKING_PATTERNS_ENGLISH_OVERRIDES[key] ?? AUDIO_ENGLISH_OVERRIDES[key] ?? englishTranslations[key] ?? translateDynamic(key) ?? value;
 }
 
 function translateTextNode(node: Text): void {

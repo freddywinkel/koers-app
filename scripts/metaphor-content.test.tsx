@@ -3,9 +3,11 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
+import LessonTheorySection from '../src/components/LessonTheorySection';
 import MetaphorArt from '../src/components/MetaphorArt';
 import { crisisContacts, getCrisisActionHref } from '../src/content/crisis';
 import { curriculum } from '../src/content/curriculum';
+import { thinkingPatternsTheorySection } from '../src/content/thinkingErrors';
 import { METAPHOR_ART_IDS, type MetaphorArtId } from '../src/content/types';
 import { translate } from '../src/i18n';
 
@@ -89,6 +91,25 @@ test('iedere illustratie rendert als een eigen, decoratief WebP-beeld', async ()
       assert.deepEqual(lossyWebpDimensions(asset), { width: 1062, height: 444 });
     })
   );
+});
+
+test('de theorielijst rendert als een toegankelijke, compacte begrippenlijst', () => {
+  const html = renderToStaticMarkup(
+    createElement(LessonTheorySection, {
+      section: thinkingPatternsTheorySection,
+      headingId: 'denkpatronen-heading'
+    })
+  );
+
+  assert.match(html, /<section[^>]+aria-labelledby="denkpatronen-heading"/);
+  assert.match(html, /<h2 id="denkpatronen-heading"/);
+  assert.equal((html.match(/<details/g) ?? []).length, 12);
+  assert.equal((html.match(/<summary/g) ?? []).length, 12);
+  assert.doesNotMatch(html, /<details[^>]* open=/, 'de compacte lijst start ingeklapt');
+  assert.doesNotMatch(html, /role="button"|aria-expanded=/);
+  for (const item of thinkingPatternsTheorySection.items) {
+    assert.ok(html.includes(`>${item.title}<`), `${item.title} ontbreekt in de begrippenlijst`);
+  }
 });
 
 test('de tijdsinschatting van w06-l03 dekt alle getimede oefenstappen', () => {

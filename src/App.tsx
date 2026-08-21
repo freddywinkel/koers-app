@@ -14,6 +14,8 @@ const Vandaag = lazy(() => import('./screens/Vandaag'));
 const Cursus = lazy(() => import('./screens/Cursus'));
 const Week = lazy(() => import('./screens/Week'));
 const Les = lazy(() => import('./screens/Les'));
+const TheoryIndex = lazy(() => import('./screens/TheoryIndex'));
+const TheoryLesson = lazy(() => import('./screens/TheoryLesson'));
 const Oefenen = lazy(() => import('./screens/Oefenen'));
 const AudioList = lazy(() => import('./screens/AudioList'));
 const AudioPlayer = lazy(() => import('./screens/AudioPlayer'));
@@ -127,6 +129,8 @@ export default function App() {
             <Route path="/cursus" element={<Cursus />} />
             <Route path="/cursus/week/:weekId" element={<Week />} />
             <Route path="/les/:lessonId" element={<Les />} />
+            <Route path="/theorie" element={<TheoryIndex />} />
+            <Route path="/theorie/:theoryId" element={<TheoryLesson />} />
             <Route path="/oefenen" element={<Oefenen />} />
             <Route path="/oefenen/audio" element={<AudioList />} />
             <Route path="/oefenen/audio/:id" element={<AudioPlayer />} />

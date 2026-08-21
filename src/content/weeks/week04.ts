@@ -1,4 +1,5 @@
 import type { Week, Flashcard } from '../types';
+import { thinkingPatternsTheorySection } from '../thinkingErrors';
 
 /**
  * Week 4 — Defusie & gedachten.
@@ -6,7 +7,8 @@ import type { Week, Flashcard } from '../types';
  * (zin ervoor, bedank je brein, verhaal een naam geven, melk-melk-melk),
  * bladeren op de stroom, en de expliciete brug naar de VERS-vaardigheid
  * gedachten uitdagen: defusie is de eerste stap, uitdagen het alternatief
- * voor gedachten over controleerbare feiten (brug zit in w04-l02).
+ * voor gedachten over controleerbare feiten. Les 2 bevat daarnaast twaalf
+ * veelvoorkomende denkpatronen met uitleg en voorbeelden.
  * Metaforen: passagiers op de bus, bladeren op de stroom (originele teksten).
  * Gebaseerd op research/act-deep-dive.md (§2.2), research/vers-deep-dive.md
  * (§6.1 vaardigheid 3) en research/course-structure-literature.md (§7.2).
@@ -56,7 +58,7 @@ export const week04: Week = {
       order: 2,
       kind: 'lesson',
       title: 'Afstand nemen van gedachten',
-      minutes: 6,
+      minutes: 12,
       tags: ['Defusie', 'Gedachten uitdagen'],
       intro: [
         'In de vorige les zag je: een gedachte is een zin, geen feit. Nu leer je drie snelle manieren om afstand te nemen. Ze duren elk maar een paar seconden.',
@@ -64,6 +66,7 @@ export const week04: Week = {
         'Soms wil je meer dan alleen afstand. Bij een controleerbare gedachte kun je "gedachten uitdagen", een vaardigheid uit VERS. Schrijf de gedachte op en vraag: is dit een feit, mijn uitleg of een voorspelling? Zoek daarna de feiten vóór en tegen, bedenk wat je tegen een lieve vriend of vriendin zou zeggen en maak een eerlijke gedachte die bij alle feiten past.',
         'De volgorde is belangrijk. Eerst afstand nemen, dan eventueel nakijken. Ga je meteen discussiëren met een gedachte, dan wordt het al snel weer touwtrekken. Defusie is je eerste stap. Uitdagen is extra gereedschap voor controleerbare feiten. De volledige oefening staat onderaan bij "Past bij deze les".'
       ],
+      theorySections: [thinkingPatternsTheorySection],
       exercise: {
         title: 'Melk, melk, melk',
         steps: [
@@ -75,6 +78,11 @@ export const week04: Week = {
       },
       reflection: 'Voelde het gek? Dat hoort erbij. Woorden zijn klanken tot wij er verhalen van maken. Daar zit je vrijheid.',
       assignment: 'Probeer deze week bij een lastige gedachte één van de drie snelle stappen: de zin ervoor, bedank je brein, of een naam voor het verhaal. Gaat het om een controleerbare gedachte en wil je verder kijken? Open dan onderaan "Gedachten uitdagen" en volg de vijf stappen.',
+      supportCta: {
+        label: 'Oefen met het G-schema',
+        to: '/steun/g-schema',
+        description: 'Kies één gedachte en onderzoek haar rustig. Je schema blijft lokaal bewaard, zodat je het later kunt teruglezen.'
+      },
       relatedSkillIds: ['defusie-afstand-van-gedachten', 'gedachten-uitdagen'],
       flashcardIds: ['w04-l02-f1', 'w04-l02-f2', 'w04-l02-f3']
     },
