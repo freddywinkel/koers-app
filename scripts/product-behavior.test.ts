@@ -11,9 +11,10 @@ import {
   thinkingPatternsTheorySection
 } from '../src/content/thinkingErrors';
 import { db } from '../src/db/db';
-import { exportAllData, importAllData, markLessonDone, saveCheckin } from '../src/db/hooks';
+import { clearAllData, exportAllData, importAllData, markLessonDone, saveCheckin } from '../src/db/hooks';
 import { LANGUAGE_STORAGE_KEY, translate } from '../src/i18n';
-import { addLocalDays, differenceInCalendarDays, startOfLocalDay } from '../src/lib/calendar';
+import { addLocalDays, differenceInCalendarDays, localDayKey, startOfLocalDay } from '../src/lib/calendar';
+import { claimDailyCheckinPrompt, DAILY_CHECKIN_PROMPT_KEY } from '../src/lib/dailyCheckinPrompt';
 import { getEligibleFlashcards } from '../src/lib/flashcardEligibility';
 import { isLessonUnlocked, isWeekUnlocked } from '../src/lib/unlock';
 
@@ -154,6 +155,37 @@ test('kalenderrekenen telt lokale dagen zonder vaste 24-uursaanname', () => {
   assert.equal(new Date(twoDaysLater).getHours(), 0);
 });
 
+test('de automatische check-in verschijnt hoogstens eenmaal per lokale kalenderdag', async () => {
+  const morning = new Date(2026, 8, 3, 8, 0).getTime();
+  const evening = new Date(2026, 8, 3, 21, 30).getTime();
+  const nextMorning = new Date(2026, 8, 4, 8, 0).getTime();
+
+  assert.equal(await claimDailyCheckinPrompt(morning), true);
+  assert.equal(await claimDailyCheckinPrompt(evening), false, 'sluiten zonder opslaan toont hem niet opnieuw');
+  assert.equal((await db.settings.get(DAILY_CHECKIN_PROMPT_KEY))?.value, localDayKey(morning));
+  assert.equal(await claimDailyCheckinPrompt(nextMorning), true, 'een nieuwe lokale dag mag opnieuw vragen');
+});
+
+test('een bestaande check-in voorkomt de automatische popup zonder de dag apart te claimen', async () => {
+  const now = new Date(2026, 8, 3, 9, 15).getTime();
+  await db.checkins.add({ ts: now, pan: 2, note: 'Al gedaan' });
+
+  assert.equal(await claimDailyCheckinPrompt(now), false);
+  assert.equal(await db.settings.get(DAILY_CHECKIN_PROMPT_KEY), undefined);
+});
+
+test('gelijktijdige openingspogingen kunnen de dagelijkse popup maar eenmaal claimen', async () => {
+  const now = new Date(2026, 8, 3, 9, 15).getTime();
+  const results = await Promise.all([claimDailyCheckinPrompt(now), claimDailyCheckinPrompt(now)]);
+  assert.deepEqual(results.sort(), [false, true]);
+});
+
+test('alle lokale gegevens wissen maakt ook de automatische dagvraag weer beschikbaar', async () => {
+  await db.settings.put({ key: DAILY_CHECKIN_PROMPT_KEY, value: '2026-9-3' });
+  await clearAllData();
+  assert.equal(await db.settings.get(DAILY_CHECKIN_PROMPT_KEY), undefined);
+});
+
 test('een snelle check-in werkt dezelfde check-in van vandaag bij', async () => {
   await saveCheckin({ pan: 2, emotion: 'onrustig', note: 'Eerste notitie' });
   await saveCheckin({ pan: 4, note: '' });
@@ -169,12 +201,14 @@ test('exports lekken de apparaatpincode niet en import houdt de huidige pincode 
   const ownPinHash = 'a'.repeat(64);
   await db.settings.bulkPut([
     { key: 'pin-hash', value: ownPinHash },
+    { key: DAILY_CHECKIN_PROMPT_KEY, value: localDayKey(Date.now()) },
     { key: 'theme', value: 'licht' },
     { key: 'naam', value: 'Voor import' }
   ]);
 
   const exported = JSON.parse(await exportAllData()) as { settings: Array<{ key: string; value: string }> };
   assert.equal(exported.settings.some((setting) => setting.key === 'pin-hash'), false);
+  assert.equal(exported.settings.some((setting) => setting.key === DAILY_CHECKIN_PROMPT_KEY), false);
 
   const backup = JSON.stringify({
     app: 'koers',
@@ -189,6 +223,7 @@ test('exports lekken de apparaatpincode niet en import houdt de huidige pincode 
   await importAllData(backup, 'replace');
 
   assert.equal((await db.settings.get('pin-hash'))?.value, ownPinHash);
+  assert.equal((await db.settings.get(DAILY_CHECKIN_PROMPT_KEY))?.value, localDayKey(Date.now()));
   assert.equal((await db.settings.get('theme'))?.value, 'donker');
   assert.equal(await db.settings.get('naam'), undefined);
   assert.equal((await db.lessonProgress.get('w01-l01'))?.status, 'done');

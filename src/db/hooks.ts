@@ -16,6 +16,7 @@ import {
 import type { PanValue } from '../content/types';
 import { isIOS, isStandalone } from '../lib/install';
 import { addLocalDays, localDayKey, startOfLocalDay } from '../lib/calendar';
+import { DAILY_CHECKIN_PROMPT_KEY } from '../lib/dailyCheckinPrompt';
 
 /**
  * Koers — datahooks en helpers
@@ -248,7 +249,7 @@ const BACKUP_TABLES = [
 
 // Een pincode beschermt dit apparaat en hoort niet in een draagbaar
 // exportbestand. De korte hash is bovendien geen veilig back-upgeheim.
-const DEVICE_ONLY_SETTING_KEYS = new Set(['pin-hash']);
+const DEVICE_ONLY_SETTING_KEYS = new Set(['pin-hash', DAILY_CHECKIN_PROMPT_KEY]);
 
 type BackupTableName = (typeof BACKUP_TABLES)[number];
 export type ImportMode = 'merge' | 'replace';

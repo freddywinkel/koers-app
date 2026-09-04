@@ -9,7 +9,7 @@ import { useRegisterSW } from 'virtual:pwa-register/react';
  */
 const CHECK_INTERVAL_MS = 60 * 60 * 1000; // elk uur opnieuw kijken
 
-export default function UpdatePrompt() {
+export default function UpdatePrompt({ suppressed = false }: { suppressed?: boolean }) {
   const registrationRef = useRef<ServiceWorkerRegistration | null>(null);
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const primaryActionRef = useRef<HTMLButtonElement | null>(null);
@@ -67,7 +67,7 @@ export default function UpdatePrompt() {
   }, [setNeedRefresh]);
 
   useEffect(() => {
-    if (!needRefresh) return;
+    if (!needRefresh || suppressed) return;
     const activeElement = document.activeElement;
     previousFocusRef.current = activeElement instanceof HTMLElement ? activeElement : null;
 
@@ -120,7 +120,7 @@ export default function UpdatePrompt() {
       previousFocusRef.current = null;
       if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
     };
-  }, [needRefresh, setNeedRefresh]);
+  }, [needRefresh, setNeedRefresh, suppressed]);
 
   const activateUpdate = async (): Promise<void> => {
     const waitingWorker = registrationRef.current?.waiting;
@@ -133,7 +133,7 @@ export default function UpdatePrompt() {
     await updateServiceWorker(true);
   };
 
-  if (!needRefresh) return null;
+  if (!needRefresh || suppressed) return null;
 
   return (
     <div

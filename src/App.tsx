@@ -1,4 +1,4 @@
-import { Component, lazy, Suspense, useEffect, type ErrorInfo, type ReactNode } from 'react';
+import { Component, lazy, Suspense, useEffect, useState, type ErrorInfo, type ReactNode } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
 import AppShell from './components/AppShell';
 import { PinGate } from './components/PinLock';
@@ -86,6 +86,7 @@ function RequireOnboarding({ children }: { children: ReactNode }) {
 }
 
 export default function App() {
+  const [dailyCheckinOpen, setDailyCheckinOpen] = useState(false);
   useApplyTheme();
   useApplyDesign();
 
@@ -109,7 +110,14 @@ export default function App() {
               </Suspense>
             }
           />
-          <Route element={<AppShell />}>
+          <Route
+            element={
+              <AppShell
+                dailyCheckinOpen={dailyCheckinOpen}
+                onDailyCheckinOpenChange={setDailyCheckinOpen}
+              />
+            }
+          >
             <Route
               path="/"
               element={
@@ -149,7 +157,7 @@ export default function App() {
         </Routes>
       </PinGate>
       {/* Updatemelding: ook zichtbaar op het pin-scherm, app-breed eenmalig gemount. */}
-      <UpdatePrompt />
+      <UpdatePrompt suppressed={dailyCheckinOpen} />
     </>
   );
 }
