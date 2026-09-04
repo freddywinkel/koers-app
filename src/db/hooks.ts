@@ -15,15 +15,15 @@ import {
 } from './db';
 import type { PanValue } from '../content/types';
 import { isIOS, isStandalone } from '../lib/install';
-import { addLocalDays, localDayKey, startOfLocalDay } from '../lib/calendar';
+import { addLocalDays, startOfLocalDay } from '../lib/calendar';
 import { DAILY_CHECKIN_PROMPT_KEY } from '../lib/dailyCheckinPrompt';
 
 /**
  * Koers — datahooks en helpers
  * -------------------------------------
  * Publieke API voor schermen en stage 3:
- *   useTodayCheckin()   · check-in van vandaag (live)
- *   saveCheckin()       · maak/werk de check-in van vandaag bij
+ *   useTodayCheckin()   · laatste check-in van vandaag (live)
+ *   saveCheckin()       · bewaar een nieuw check-inmoment
  *   useStreak()         · vergevende reeks: { count, frozen }
  *   useLessonProgress() · voortgang van één les (live)
  *   useAllLessonProgress() · alle voortgang (live)
@@ -49,42 +49,33 @@ export function useTodayCheckin() {
   }, []);
 }
 
-/** Laatste check-in per lokale kalenderdag, nieuwste eerst. */
-export function useRecentCheckins(limit = 7): CheckinRow[] | undefined {
-  return useLiveQuery(async () => {
-    const rows = await db.checkins.orderBy('ts').reverse().toArray();
-    const seenDays = new Set<string>();
-    const recent: CheckinRow[] = [];
-    for (const row of rows) {
-      const day = localDayKey(row.ts);
-      if (seenDays.has(day)) continue;
-      seenDays.add(day);
-      recent.push(row);
-      if (recent.length >= limit) break;
-    }
-    return recent;
-  }, [limit]);
+/** Alle recente check-inmomenten, nieuwste eerst. De limiet geldt per moment. */
+export async function getRecentCheckins(limit = 7): Promise<CheckinRow[]> {
+  const safeLimit = Math.max(0, Math.floor(limit));
+  if (safeLimit === 0) return [];
+  const rows = await db.checkins.orderBy('ts').reverse().toArray();
+  return rows
+    .sort((a, b) => b.ts - a.ts || (b.id ?? 0) - (a.id ?? 0))
+    .slice(0, safeLimit);
 }
 
-/**
- * Sla de check-in van vandaag op. Bestaat er al een, dan wordt die bijgewerkt
- * (pan blijft bewust overschrijfbaar — opnieuw voelen mag altijd).
- */
-export async function saveCheckin(input: { pan: PanValue; emotion?: string; note?: string }): Promise<void> {
-  const today = startOfDay(Date.now());
-  const tomorrow = addLocalDays(today, 1);
-  const rows = await db.checkins.where('ts').between(today, tomorrow, true, false).toArray();
-  const latest = rows.sort((a, b) => b.ts - a.ts)[0];
-  if (latest?.id != null) {
-    await db.checkins.update(latest.id, {
-      ts: Date.now(),
-      pan: input.pan,
-      emotion: input.emotion ?? latest.emotion,
-      note: input.note ?? latest.note
-    });
-  } else {
-    await db.checkins.add({ ts: Date.now(), pan: input.pan, emotion: input.emotion ?? '', note: input.note });
-  }
+export function useRecentCheckins(limit = 7): CheckinRow[] | undefined {
+  return useLiveQuery(() => getRecentCheckins(limit), [limit]);
+}
+
+/** Bewaar één nieuw check-inmoment. Bestaande momenten blijven ongewijzigd. */
+export async function saveCheckin(
+  input: { pan: PanValue; emotion?: string; note?: string },
+  now = Date.now()
+): Promise<CheckinRow> {
+  const row: CheckinRow = {
+    ts: now,
+    pan: input.pan,
+    emotion: input.emotion ?? '',
+    note: input.note
+  };
+  const id = await db.checkins.add(row);
+  return { ...row, id };
 }
 
 /* -------------------------------- Streak --------------------------------- */
@@ -317,6 +308,7 @@ function isCheckinRow(value: unknown): value is CheckinRow {
     isOptionalId(value.id) &&
     isFiniteNumber(value.ts) &&
     value.ts >= 0 &&
+    Number.isFinite(new Date(value.ts).getTime()) &&
     [1, 2, 3, 4, 5].includes(value.pan as number) &&
     typeof value.emotion === 'string' &&
     isOptionalString(value.note)

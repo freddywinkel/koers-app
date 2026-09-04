@@ -28,19 +28,22 @@ const MANUAL_TRANSLATIONS: Readonly<Record<string, string>> = {
   'Welke pan ben je nu?': 'Which pressure-cooker level are you at right now?',
   'Snelle check-in': 'Quick check-in',
   'Snelle check-in wordt klaargelegd…': 'Preparing your quick check-in…',
-  'Kies je pan en schrijf eventueel één zin. Dit wordt direct bij Vandaag opgeslagen.':
-    'Choose your pressure-cooker level and optionally write one sentence. It is saved directly to Today.',
+  'Kies je pan en schrijf eventueel één zin. Je moment krijgt automatisch de huidige tijd.':
+    'Choose your pressure-cooker level and optionally write one sentence. Your moment automatically gets the current time.',
   'Eén rustig moment om te voelen hoe het nu met je gaat.':
     'One calm moment to notice how you are feeling right now.',
   Sluiten: 'Close',
   'Bezig met opslaan…': 'Saving…',
   'Opslaan in Koers': 'Save in Koers',
   'Opgeslagen in Koers': 'Saved in Koers',
+  'Opgeslagen om': 'Saved at',
+  'Je kunt vandaag nog een check-in doen.': 'You can check in again today.',
   'Je pan en notitie staan nu ook bij Vandaag ·': 'Your level and note are now also shown in Today ·',
   'Opslaan lukte niet. Je invoer blijft staan; probeer het nog een keer.':
     'Saving failed. Your entry is still here; please try again.',
-  'Je check-in van vandaag staat al klaar. Opslaan werkt diezelfde check-in bij.':
-    "Today's check-in is already here. Saving will update that same check-in.",
+  'Zo kun je rustig terugkijken naar je laatste momenten.':
+    'This lets you gently look back at your latest moments.',
+  'Past bij je laatste check-in:': 'Suggested for your latest check-in:',
   'Snelle check-in vanaf je beginscherm': 'Quick check-in from your Home Screen',
   'Koers toont bij de eerste opening van de dag automatisch de korte check-in. Na opslaan ga je direct naar Vandaag. Hier kun je de check-in altijd handmatig openen.':
     'Koers automatically shows the quick check-in the first time you open the app each day. After saving, you go straight to Today. You can always open the check-in manually here.',

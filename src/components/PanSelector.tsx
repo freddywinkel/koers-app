@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import PanIcon, { PAN_LABELS } from './PanIcon';
 import type { PanValue } from '../content/types';
 
@@ -7,13 +8,16 @@ interface Props {
   value: PanValue | null;
   onChange: (pan: PanValue) => void;
   disabled?: boolean;
+  name?: string;
 }
 
 /**
  * De pannetjesmodel-selector: 5 gelijke tegels, geselecteerd = wit vlak,
  * rand eucalyptus-diep, lichte lift (spec §3 "Pan-selector").
  */
-export default function PanSelector({ value, onChange, disabled = false }: Props) {
+export default function PanSelector({ value, onChange, disabled = false, name }: Props) {
+  const generatedName = useId();
+  const radioName = name ?? `pan-${generatedName}`;
   return (
     <fieldset className="mt-3.5 min-w-0" disabled={disabled}>
       <legend className="sr-only">Kies je pan</legend>
@@ -33,7 +37,7 @@ export default function PanSelector({ value, onChange, disabled = false }: Props
               <input
                 className="sr-only"
                 type="radio"
-                name="dagelijkse-pan"
+                name={radioName}
                 value={pan}
                 checked={selected}
                 onChange={() => onChange(pan)}
