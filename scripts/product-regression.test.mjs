@@ -39,23 +39,42 @@ test('herinneringen gebruiken de Pages-basis, bewaren dezelfde-dagstatus en open
   assert.match(handler, /clients\.openWindow/);
 });
 
-test('de PWA-snelle check-in gebruikt dezelfde dagopslag en vermijdt een tweede iPhone-installatie', async () => {
+test('de PWA-check-in bewaart losse momenten, leegt de invoer en vermijdt een tweede iPhone-installatie', async () => {
   const app = await read('src/App.tsx');
   const quickCheckin = await read('src/screens/QuickCheckin.tsx');
   const quickCheckinForm = await read('src/components/QuickCheckinForm.tsx');
   const dailyPrompt = await read('src/components/DailyQuickCheckinPrompt.tsx');
   const shell = await read('src/components/AppShell.tsx');
   const updatePrompt = await read('src/components/UpdatePrompt.tsx');
+  const hooks = await read('src/db/hooks.ts');
+  const today = await read('src/screens/Vandaag.tsx');
+  const checkinFormatting = await read('src/lib/checkins.ts');
   const profile = await read('src/screens/Profiel.tsx');
   const tabBar = await read('src/components/TabBar.tsx');
   const reminders = await read('src/lib/reminders.ts');
   const handler = await read('public/notification-handler.js');
+  const checkinUi = `${quickCheckinForm}\n${today}`;
   assert.match(app, /path="\/check-in"/);
   assert.match(app, /<RequireOnboarding>/);
-  assert.match(quickCheckin, /useTodayCheckin\(\)/);
   assert.match(quickCheckin, /manualOpen/);
   assert.match(quickCheckin, /<Navigate to="\/" replace/);
-  assert.match(quickCheckinForm, /await saveCheckin\(\{ pan, note \}\);\s*onSaved\(\);/);
+  assert.match(quickCheckinForm, /saved = await saveCheckin\(\{ pan, note \}\)/);
+  assert.match(quickCheckinForm, /onSaved\?\.\(saved\)/);
+  assert.match(hooks, /export async function getRecentCheckins/);
+  assert.match(hooks, /db\.checkins\.add/);
+  assert.doesNotMatch(hooks, /db\.checkins\.update\(latest\.id/);
+  assert.doesNotMatch(hooks, /seenDays/);
+  assert.match(today, /formatCheckinMoment/);
+  assert.doesNotMatch(today, /startOfDay\(row\.ts\)\s*<\s*startOfDay\(Date\.now\(\)\)/);
+  assert.doesNotMatch(today, /value=\{checkin\?\.pan \?\? null\}/);
+  assert.match(checkinUi, /Opgeslagen om/);
+  assert.match(checkinUi, /Je kunt vandaag nog een check-in doen\./);
+  assert.match(checkinUi, /setPan\(null\)/);
+  assert.match(checkinUi, /setNote\(''\)/);
+  assert.match(checkinFormatting, /hour:\s*'2-digit'/);
+  assert.match(checkinFormatting, /minute:\s*'2-digit'/);
+  assert.match(checkinFormatting, /Vandaag/);
+  assert.match(checkinFormatting, /Today/);
   assert.match(dailyPrompt, /claimDailyCheckinPrompt\(\)/);
   assert.match(dailyPrompt, /role="dialog"/);
   assert.match(dailyPrompt, /aria-modal="true"/);
@@ -110,7 +129,7 @@ test('de expliciete productcorrecties blijven zichtbaar', async () => {
   const support = await read('src/screens/Crisis.tsx');
   const week2 = await read('src/content/weeks/week02.ts');
   assert.match(today, /Rond Week 1, Les 3 af om het pannetjesmodel te ontgrendelen\./);
-  assert.match(today, /disabled=!panCheckinUnlocked|disabled=\{!panCheckinUnlocked\}/);
+  assert.match(today, /disabled=!panCheckinUnlocked|disabled=\{!panCheckinUnlocked\}|PanSelector value=\{null\} disabled/);
   assert.match(support, />Steunmiddelen</);
   assert.doesNotMatch(support, />Je gereedschappen</);
   assert.ok(

@@ -1,37 +1,58 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import PanSelector from './PanSelector';
 import type { PanValue } from '../content/types';
 import type { CheckinRow } from '../db/db';
 import { saveCheckin } from '../db/hooks';
+import { formatCheckinTime } from '../lib/checkins';
+import { getLocale } from '../i18n';
 
-type SaveStatus = 'idle' | 'saving' | 'error';
+type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
 interface QuickCheckinFormProps {
-  checkin: CheckinRow | null;
-  onSaved: () => void;
+  onSaved?: (checkin: CheckinRow) => void;
   titleId?: string;
 }
 
-/** Gedeeld formulier voor de dagelijkse popup en de handmatige check-in. */
-export default function QuickCheckinForm({ checkin, onSaved, titleId }: QuickCheckinFormProps) {
-  const [pan, setPan] = useState<PanValue | null>(checkin?.pan ?? null);
-  const [note, setNote] = useState(checkin?.note ?? '');
+/** Gedeeld formulier dat bij iedere opslag een nieuw check-inmoment maakt. */
+export default function QuickCheckinForm({ onSaved, titleId }: QuickCheckinFormProps) {
+  const [pan, setPan] = useState<PanValue | null>(null);
+  const [note, setNote] = useState('');
   const [status, setStatus] = useState<SaveStatus>('idle');
+  const [savedAt, setSavedAt] = useState<number | null>(null);
+  const savingRef = useRef(false);
+  const headingRef = useRef<HTMLHeadingElement>(null);
 
   async function handleSave() {
-    if (!pan || status === 'saving') return;
+    if (!pan || savingRef.current) return;
+    savingRef.current = true;
     setStatus('saving');
+    let saved: CheckinRow;
     try {
-      await saveCheckin({ pan, note });
-      onSaved();
+      saved = await saveCheckin({ pan, note });
     } catch {
+      savingRef.current = false;
       setStatus('error');
+      return;
+    }
+    savingRef.current = false;
+    setPan(null);
+    setNote('');
+    setSavedAt(saved.ts);
+    setStatus('saved');
+    onSaved?.(saved);
+    if (!onSaved && typeof window !== 'undefined') {
+      window.requestAnimationFrame(() => headingRef.current?.focus({ preventScroll: true }));
     }
   }
 
   return (
-    <>
-      <h2 id={titleId} className="card-title">Welke pan ben je nu?</h2>
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        void handleSave();
+      }}
+    >
+      <h2 ref={headingRef} id={titleId} tabIndex={-1} className="card-title">Welke pan ben je nu?</h2>
       <p className="sub mt-1">Tik op de pan die bij dit moment past.</p>
       <PanSelector
         value={pan}
@@ -59,11 +80,10 @@ export default function QuickCheckinForm({ checkin, onSaved, titleId }: QuickChe
       </label>
 
       <button
-        type="button"
+        type="submit"
         className="btn-primary mt-4 w-full disabled:cursor-not-allowed disabled:opacity-45"
         disabled={!pan || status === 'saving'}
         aria-busy={status === 'saving'}
-        onClick={() => void handleSave()}
       >
         {status === 'saving' ? 'Bezig met opslaan…' : 'Opslaan in Koers'}
       </button>
@@ -74,9 +94,18 @@ export default function QuickCheckinForm({ checkin, onSaved, titleId }: QuickChe
         </p>
       )}
 
-      {checkin && status === 'idle' && (
-        <p className="sub mt-3">Je check-in van vandaag staat al klaar. Opslaan werkt diezelfde check-in bij.</p>
+      {status === 'saved' && savedAt !== null && (
+        <p
+          className="mt-3 rounded-2xl border border-euca/25 bg-eucatint px-4 py-3 text-sm font-semibold text-euca-deep"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <span>Opgeslagen om</span>{' '}
+          <time dateTime={new Date(savedAt).toISOString()}>{formatCheckinTime(savedAt, getLocale())}</time>.{' '}
+          <span>Je kunt vandaag nog een check-in doen.</span>
+        </p>
       )}
-    </>
+    </form>
   );
 }

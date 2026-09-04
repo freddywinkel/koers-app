@@ -8,8 +8,7 @@ import type { PanValue } from '../content/types';
  * Tabellen zijn getypt; hooks en helpers staan in src/db/hooks.ts.
  */
 
-/** Dagelijkse check-in via het pannetjesmodel. Eén of meerdere per dag mogelijk;
- *  saveCheckin() werkt de laatste van vandaag bij. */
+/** Check-inmoment via het pannetjesmodel. Iedere opslag is een eigen record. */
 export interface CheckinRow {
   id?: number;
   /** Unix-timestamp (ms). */

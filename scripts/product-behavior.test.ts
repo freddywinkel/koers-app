@@ -11,9 +11,18 @@ import {
   thinkingPatternsTheorySection
 } from '../src/content/thinkingErrors';
 import { db } from '../src/db/db';
-import { clearAllData, exportAllData, importAllData, markLessonDone, saveCheckin } from '../src/db/hooks';
+import {
+  clearAllData,
+  computeStreak,
+  exportAllData,
+  getRecentCheckins,
+  importAllData,
+  markLessonDone,
+  saveCheckin
+} from '../src/db/hooks';
 import { LANGUAGE_STORAGE_KEY, translate } from '../src/i18n';
 import { addLocalDays, differenceInCalendarDays, localDayKey, startOfLocalDay } from '../src/lib/calendar';
+import { formatCheckinMoment } from '../src/lib/checkins';
 import { claimDailyCheckinPrompt, DAILY_CHECKIN_PROMPT_KEY } from '../src/lib/dailyCheckinPrompt';
 import { getEligibleFlashcards } from '../src/lib/flashcardEligibility';
 import { isLessonUnlocked, isWeekUnlocked } from '../src/lib/unlock';
@@ -161,6 +170,9 @@ test('de automatische check-in verschijnt hoogstens eenmaal per lokale kalenderd
   const nextMorning = new Date(2026, 8, 4, 8, 0).getTime();
 
   assert.equal(await claimDailyCheckinPrompt(morning), true);
+  await saveCheckin({ pan: 2, note: 'Ochtend' }, morning + 60_000);
+  await saveCheckin({ pan: 4, note: 'Avond' }, evening - 60_000);
+  assert.equal(await db.checkins.count(), 2, 'meerdere registraties veranderen de dagclaim niet');
   assert.equal(await claimDailyCheckinPrompt(evening), false, 'sluiten zonder opslaan toont hem niet opnieuw');
   assert.equal((await db.settings.get(DAILY_CHECKIN_PROMPT_KEY))?.value, localDayKey(morning));
   assert.equal(await claimDailyCheckinPrompt(nextMorning), true, 'een nieuwe lokale dag mag opnieuw vragen');
@@ -186,15 +198,88 @@ test('alle lokale gegevens wissen maakt ook de automatische dagvraag weer beschi
   assert.equal(await db.settings.get(DAILY_CHECKIN_PROMPT_KEY), undefined);
 });
 
-test('een snelle check-in werkt dezelfde check-in van vandaag bij', async () => {
-  await saveCheckin({ pan: 2, emotion: 'onrustig', note: 'Eerste notitie' });
-  await saveCheckin({ pan: 4, note: '' });
+test('twee snelle check-ins op dezelfde dag blijven twee afzonderlijke registraties', async () => {
+  const morning = new Date(2026, 8, 3, 9, 7).getTime();
+  const afternoon = new Date(2026, 8, 3, 15, 42).getTime();
 
-  const rows = await db.checkins.toArray();
-  assert.equal(rows.length, 1);
-  assert.equal(rows[0].pan, 4);
-  assert.equal(rows[0].emotion, 'onrustig', 'een niet-bewerkbaar bestaand veld blijft behouden');
-  assert.equal(rows[0].note, '', 'een leeggemaakte notitie wordt ook echt gewist');
+  const first = await saveCheckin({ pan: 2, emotion: 'onrustig', note: 'Eerste notitie' }, morning);
+  const second = await saveCheckin({ pan: 4, note: 'Later op de dag' }, afternoon);
+
+  assert.ok(first.id != null);
+  assert.ok(second.id != null);
+  assert.notEqual(first.id, second.id);
+  assert.equal(first.ts, morning);
+  assert.equal(second.ts, afternoon);
+
+  const rows = await db.checkins.orderBy('ts').toArray();
+  assert.deepEqual(
+    rows.map(({ ts, pan, emotion, note }) => ({ ts, pan, emotion, note })),
+    [
+      { ts: morning, pan: 2, emotion: 'onrustig', note: 'Eerste notitie' },
+      { ts: afternoon, pan: 4, emotion: '', note: 'Later op de dag' }
+    ]
+  );
+});
+
+test('recente check-ins bevatten alle momenten van vandaag en staan nieuwste eerst', async () => {
+  const yesterday = new Date(2026, 8, 2, 20, 15).getTime();
+  const morning = new Date(2026, 8, 3, 9, 7).getTime();
+  const afternoon = new Date(2026, 8, 3, 15, 42).getTime();
+
+  await saveCheckin({ pan: 1, note: 'Gisteren' }, yesterday);
+  await saveCheckin({ pan: 2, note: 'Vanochtend' }, morning);
+  await saveCheckin({ pan: 4, note: 'Vanmiddag' }, afternoon);
+
+  const recent = await getRecentCheckins(3);
+  assert.deepEqual(recent.map((row) => row.ts), [afternoon, morning, yesterday]);
+  assert.deepEqual(recent.map((row) => row.note), ['Vanmiddag', 'Vanochtend', 'Gisteren']);
+  assert.deepEqual((await getRecentCheckins(2)).map((row) => row.ts), [afternoon, morning]);
+});
+
+test('meerdere check-ins op één dag tellen als één streakdag', () => {
+  const today = startOfLocalDay(Date.now());
+  const yesterday = addLocalDays(today, -1);
+  const registeredDays = new Set([
+    startOfLocalDay(today + 9 * 60 * 60 * 1_000),
+    startOfLocalDay(today + 15 * 60 * 60 * 1_000),
+    startOfLocalDay(yesterday + 20 * 60 * 60 * 1_000)
+  ]);
+
+  assert.equal(registeredDays.size, 2);
+  assert.deepEqual(computeStreak(registeredDays), { count: 2, frozen: false });
+});
+
+test('check-inmomenten tonen voor vandaag en eerdere dagen een gelokaliseerde tijd', () => {
+  const now = new Date(2026, 8, 3, 16, 0).getTime();
+  const today = new Date(2026, 8, 3, 9, 7).getTime();
+  const earlier = new Date(2026, 8, 2, 9, 7).getTime();
+
+  assert.equal(formatCheckinMoment(today, now, 'nl-NL'), 'Vandaag · 09:07');
+  assert.equal(formatCheckinMoment(today, now, 'en-GB'), 'Today · 09:07');
+
+  const nlEarlier = formatCheckinMoment(earlier, now, 'nl-NL');
+  const enEarlier = formatCheckinMoment(earlier, now, 'en-GB');
+  const nlDate = new Intl.DateTimeFormat('nl-NL', { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(earlier));
+  const enDate = new Intl.DateTimeFormat('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }).format(new Date(earlier));
+  assert.ok(nlEarlier.toLocaleLowerCase('nl-NL').includes(nlDate.toLocaleLowerCase('nl-NL')));
+  assert.ok(enEarlier.toLocaleLowerCase('en-GB').includes(enDate.toLocaleLowerCase('en-GB')));
+  assert.match(nlEarlier, / · 09:07$/);
+  assert.match(enEarlier, / · 09:07$/);
+});
+
+test('export en vervangen bewaren meerdere check-ins van dezelfde dag met hun eigen tijd', async () => {
+  const morning = new Date(2026, 8, 3, 9, 7).getTime();
+  const afternoon = new Date(2026, 8, 3, 15, 42).getTime();
+  const first = await saveCheckin({ pan: 2, emotion: 'onrustig', note: 'Eerste notitie' }, morning);
+  const second = await saveCheckin({ pan: 4, note: 'Later op de dag' }, afternoon);
+  const exported = await exportAllData();
+
+  await clearAllData();
+  const summary = await importAllData(exported, 'replace');
+  const restored = await db.checkins.orderBy('ts').toArray();
+
+  assert.equal(summary.tableCounts.checkins, 2);
+  assert.deepEqual(restored, [first, second]);
 });
 
 test('exports lekken de apparaatpincode niet en import houdt de huidige pincode vast', async () => {
@@ -397,6 +482,23 @@ test('een back-up met dubbele primaire sleutels wordt atomair geweigerd', async 
     /Tabel 'checkins' bevat een dubbele sleutel '4' op positie 2/
   );
   assert.equal(await db.lessonProgress.count(), 1, 'validatiefouten wijzigen geen enkele tabel');
+});
+
+test('een check-in met een ongeldige datum wordt voor import atomair geweigerd', async () => {
+  const existing = { id: 9, ts: 5_000, pan: 2 as const, emotion: 'blijft behouden' };
+  await db.checkins.put(existing);
+  const invalidTimestampBackup = JSON.stringify({
+    app: 'koers',
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    checkins: [{ id: 10, ts: 1e20, pan: 4, emotion: 'ongeldige datum' }]
+  });
+
+  await assert.rejects(
+    importAllData(invalidTimestampBackup, 'replace'),
+    /Tabel 'checkins' bevat een ongeldige rij op positie 1/
+  );
+  assert.deepEqual(await db.checkins.toArray(), [existing]);
 });
 
 test('een onredelijk groot importbestand wordt vóór verwerken atomair geweigerd', async () => {

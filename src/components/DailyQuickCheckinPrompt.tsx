@@ -197,7 +197,7 @@ export default function DailyQuickCheckinPrompt({ onOpenChange }: { onOpenChange
           </button>
         </div>
         <div className="mt-4">
-          <QuickCheckinForm checkin={null} onSaved={() => setOpen(false)} titleId="daily-checkin-title" />
+          <QuickCheckinForm onSaved={() => setOpen(false)} titleId="daily-checkin-title" />
         </div>
       </section>
     </div>

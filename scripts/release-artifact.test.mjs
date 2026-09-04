@@ -86,7 +86,7 @@ test('de gebouwde app gebruikt overal het GitHub Pages-subpad', async () => {
   assert.doesNotMatch(html, /(?:src|href)="\/src\//);
 });
 
-test('de daadwerkelijke productie-bundle bevat de snelle check-inroute en gebruikersflow', async () => {
+test('de daadwerkelijke productie-bundle bevat de snelle check-inroute en meerdere check-inmomenten', async () => {
   const scripts = await assetFiles('.js');
   assert.ok(scripts.length > 0, 'er hoort minstens één productie-JavaScriptbestand te zijn');
   const bundle = (await Promise.all(scripts.map((entry) => readDist(`assets/${entry}`)))).join('\n');
@@ -96,6 +96,10 @@ test('de daadwerkelijke productie-bundle bevat de snelle check-inroute en gebrui
   assert.match(bundle, /Snelle check-in/);
   assert.match(bundle, /Dagelijkse check-in/);
   assert.match(bundle, /Opslaan in Koers/);
+  assert.match(bundle, /Opgeslagen om/);
+  assert.match(bundle, /Je kunt vandaag nog een check-in doen\./);
+  assert.doesNotMatch(bundle, /Opslaan werkt diezelfde check-in bij/);
+  assert.doesNotMatch(bundle, /Saving will update that same check-in/);
   assert.match(bundle, /koers-daily-checkin-prompt-day/);
   assert.match(bundle, /w01-l03/);
 });
