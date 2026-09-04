@@ -1,42 +1,28 @@
-import { useEffect, useState } from 'react';
-import { Link, Navigate } from 'react-router';
-import PanSelector from '../components/PanSelector';
-import type { PanValue } from '../content/types';
-import { saveCheckin, useDoneLessonIds, useTodayCheckin } from '../db/hooks';
-import { getLocale } from '../i18n';
+import { useEffect } from 'react';
+import { Navigate, useNavigate, useSearchParams } from 'react-router';
+import QuickCheckinForm from '../components/QuickCheckinForm';
+import { useDoneLessonIds, useTodayCheckin } from '../db/hooks';
+import { claimDailyCheckinPrompt } from '../lib/dailyCheckinPrompt';
 
-type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
-
-function timeLabel(date: Date): string {
-  return new Intl.DateTimeFormat(getLocale(), {
-    weekday: 'long',
-    hour: '2-digit',
-    minute: '2-digit'
-  }).format(date);
-}
-
-/**
- * Eén doelbewust klein scherm voor een check-in vanaf de geïnstalleerde PWA.
- * Dezelfde saveCheckin-helper en IndexedDB-tabel als Vandaag worden gebruikt,
- * zodat er geen tweede gegevensstroom of schijn-synchronisatie ontstaat.
- */
+/** Handmatige check-in; de kale startroute wordt door de dagelijkse popup overgenomen. */
 export default function QuickCheckin() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const checkin = useTodayCheckin();
   const doneLessonIds = useDoneLessonIds();
-  const [pan, setPan] = useState<PanValue | null>(null);
-  const [note, setNote] = useState('');
-  const [hydrated, setHydrated] = useState(false);
-  const [status, setStatus] = useState<SaveStatus>('idle');
-  const [savedAt, setSavedAt] = useState<Date | null>(null);
+  const manualOpen = searchParams.get('manual') === '1';
 
   useEffect(() => {
-    if (hydrated || checkin === undefined) return;
-    setPan(checkin?.pan ?? null);
-    setNote(checkin?.note ?? '');
-    setHydrated(true);
-  }, [checkin, hydrated]);
+    if (!manualOpen || checkin === undefined || doneLessonIds === undefined || !doneLessonIds.has('w01-l03')) return;
+    // Een bewuste handmatige opening telt ook als gezien, maar wordt zelf nooit geblokkeerd.
+    void claimDailyCheckinPrompt().catch(() => undefined);
+  }, [checkin, doneLessonIds, manualOpen]);
 
-  if (doneLessonIds === undefined || checkin === undefined || !hydrated) {
+  // Bestaande installaties starten op deze kale route. AppShell toont daarover
+  // de dagelijkse popup en deze omleiding legt Vandaag eronder.
+  if (!manualOpen) return <Navigate to="/" replace />;
+
+  if (doneLessonIds === undefined || checkin === undefined) {
     return (
       <div className="screen-stack">
         <section className="card" role="status" aria-live="polite">
@@ -46,20 +32,7 @@ export default function QuickCheckin() {
     );
   }
 
-  // Houd dezelfde ontgrendeling aan als de check-in op Vandaag.
   if (!doneLessonIds.has('w01-l03')) return <Navigate to="/" replace />;
-
-  async function handleSave() {
-    if (!pan || status === 'saving') return;
-    setStatus('saving');
-    try {
-      await saveCheckin({ pan, note });
-      setSavedAt(new Date());
-      setStatus('saved');
-    } catch {
-      setStatus('error');
-    }
-  }
 
   return (
     <div className="screen-stack">
@@ -67,74 +40,19 @@ export default function QuickCheckin() {
         <p className="eyebrow">Vandaag</p>
         <div className="mt-1.5 flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <h1 className="font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">Snelle check-in</h1>
+            <h1 className="font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">
+              Snelle check-in
+            </h1>
             <p className="sub mt-1.5">Kies je pan en schrijf eventueel één zin. Dit wordt direct bij Vandaag opgeslagen.</p>
           </div>
-          <Link
-            to="/"
-            className="inline-flex min-h-12 flex-none items-center rounded-2xl border border-line bg-raised px-3.5 text-sm font-extrabold text-ink shadow-soft"
-          >
+          <button type="button" className="btn-secondary flex-none" onClick={() => navigate('/', { replace: true })}>
             Sluiten
-          </Link>
+          </button>
         </div>
       </header>
 
       <section className="card" aria-label="Snelle check-in">
-        <h2 className="card-title">Welke pan ben je nu?</h2>
-        <p className="sub mt-1">Tik op de pan die bij dit moment past.</p>
-        <PanSelector
-          value={pan}
-          disabled={status === 'saving'}
-          onChange={(nextPan) => {
-            setPan(nextPan);
-            if (status !== 'idle') setStatus('idle');
-          }}
-        />
-
-        <label className="mt-4 block">
-          <span className="sub">Wil je er iets bij opschrijven? (niet verplicht)</span>
-          <textarea
-            className="input-soft mt-1.5 min-h-[88px] resize-y"
-            rows={3}
-            maxLength={500}
-            value={note}
-            disabled={status === 'saving'}
-            placeholder="Eén zin is genoeg."
-            onChange={(event) => {
-              setNote(event.target.value);
-              if (status !== 'idle') setStatus('idle');
-            }}
-          />
-        </label>
-
-        <button
-          type="button"
-          className="btn-primary mt-4 w-full disabled:cursor-not-allowed disabled:opacity-45"
-          disabled={!pan || status === 'saving'}
-          aria-busy={status === 'saving'}
-          onClick={() => void handleSave()}
-        >
-          {status === 'saving' ? 'Bezig met opslaan…' : 'Opslaan in Koers'}
-        </button>
-
-        {status === 'saved' && savedAt && (
-          <div className="mt-3 rounded-2xl border border-euca/25 bg-eucatint px-4 py-3" role="status" aria-live="polite">
-            <p className="text-sm font-extrabold text-euca-deep">Opgeslagen in Koers</p>
-            <p className="sub mt-1">
-              Je pan en notitie staan nu ook bij Vandaag · {timeLabel(savedAt)}.
-            </p>
-          </div>
-        )}
-
-        {status === 'error' && (
-          <p className="mt-3 rounded-2xl bg-apricot-soft px-4 py-3 text-sm font-semibold text-ap-deep" role="alert">
-            Opslaan lukte niet. Je invoer blijft staan; probeer het nog een keer.
-          </p>
-        )}
-
-        {checkin && status === 'idle' && hydrated && (
-          <p className="sub mt-3">Je check-in van vandaag staat al klaar. Opslaan werkt diezelfde check-in bij.</p>
-        )}
+        <QuickCheckinForm checkin={checkin} onSaved={() => navigate('/', { replace: true })} />
       </section>
     </div>
   );

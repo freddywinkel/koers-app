@@ -1,5 +1,6 @@
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { Outlet, useLocation } from 'react-router';
+import DailyQuickCheckinPrompt from './DailyQuickCheckinPrompt';
 import TabBar from './TabBar';
 
 /**
@@ -10,7 +11,13 @@ import TabBar from './TabBar';
  * tijdens het scrollen in- of uitklapt (100vh/100dvh-gevoeligheid).
  * "Steun" zit als tab in de tab bar en is daardoor app-breed bereikbaar.
  */
-export default function AppShell() {
+export default function AppShell({
+  dailyCheckinOpen = false,
+  onDailyCheckinOpenChange
+}: {
+  dailyCheckinOpen?: boolean;
+  onDailyCheckinOpenChange?: (open: boolean) => void;
+}) {
   const mainRef = useRef<HTMLElement>(null);
   const lastHeadingRef = useRef<HTMLHeadingElement | null>(null);
   const { pathname } = useLocation();
@@ -71,6 +78,8 @@ export default function AppShell() {
     <div className="app-shell fixed inset-0 mx-auto flex w-full max-w-5xl flex-col bg-mist">
       <main
         ref={mainRef}
+        inert={dailyCheckinOpen ? true : undefined}
+        aria-hidden={dailyCheckinOpen ? true : undefined}
         className="app-main min-h-0 flex-1 overflow-y-auto overscroll-y-contain pt-[env(safe-area-inset-top)]"
       >
         <Suspense
@@ -83,10 +92,22 @@ export default function AppShell() {
           <Outlet />
         </Suspense>
       </main>
-      <p className="sr-only" aria-live="polite" aria-atomic="true">
+      <p
+        className="sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+        aria-hidden={dailyCheckinOpen ? true : undefined}
+      >
         {routeAnnouncement}
       </p>
-      <TabBar />
+      <DailyQuickCheckinPrompt onOpenChange={onDailyCheckinOpenChange} />
+      <div
+        inert={dailyCheckinOpen ? true : undefined}
+        aria-hidden={dailyCheckinOpen ? true : undefined}
+        className="contents"
+      >
+        <TabBar />
+      </div>
     </div>
   );
 }

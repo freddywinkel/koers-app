@@ -409,10 +409,10 @@ export default function Profiel() {
       <section className="card" aria-label="Snelle check-in vanaf je beginscherm">
         <h2 className="card-title">Snelle check-in vanaf je beginscherm</h2>
         <p className="sub mt-1.5">
-          Koers is ingesteld om vanaf het bestaande app-icoon direct de korte check-in te openen. Kies een pan, schrijf
-          eventueel een zin en sla op. Je ziet dezelfde check-in daarna ook bij Vandaag.
+          Koers toont bij de eerste opening van de dag automatisch de korte check-in. Na opslaan ga je direct naar
+          Vandaag. Hier kun je de check-in altijd handmatig openen.
         </p>
-        <Link to="/check-in" className="btn-primary mt-3 w-full">
+        <Link to="/check-in?manual=1" className="btn-primary mt-3 w-full">
           Open snelle check-in
         </Link>
         <div className="mt-3 rounded-2xl bg-dune p-4">

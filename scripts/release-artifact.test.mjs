@@ -92,8 +92,11 @@ test('de daadwerkelijke productie-bundle bevat de snelle check-inroute en gebrui
   const bundle = (await Promise.all(scripts.map((entry) => readDist(`assets/${entry}`)))).join('\n');
 
   assert.match(bundle, /\/check-in/);
+  assert.match(bundle, /\/check-in\?manual=1/);
   assert.match(bundle, /Snelle check-in/);
+  assert.match(bundle, /Dagelijkse check-in/);
   assert.match(bundle, /Opslaan in Koers/);
+  assert.match(bundle, /koers-daily-checkin-prompt-day/);
   assert.match(bundle, /w01-l03/);
 });
 

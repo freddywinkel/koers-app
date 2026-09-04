@@ -30,6 +30,8 @@ const MANUAL_TRANSLATIONS: Readonly<Record<string, string>> = {
   'Snelle check-in wordt klaargelegd…': 'Preparing your quick check-in…',
   'Kies je pan en schrijf eventueel één zin. Dit wordt direct bij Vandaag opgeslagen.':
     'Choose your pressure-cooker level and optionally write one sentence. It is saved directly to Today.',
+  'Eén rustig moment om te voelen hoe het nu met je gaat.':
+    'One calm moment to notice how you are feeling right now.',
   Sluiten: 'Close',
   'Bezig met opslaan…': 'Saving…',
   'Opslaan in Koers': 'Save in Koers',
@@ -40,8 +42,8 @@ const MANUAL_TRANSLATIONS: Readonly<Record<string, string>> = {
   'Je check-in van vandaag staat al klaar. Opslaan werkt diezelfde check-in bij.':
     "Today's check-in is already here. Saving will update that same check-in.",
   'Snelle check-in vanaf je beginscherm': 'Quick check-in from your Home Screen',
-  'Koers is ingesteld om vanaf het bestaande app-icoon direct de korte check-in te openen. Kies een pan, schrijf eventueel een zin en sla op. Je ziet dezelfde check-in daarna ook bij Vandaag.':
-    'Koers is set to open the short check-in directly from the existing app icon. Choose a level, optionally write one sentence and save. You will see the same check-in in Today.',
+  'Koers toont bij de eerste opening van de dag automatisch de korte check-in. Na opslaan ga je direct naar Vandaag. Hier kun je de check-in altijd handmatig openen.':
+    'Koers automatically shows the quick check-in the first time you open the app each day. After saving, you go straight to Today. You can always open the check-in manually here.',
   'Open snelle check-in': 'Open quick check-in',
   'Waarom geen apart iPhone-widget?': 'Why is there no separate iPhone widget?',
   'Een PWA-widget of Safari-snelkoppeling kan niet betrouwbaar bij de lokale gegevens van de geïnstalleerde Koers-app. Gebruik daarom je bestaande Koers-icoon en installeer geen tweede kopie; zo blijven je pan en notitie samen in één lokale app.':

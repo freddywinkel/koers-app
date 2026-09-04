@@ -65,13 +65,13 @@ async function runNotificationClick({ requestedUrl, existingClientUrl }) {
 
 test('een geldige notificatie opent de check-in binnen dezelfde Pages-scope', async () => {
   const result = await runNotificationClick({
-    requestedUrl: 'https://example.test/koers-app/#/check-in',
+    requestedUrl: 'https://example.test/koers-app/#/check-in?manual=1',
     existingClientUrl: null
   });
 
   assert.deepEqual(result, {
     closed: true,
-    openedUrl: 'https://example.test/koers-app/#/check-in',
+    openedUrl: 'https://example.test/koers-app/#/check-in?manual=1',
     navigatedUrl: null,
     focused: false
   });
@@ -83,17 +83,26 @@ test('een externe of gelijkende URL kan nooit buiten de Koers-scope openen', asy
     'https://example.test/koers-app-evil/#/check-in'
   ]) {
     const result = await runNotificationClick({ requestedUrl, existingClientUrl: null });
-    assert.equal(result.openedUrl, 'https://example.test/koers-app/#/check-in');
+    assert.equal(result.openedUrl, 'https://example.test/koers-app/#/check-in?manual=1');
   }
 });
 
 test('een bestaande Koers-client wordt veilig naar de check-in gestuurd en gefocust', async () => {
   const result = await runNotificationClick({
-    requestedUrl: 'https://example.test/koers-app/#/check-in',
+    requestedUrl: 'https://example.test/koers-app/#/check-in?manual=1',
     existingClientUrl: 'https://example.test/koers-app/#/cursus'
   });
 
   assert.equal(result.openedUrl, null);
-  assert.equal(result.navigatedUrl, 'https://example.test/koers-app/#/check-in');
+  assert.equal(result.navigatedUrl, 'https://example.test/koers-app/#/check-in?manual=1');
   assert.equal(result.focused, true);
+});
+
+test('een oudere notificatielink wordt als bewuste handmatige check-in geopend', async () => {
+  const result = await runNotificationClick({
+    requestedUrl: 'https://example.test/koers-app/#/check-in',
+    existingClientUrl: null
+  });
+
+  assert.equal(result.openedUrl, 'https://example.test/koers-app/#/check-in?manual=1');
 });
