@@ -5,7 +5,7 @@ import vm from 'node:vm';
 
 const handlerSource = await readFile(new URL('../public/notification-handler.js', import.meta.url), 'utf8');
 
-async function runNotificationClick({ requestedUrl, existingClientUrl }) {
+async function runNotificationClick({ requestedUrl, existingClientUrl, navigationFails = false }) {
   let clickHandler;
   let openedUrl = null;
   let navigatedUrl = null;
@@ -17,8 +17,10 @@ async function runNotificationClick({ requestedUrl, existingClientUrl }) {
     ? {
         url: existingClientUrl,
         async navigate(url) {
+          if (navigationFails) throw new Error('Client closed');
           navigatedUrl = url;
           this.url = url;
+          return this;
         },
         async focus() {
           focused = true;
@@ -104,5 +106,14 @@ test('een oudere notificatielink wordt als bewuste handmatige check-in geopend',
     existingClientUrl: null
   });
 
+  assert.equal(result.openedUrl, 'https://example.test/koers-app/#/check-in?manual=1');
+});
+
+test('een verdwijnende client verliest de notificatieklik niet', async () => {
+  const result = await runNotificationClick({
+    requestedUrl: 'https://example.test/koers-app/#/check-in?manual=1',
+    existingClientUrl: 'https://example.test/koers-app/#/cursus',
+    navigationFails: true
+  });
   assert.equal(result.openedUrl, 'https://example.test/koers-app/#/check-in?manual=1');
 });

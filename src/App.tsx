@@ -41,8 +41,8 @@ function RouteLoader() {
 }
 
 /** Vang onverwachte render-/opslagfouten op met een bruikbare herstelroute. */
-export class AppErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
-  state = { failed: false };
+export class AppErrorBoundary extends Component<{ children: ReactNode; initiallyFailed?: boolean }, { failed: boolean }> {
+  state = { failed: this.props.initiallyFailed ?? false };
 
   static getDerivedStateFromError(): { failed: boolean } {
     return { failed: true };

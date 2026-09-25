@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 import { skills } from '../content/skills';
 import { audioSessions } from '../content/audio';
+import { getLanguage } from '../i18n';
 
 /** Klein icoon-tje voor de link-kaarten (eucatint tegel, stroke currentColor). */
 function CardIcon({ children }: { children: ReactNode }) {
@@ -64,8 +65,10 @@ export default function Oefenen() {
           </span>
           <span className="min-w-0 flex-1">
             <span className="block text-[15px] font-bold text-ink">Mindfulness met echte stemmen</span>
-            <span className="sub mt-0.5 block">
-              Luister via Spotify naar Marjolein van der Aar van Mindful Minuut.
+            <span className="sub mt-0.5 block" data-no-translate>
+              {getLanguage() === 'en'
+                ? 'Listen to Victoria Mlynko from Meditations for Mental Health on Spotify.'
+                : 'Luister via Spotify naar Marjolein van der Aar van Mindful Minuut.'}
             </span>
           </span>
           <Chevron />

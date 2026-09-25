@@ -30,6 +30,7 @@ export default function Les() {
   const allWeeksOpen = useAllWeeksOpen();
   const navigate = useNavigate();
   const [completing, setCompleting] = useState(false);
+  const [saveError, setSaveError] = useState(false);
 
   if (!lesson) return <NotFound />;
   if (doneLessonIds === undefined) {
@@ -87,6 +88,7 @@ export default function Les() {
   const completeLesson = async () => {
     if (completing) return;
     setCompleting(true);
+    setSaveError(false);
     try {
       await markLessonDone(lesson.id);
       const completed = new Set(doneLessonIds);
@@ -97,6 +99,8 @@ export default function Les() {
       } else {
         navigate(`/cursus/week/${lesson.weekId}`, { state: { weekComplete } });
       }
+    } catch {
+      setSaveError(true);
     } finally {
       setCompleting(false);
     }
@@ -249,6 +253,7 @@ export default function Les() {
       )}
 
       {/* Afronden */}
+      {saveError && <p className="sub" role="alert">Opslaan lukte niet. Probeer het opnieuw.</p>}
       {isDone ? (
         <div className="flex flex-col gap-2.5">
           <p className="card flex items-center gap-2 text-[15px] font-bold text-ink">

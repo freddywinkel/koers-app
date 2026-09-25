@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "vite",
     "typecheck": "tsc --noEmit",
-    "test:product": "node --test scripts/product-regression.test.mjs scripts/notification-handler.test.mjs && node --import tsx --test scripts/product-behavior.test.ts scripts/audio-integrity.test.ts scripts/metaphor-content.test.tsx scripts/theory-content.test.ts",
+    "test:product": "node --test scripts/product-regression.test.mjs scripts/notification-handler.test.mjs scripts/reminders-behavior.test.mjs && node --import tsx --test scripts/product-behavior.test.ts scripts/pin-behavior.test.ts scripts/i18n-behavior.test.ts scripts/storage-audit.test.ts scripts/flow-behavior.test.ts scripts/pwa-updates.test.ts scripts/audio-integrity.test.ts scripts/metaphor-content.test.tsx scripts/theory-content.test.ts",
     "test:artifact": "node --test scripts/release-artifact.test.mjs",
     "build": "npm run typecheck && vite build",
     "build:pages": "npm run typecheck && npm run test:product && vite build --mode gh-pages && npm run test:artifact",
@@ -35,7 +35,7 @@
     "autoprefixer": "^10.5.4",
     "fake-indexeddb": "^6.2.5",
     "ffmpeg-static": "^5.2.0",
-    "postcss": "^8.5.22",
+    "postcss": "^8.5.24",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.20.6",
     "typescript": "~5.6.3",
@@ -44,6 +44,6 @@
   },
   "overrides": {
     "@trickfilm400/rollup-plugin-off-main-thread": "4.0.0-pre2",
-    "brace-expansion": "5.0.8"
+    "brace-expansion": "5.0.9"
   }
 }

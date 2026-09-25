@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { getLocale } from '../i18n';
+import { activateWaitingWorker } from '../lib/pwaUpdates';
 
 const buildLabel = new Date(__BUILD_TIME__).toLocaleString(getLocale(), {
   day: 'numeric',
@@ -58,18 +59,17 @@ export default function VersionCard() {
         setResult('fout');
         return;
       }
-      await reg.update();
+      // De wachtende versie staat al lokaal klaar, ook wanneer we offline zijn.
+      if (!reg.waiting) await reg.update();
       if (reg.installing && !(await waitUntilInstalled(reg.installing))) {
         setResult('fout');
         return;
       }
       const waitingWorker = await waitForWaitingWorker(reg);
       if (waitingWorker) {
-        navigator.serviceWorker.addEventListener('controllerchange', () => window.location.reload(), {
-          once: true
-        });
-        waitingWorker.postMessage({ type: 'SKIP_WAITING' });
-        return; // herladen volgt via controllerchange
+        await activateWaitingWorker(waitingWorker);
+        window.location.reload();
+        return;
       }
       setResult('geen');
     } catch {

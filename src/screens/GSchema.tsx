@@ -7,6 +7,7 @@ import {
   clearGSchemaDraft,
   formatGSchemaDate,
   loadGSchemaDraft,
+  mergeLoadedGSchemaDraft,
   saveGSchema,
   saveGSchemaDraft,
   useGSchemas,
@@ -36,6 +37,8 @@ export default function GSchema() {
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
   const [draftReady, setDraftReady] = useState(false);
+  const [draftLoadError, setDraftLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
   const [draftStatus, setDraftStatus] = useState<'idle' | 'restored' | 'pending' | 'saved' | 'error'>('idle');
   const fieldsRef = useRef(fields);
   const percentagesRef = useRef(percentages);
@@ -69,22 +72,31 @@ export default function GSchema() {
   // Herstel een eerder concept, maar overschrijf nooit invoer die tijdens het laden is begonnen.
   useEffect(() => {
     let alive = true;
+    setDraftLoadError(false);
     void loadGSchemaDraft().then((draft) => {
       if (!alive) return;
-      if (draft && revisionRef.current === 0) {
-        fieldsRef.current = draft.fields;
-        percentagesRef.current = draft.percentages;
-        setFields(draft.fields);
-        setPercentages(draft.percentages);
+      if (draft) {
+        // Keep edits made during hydration, while restoring every untouched
+        // field from the older draft instead of discarding that whole draft.
+        const { fields: restoredFields, percentages: restoredPercentages } = mergeLoadedGSchemaDraft(
+          draft, fieldsRef.current, percentagesRef.current
+        );
+        fieldsRef.current = restoredFields;
+        percentagesRef.current = restoredPercentages;
+        setFields(restoredFields);
+        setPercentages(restoredPercentages);
+        cacheGSchemaDraftForRecovery(restoredFields, restoredPercentages);
         setDraftStatus('restored');
       }
       draftReadyRef.current = true;
       setDraftReady(true);
+    }).catch(() => {
+      if (alive) setDraftLoadError(true);
     });
     return () => {
       alive = false;
     };
-  }, []);
+  }, [loadAttempt]);
 
   const persistDraft = useCallback((nextFields: Record<string, string>, nextPercentages: Record<string, number>, revision: number) => {
     const hasDraft =
@@ -223,6 +235,13 @@ export default function GSchema() {
           ← Terug naar Steun
         </Link>
       </header>
+
+      {draftLoadError && (
+        <div className="card">
+          <p className="sub" role="alert">Laden lukte niet. Probeer het opnieuw.</p>
+          <button type="button" className="btn-secondary mt-3" onClick={() => setLoadAttempt((attempt) => attempt + 1)}>Probeer opnieuw</button>
+        </div>
+      )}
 
       {/* Deel 1 */}
       <section className="card" aria-label="Deel 1 · Wat er gebeurde">
@@ -394,7 +413,7 @@ function GSchemaRecord({ row }: { row: GSchemaRow }) {
           <p className="text-[12px] font-bold uppercase tracking-wide text-ink-soft">
             {formatGSchemaDate(row.createdAt)}
           </p>
-          <p className="mt-0.5 truncate text-[14.5px] font-bold text-ink">{samenvatting}</p>
+          <p className="mt-0.5 truncate text-[14.5px] font-bold text-ink" data-no-translate>{samenvatting}</p>
         </div>
         <svg
           width="16"
@@ -420,7 +439,7 @@ function GSchemaRecord({ row }: { row: GSchemaRow }) {
             return (
               <div key={veld.key}>
                 <p className="text-[13px] font-extrabold text-ink">{veld.title}</p>
-                <p className="mt-0.5 whitespace-pre-wrap text-[13.5px] leading-body text-ink">
+                <p className="mt-0.5 whitespace-pre-wrap text-[13.5px] leading-body text-ink" data-no-translate>
                   {row.fields[veld.key]}
                 </p>
                 {pct !== undefined && (

@@ -82,9 +82,12 @@ export class GuidedAudioPlayer {
     const supported = audioSupported();
     this.onChange = onChange;
     this.state = { status: 'idle', currentTime: 0, duration: 0, supported };
-    this.audio = supported ? new Audio(audioUrl(session)) : null;
+    this.audio = supported ? new Audio() : null;
 
     if (this.audio) {
+      // Een CORS-request kan door de service worker uit de volledige offline
+      // download worden beantwoord; dit geldt ook voor dezelfde origin.
+      this.audio.crossOrigin = 'anonymous';
       this.audio.preload = 'metadata';
       this.audio.addEventListener('loadedmetadata', this.onLoadedMetadata);
       this.audio.addEventListener('durationchange', this.onLoadedMetadata);
@@ -93,6 +96,7 @@ export class GuidedAudioPlayer {
       this.audio.addEventListener('pause', this.onPause);
       this.audio.addEventListener('ended', this.onEnded);
       this.audio.addEventListener('error', this.onError);
+      this.audio.src = audioUrl(session);
     }
   }
 

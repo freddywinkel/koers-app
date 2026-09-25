@@ -36,12 +36,15 @@ export default function FlashcardDeck() {
   // null = laden; [] = niets aan de beurt
   const [queue, setQueue] = useState<Flashcard[] | null>(null);
   const [nextDue, setNextDue] = useState<number | null>(null);
+  const [loadError, setLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
 
   useEffect(() => {
     if (doneLessonIds === undefined) return;
     let alive = true;
     setQueue(null);
     setNextDue(null);
+    setLoadError(false);
     void (async () => {
       const ids = await getDueFlashcards(eligibleIds);
       if (!alive) return;
@@ -51,11 +54,11 @@ export default function FlashcardDeck() {
         setNextDue(nd);
       }
       setQueue(getFlashcards(ids));
-    })();
+    })().catch(() => { if (alive) setLoadError(true); });
     return () => {
       alive = false;
     };
-  }, [doneLessonIds, eligibleIds]);
+  }, [doneLessonIds, eligibleIds, loadAttempt]);
 
   return (
     <div className="screen-stack">
@@ -72,7 +75,12 @@ export default function FlashcardDeck() {
         <span className="eyebrow !text-ink-soft">Flashcards · herhaling</span>
       </div>
 
-      {queue === null ? (
+      {loadError ? (
+        <div className="card">
+          <p className="sub" role="alert">Laden lukte niet. Probeer het opnieuw.</p>
+          <button type="button" className="btn-secondary mt-3" onClick={() => setLoadAttempt((attempt) => attempt + 1)}>Probeer opnieuw</button>
+        </div>
+      ) : queue === null ? (
         <p className="card sub" role="status">
           De kaarten worden klaargelegd…
         </p>
@@ -117,6 +125,7 @@ function Deck({ initial }: { initial: Flashcard[] }) {
   const [unresolved, setUnresolved] = useState<Set<string>>(() => new Set(initial.map((c) => c.id)));
   const [flipped, setFlipped] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [saveError, setSaveError] = useState(false);
 
   const total = initial.length;
   const doneCount = total - unresolved.size;
@@ -125,6 +134,7 @@ function Deck({ initial }: { initial: Flashcard[] }) {
   async function onGrade(grade: Grade) {
     if (!card || busy) return;
     setBusy(true);
+    setSaveError(false);
     try {
       await gradeCard(card.id, grade);
       setQueue((q) => {
@@ -139,6 +149,8 @@ function Deck({ initial }: { initial: Flashcard[] }) {
         });
       }
       setFlipped(false);
+    } catch {
+      setSaveError(true);
     } finally {
       setBusy(false);
     }
@@ -227,6 +239,7 @@ function Deck({ initial }: { initial: Flashcard[] }) {
       </div>
 
       {/* Beoordeling — pas zichtbaar als het antwoord om ligt */}
+      {saveError && <p className="sub" role="alert">Opslaan lukte niet. Probeer het opnieuw.</p>}
       {flipped ? (
         <div className="grid grid-cols-2 gap-2.5" role="group" aria-label="Hoe ging het?">
           {GRADE_ORDER.map((grade) => (

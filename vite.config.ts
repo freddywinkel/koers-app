@@ -54,6 +54,10 @@ export default defineConfig(({ mode }) => ({
             handler: 'CacheFirst',
             options: {
               cacheName: 'koers-audio',
+              // Een mobiele audiospeler vraagt vaak byte-ranges. Geef die uit
+              // de volledige offline download terug, ook tijdens doorspoelen.
+              rangeRequests: true,
+              cacheableResponse: { statuses: [200] },
               expiration: { maxEntries: 40, maxAgeSeconds: 60 * 60 * 24 * 90 }
             }
           }

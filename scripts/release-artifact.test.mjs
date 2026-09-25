@@ -139,6 +139,13 @@ test('service worker en notificatiehandler verwijzen naar de verse app-shell en 
   assert.doesNotMatch(handler, /fallbackUrl\s*=\s*`\$\{self\.registration\.scope\}#\/`/);
 });
 
+test('offline audio gebruikt byte-ranges uit volledige geslaagde downloads', async () => {
+  const worker = await readDist('sw.js');
+  assert.match(worker, /RangeRequestsPlugin/);
+  assert.match(worker, /CacheableResponsePlugin\(\{statuses:\[200\]\}\)/);
+  assert.match(worker, /cacheName:"koers-audio"/);
+});
+
 test('alle essentiële iconen zijn niet-leeg in het release-artifact', async () => {
   const expectedIcons = [
     { icon: 'icon-192.png', size: 192, colorType: 6 },

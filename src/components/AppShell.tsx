@@ -19,7 +19,6 @@ export default function AppShell({
   onDailyCheckinOpenChange?: (open: boolean) => void;
 }) {
   const mainRef = useRef<HTMLElement>(null);
-  const lastHeadingRef = useRef<HTMLHeadingElement | null>(null);
   const { pathname } = useLocation();
   const [routeAnnouncement, setRouteAnnouncement] = useState('');
 
@@ -36,11 +35,10 @@ export default function AppShell({
     const announceHeading = (): boolean => {
       const heading = main.querySelector<HTMLHeadingElement>('h1');
       const title = heading?.textContent?.trim();
-      // Een lazy route kan het vorige scherm kort zichtbaar houden. Kondig
-      // pas een nieuwe h1-node aan, anders blijft titel/focus op de oude route.
-      if (!heading || !title || heading === lastHeadingRef.current) return false;
+      // The pathname-keyed boundary below guarantees this belongs to the
+      // current route, including consecutive lessons sharing one component.
+      if (!heading || !title) return false;
       observer?.disconnect();
-      lastHeadingRef.current = heading;
       if (fallbackTimer !== undefined) {
         window.clearTimeout(fallbackTimer);
         fallbackTimer = undefined;
@@ -83,6 +81,7 @@ export default function AppShell({
         className="app-main min-h-0 flex-1 overflow-y-auto overscroll-y-contain pt-[env(safe-area-inset-top)]"
       >
         <Suspense
+          key={pathname}
           fallback={
             <div className="screen-stack" role="status" aria-live="polite">
               <p className="card sub">Pagina wordt klaargelegd…</p>
