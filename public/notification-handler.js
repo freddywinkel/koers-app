@@ -25,8 +25,15 @@ self.addEventListener('notificationclick', (event) => {
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(async (windowClients) => {
       const sameScopeClient = windowClients.find((client) => isInsideScope(client.url));
       if (sameScopeClient) {
-        if ('navigate' in sameScopeClient) await sameScopeClient.navigate(targetUrl);
-        return sameScopeClient.focus();
+        try {
+          if ('navigate' in sameScopeClient) {
+            const navigatedClient = await sameScopeClient.navigate(targetUrl);
+            if (navigatedClient) return await navigatedClient.focus();
+          }
+        } catch {
+          // Een tab kan tussen matchAll en navigate zijn gesloten. Open dan
+          // alsnog de check-in in plaats van de klik verloren te laten gaan.
+        }
       }
       return self.clients.openWindow(targetUrl);
     })

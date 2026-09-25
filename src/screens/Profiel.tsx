@@ -24,7 +24,7 @@ import { PinLockScreen, PinSetup } from '../components/PinLock';
 import { isIOS, isStandalone, promptInstall, useCanInstall } from '../lib/install';
 import VersionCard from '../components/VersionCard';
 import DesignPicker from '../components/DesignPicker';
-import { getLanguage, storeLanguage, type AppLanguage } from '../i18n';
+import { getLanguage, type AppLanguage } from '../i18n';
 
 type ThemeChoice = 'systeem' | 'licht' | 'donker';
 type StorageStatus = 'checking' | 'persistent' | 'best-effort' | 'unsupported';
@@ -39,11 +39,28 @@ const HASH_RE = /^[a-f0-9]{64}$/;
 
 /** Profiel: voortgang, instellingen, installatie-info en databeheer. */
 export default function Profiel() {
-  const { get, set } = useSettings();
+  const { ready, get, set: persistSetting } = useSettings();
   const done = useDoneLessonIds();
   const streak = useStreak();
   const checkinCount = useLiveQuery(() => db.checkins.count(), []);
   const [deleted, setDeleted] = useState(false);
+  const [settingsError, setSettingsError] = useState('');
+  const savedName = get('naam');
+  const [name, setName] = useState(savedName);
+  useEffect(() => {
+    if (ready) setName(savedName);
+  }, [ready, savedName]);
+
+  async function saveProfileSetting(key: string, value: string): Promise<boolean> {
+    setSettingsError('');
+    try {
+      await persistSetting(key, value);
+      return true;
+    } catch {
+      setSettingsError('Opslaan lukte niet. Je invoer blijft staan; probeer het nog een keer.');
+      return false;
+    }
+  }
 
   const theme = (get('theme', 'systeem') || 'systeem') as ThemeChoice;
   const language = (get('language', getLanguage()) || 'nl') as AppLanguage;
@@ -53,9 +70,7 @@ export default function Profiel() {
 
   async function handleLanguageChange(nextLanguage: AppLanguage) {
     if (nextLanguage === language) return;
-    storeLanguage(nextLanguage);
-    await set('language', nextLanguage);
-    window.location.reload();
+    if (await saveProfileSetting('language', nextLanguage)) window.location.reload();
   }
 
   /* ---------------------------- Herinneringen ---------------------------- */
@@ -80,7 +95,7 @@ export default function Profiel() {
   async function handleRemovePin() {
     const ok = window.confirm('Pincode verwijderen? De app is daarna niet meer vergrendeld.');
     if (!ok) return;
-    await set(PIN_HASH_KEY, '');
+    await saveProfileSetting(PIN_HASH_KEY, '');
   }
 
   /* ------------------------------- Installeren ---------------------------- */
@@ -103,6 +118,10 @@ export default function Profiel() {
   const [pendingImport, setPendingImport] = useState<{ name: string; json: string } | null>(null);
   const [importFeedback, setImportFeedback] = useState<ImportFeedback | null>(null);
   const [importBusy, setImportBusy] = useState(false);
+  const [exportBusy, setExportBusy] = useState(false);
+  const [deleteBusy, setDeleteBusy] = useState(false);
+  const [dataError, setDataError] = useState('');
+  const dataBusy = importBusy || exportBusy || deleteBusy;
 
   useEffect(() => {
     let active = true;
@@ -136,15 +155,33 @@ export default function Profiel() {
   }
 
   async function handleExport() {
-    const json = await exportAllData();
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `koers-export-${new Date().toISOString().slice(0, 10)}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-    setExportMsg('De export is gedownload. Bewaar het bestand op een plek die alleen jij kunt openen.');
+    if (dataBusy) return;
+    setExportBusy(true);
+    setExportMsg('');
+    setDataError('');
+    let url: string | undefined;
+    let anchor: HTMLAnchorElement | undefined;
+    try {
+      const json = await exportAllData();
+      const blob = new Blob([json], { type: 'application/json' });
+      url = URL.createObjectURL(blob);
+      anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = `koers-export-${new Date().toISOString().slice(0, 10)}.json`;
+      document.body.appendChild(anchor);
+      anchor.click();
+      setExportMsg('De download is gestart. Controleer of het bestand is opgeslagen en bewaar het op een plek die alleen jij kunt openen.');
+    } catch {
+      setDataError('Exporteren lukte niet. Je gegevens zijn niet gewijzigd. Probeer het opnieuw.');
+    } finally {
+      anchor?.remove();
+      // Give Safari time to consume the download before releasing its URL.
+      if (url) {
+        const downloadUrl = url;
+        window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 60_000);
+      }
+      setExportBusy(false);
+    }
   }
 
   async function handleImportFile(event: ChangeEvent<HTMLInputElement>) {
@@ -165,7 +202,7 @@ export default function Profiel() {
   }
 
   async function handleImport(mode: ImportMode) {
-    if (!pendingImport || importBusy) return;
+    if (!pendingImport || dataBusy) return;
     const confirmed = window.confirm(
       mode === 'replace'
         ? 'Huidige gegevens vervangen? Alle lokale Koers-gegevens worden eerst gewist en daarna uit dit bestand teruggezet. Gegevens die niet in de export staan gaan definitief verloren. Doorgaan?'
@@ -175,6 +212,9 @@ export default function Profiel() {
 
     setImportBusy(true);
     setImportFeedback(null);
+    setDataError('');
+    setExportMsg('');
+    const runningLanguage = getLanguage();
     try {
       const summary = await importAllData(pendingImport.json, mode);
       const action = mode === 'replace' ? 'teruggezet' : 'samengevoegd';
@@ -184,6 +224,9 @@ export default function Profiel() {
       });
       setPendingImport(null);
       setDeleted(false);
+      // The translation observer and dictionary are installed once at startup.
+      // Rebuild the UI when a restored preference changes that running language.
+      if (summary.language !== runningLanguage) window.location.reload();
     } catch (error) {
       setImportFeedback({
         kind: 'error',
@@ -195,12 +238,27 @@ export default function Profiel() {
   }
 
   async function handleDelete() {
+    if (dataBusy) return;
     const ok = window.confirm(
       'Weet je het zeker? Al je gegevens (check-ins, voortgang, notities) worden van dit apparaat verwijderd. Dit kun je niet ongedaan maken.'
     );
     if (!ok) return;
-    await clearAllData();
-    setDeleted(true);
+    setDeleteBusy(true);
+    setDeleted(false);
+    setDataError('');
+    const runningLanguage = getLanguage();
+    try {
+      await clearAllData();
+      setPendingImport(null);
+      setImportFeedback(null);
+      setExportMsg('');
+      setDeleted(true);
+      if (runningLanguage !== 'nl') window.location.reload();
+    } catch {
+      setDataError('Verwijderen lukte niet. Je gegevens zijn behouden. Probeer het opnieuw.');
+    } finally {
+      setDeleteBusy(false);
+    }
   }
 
   return (
@@ -209,6 +267,7 @@ export default function Profiel() {
         <p className="eyebrow">Profiel</p>
         <h1 className="mt-1.5 font-display text-[29px] font-semibold leading-[1.16] tracking-[-0.01em]">Over jou &amp; de app</h1>
       </header>
+      {settingsError && <p className="sub text-ap-deep" role="alert">{settingsError}</p>}
 
       {/* Voortgang */}
       <section className="card" aria-label="Voortgang">
@@ -242,8 +301,10 @@ export default function Profiel() {
             type="text"
             maxLength={30}
             placeholder="Je naam of roepnaam"
-            defaultValue={get('naam')}
-            onBlur={(e) => void set('naam', e.target.value.trim())}
+            value={name}
+            disabled={!ready}
+            onChange={(event) => setName(event.target.value)}
+            onBlur={(event) => void saveProfileSetting('naam', event.target.value.trim())}
           />
         </label>
       </section>
@@ -301,7 +362,7 @@ export default function Profiel() {
                   name="kleurmodus"
                   value={t.value}
                   checked={active}
-                  onChange={() => void set('theme', t.value)}
+                  onChange={() => void saveProfileSetting('theme', t.value)}
                 />
                 {t.label}
               </label>
@@ -323,8 +384,8 @@ export default function Profiel() {
                 type="time"
                 value={get('herinnering-tijd', '19:00')}
                 onChange={(e) => {
-                  void set('herinnering-tijd', e.target.value).then(() => {
-                    window.dispatchEvent(new Event(REMINDER_SETTINGS_EVENT));
+                  void saveProfileSetting('herinnering-tijd', e.target.value).then((saved) => {
+                    if (saved) window.dispatchEvent(new Event(REMINDER_SETTINGS_EVENT));
                   });
                 }}
               />
@@ -371,8 +432,7 @@ export default function Profiel() {
             <div className="min-w-0">
               <p className="text-sm font-extrabold text-ink">App-vergrendeling (pincode)</p>
               <p className="sub">
-                Extra privacy voor gedeelde telefoons. Een pincode houdt mensen die meekijken tegen, maar versleutelt je gegevens
-                niet volledig.
+                Extra privacy voor gedeelde telefoons. Een pincode houdt mensen die meekijken tegen, maar versleutelt je gegevens niet.
               </p>
             </div>
             {hasPin && <span className="chip border border-euca-deep/30 bg-eucatint flex-none text-euca-deep">Actief</span>}
@@ -409,8 +469,8 @@ export default function Profiel() {
       <section className="card" aria-label="Snelle check-in vanaf je beginscherm">
         <h2 className="card-title">Snelle check-in vanaf je beginscherm</h2>
         <p className="sub mt-1.5">
-          Koers toont bij de eerste opening van de dag automatisch de korte check-in. Na opslaan ga je direct naar
-          Vandaag. Hier kun je de check-in altijd handmatig openen.
+          Koers toont bij de eerste opening van de dag automatisch de korte check-in. Na opslaan sluit de pop-up.
+          De handmatige check-in brengt je terug naar Vandaag. Hier kun je de check-in altijd handmatig openen.
         </p>
         <Link to="/check-in?manual=1" className="btn-primary mt-3 w-full">
           Open snelle check-in
@@ -513,7 +573,7 @@ export default function Profiel() {
           <p className="sub mt-3">Deze browser kan geen extra opslagbescherming bevestigen. Maak daarom geregeld een export.</p>
         )}
         {storageMsg && <p className="sub mt-2" role="status">{storageMsg}</p>}
-        <button type="button" className="btn-secondary mt-3.5 w-full" onClick={() => void handleExport()}>
+        <button type="button" className="btn-secondary mt-3.5 w-full" disabled={dataBusy} onClick={() => void handleExport()}>
           Exporteer alles als JSON-bestand
         </button>
         {exportMsg && <p className="sub mt-2" role="status">{exportMsg}</p>}
@@ -524,13 +584,13 @@ export default function Profiel() {
             type="file"
             accept="application/json,.json"
             onChange={(event) => void handleImportFile(event)}
-            disabled={importBusy}
+            disabled={dataBusy}
           />
         </label>
         {pendingImport && (
           <div className="mt-3 rounded-2xl bg-dune p-4">
             <p className="text-sm font-extrabold text-ink">Gekozen bestand</p>
-            <p className="sub mt-1 break-all">{pendingImport.name}</p>
+            <p className="sub mt-1 break-all" data-no-translate>{pendingImport.name}</p>
             <p className="sub mt-2">
               Samenvoegen houdt je huidige gegevens; vervangen wist ze eerst. Koers accepteert alleen gevalideerde
               exports met bekende gegevenstabellen. Je huidige app-pincode blijft bij beide keuzes behouden.
@@ -539,7 +599,7 @@ export default function Profiel() {
               <button
                 type="button"
                 className="btn-secondary w-full"
-                disabled={importBusy}
+                disabled={dataBusy}
                 onClick={() => void handleImport('merge')}
               >
                 {importBusy ? 'Bezig…' : 'Samenvoegen'}
@@ -547,7 +607,7 @@ export default function Profiel() {
               <button
                 type="button"
                 className="flex min-h-[44px] w-full items-center justify-center rounded-2xl bg-apricot-soft px-4 py-2.5 text-sm font-extrabold text-ap-deep disabled:opacity-60"
-                disabled={importBusy}
+                disabled={dataBusy}
                 onClick={() => void handleImport('replace')}
               >
                 {importBusy ? 'Bezig…' : 'Alles vervangen'}
@@ -566,10 +626,12 @@ export default function Profiel() {
         <button
           type="button"
           className="mt-2.5 flex min-h-[44px] w-full items-center justify-center rounded-2xl bg-apricot-soft px-4 py-2.5 text-sm font-extrabold text-ap-deep"
+          disabled={dataBusy}
           onClick={() => void handleDelete()}
         >
           Verwijder alle gegevens
         </button>
+        {dataError && <p className="mt-2 text-[13.5px] font-semibold text-ap-deep" role="alert">{dataError}</p>}
         {deleted && <p className="sub mt-2" role="status">Je gegevens zijn verwijderd. Je begint met een schone lei — helemaal oké.</p>}
       </section>
 

@@ -16,6 +16,8 @@ export default function Onboarding() {
   const { set } = useSettings();
   const [index, setIndex] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [saveError, setSaveError] = useState(false);
+  const savingRef = useRef(false);
   const touchStartX = useRef<number | null>(null);
 
   const total = onboarding.length;
@@ -23,10 +25,19 @@ export default function Onboarding() {
   const isLast = index === total - 1;
 
   async function finish() {
-    if (busy) return;
+    if (savingRef.current) return;
+    savingRef.current = true;
     setBusy(true);
-    await set('onboarding-done', 'ja');
-    navigate('/', { replace: true });
+    setSaveError(false);
+    try {
+      await set('onboarding-done', 'ja');
+      navigate('/', { replace: true });
+    } catch {
+      setSaveError(true);
+    } finally {
+      savingRef.current = false;
+      setBusy(false);
+    }
   }
 
   function goTo(next: number) {
@@ -42,6 +53,7 @@ export default function Onboarding() {
             type="button"
             className="sub min-h-[44px] px-2 font-bold underline underline-offset-2"
             onClick={() => void finish()}
+            disabled={busy}
           >
             Overslaan
           </button>
@@ -95,6 +107,7 @@ export default function Onboarding() {
         ))}
       </div>
 
+      {saveError && <p className="sub mb-3" role="alert">Opslaan lukte niet. Probeer het opnieuw.</p>}
       {isLast ? (
         <button type="button" className="btn-primary" disabled={busy} onClick={() => void finish()}>
           Start de cursus

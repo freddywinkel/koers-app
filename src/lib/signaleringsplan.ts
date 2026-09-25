@@ -1,7 +1,7 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, type SignaleringsplanRow } from '../db/db';
 import { EHP_SECTIONS, type EhpFieldDef, type EhpSectionDef } from './ehp';
-import { translate } from '../i18n';
+import { getLocale, translate } from '../i18n';
 
 /**
  * Signaleringsplan — datahooks boven op `db.signaleringsplannen`
@@ -34,7 +34,7 @@ export type { EhpFieldDef as SignaleringsplanFieldDef, EhpSectionDef as Signaler
 export function useSignaleringsplannen(): SignaleringsplanRow[] | undefined {
   return useLiveQuery(async () => {
     const rows = await db.signaleringsplannen.toArray();
-    return rows.sort((a, b) => b.createdAt - a.createdAt);
+    return rows.sort((a, b) => b.createdAt - a.createdAt || (b.id ?? 0) - (a.id ?? 0));
   }, []);
 }
 
@@ -53,20 +53,23 @@ export function useHuidigSignaleringsplan(): SignaleringsplanRow | null | undefi
  * Zo kan de editor altijd meteen opslaan, ook bij de allereerste keer.
  */
 export async function ensureHuidigSignaleringsplan(): Promise<number> {
-  const rows = await db.signaleringsplannen.orderBy('createdAt').reverse().limit(1).toArray();
-  if (rows.length > 0 && rows[0].id !== undefined) return rows[0].id;
-  return startNieuwSignaleringsplan();
+  return db.transaction('rw', db.signaleringsplannen, async () => {
+    const rows = await db.signaleringsplannen.orderBy('createdAt').reverse().limit(1).toArray();
+    if (rows.length > 0 && rows[0].id !== undefined) return rows[0].id;
+    return startNieuwSignaleringsplan();
+  });
 }
 
 /** Sla één veld op in een bestaand plan (en werk updatedAt bij). */
 export async function saveSignaleringsplanVeld(planId: number, key: string, content: string): Promise<void> {
-  await db.signaleringsplannen
+  const updated = await db.signaleringsplannen
     .where('id')
     .equals(planId)
     .modify((plan) => {
       plan.fields = { ...plan.fields, [key]: content };
       plan.updatedAt = Date.now();
     });
+  if (updated === 0) throw new Error('Dit signaleringsplan is niet meer beschikbaar.');
 }
 
 /**
@@ -97,6 +100,5 @@ export function countFilledPlanSections(fields: Record<string, string> | undefin
 
 /** Datumnotatie voor records, bv. "12 mei 2026". */
 export function formatRecordDate(ts: number): string {
-  const locale = localStorage.getItem('koers-language') === 'en' ? 'en-GB' : 'nl-NL';
-  return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(ts));
+  return new Intl.DateTimeFormat(getLocale(), { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(ts));
 }

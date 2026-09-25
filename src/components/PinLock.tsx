@@ -19,12 +19,12 @@ import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type Reac
 import SafetyContacts from './SafetyContacts';
 import { clearAllData, useSettings } from '../db/hooks';
 import {
-  hashPin,
+  clearSessionUnlock,
   isSessionUnlocked,
   isValidPin,
   markSessionUnlocked,
   PIN_HASH_KEY,
-  PIN_SESSION_KEY,
+  savePin,
   verifyPin
 } from '../lib/pin';
 
@@ -103,6 +103,7 @@ function PinPad({
 function usePinEntry(onComplete: (pin: string) => void | Promise<void>) {
   const [pin, setPin] = useState('');
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(false);
   const pinRef = useRef('');
   const busyRef = useRef(false);
   const timerRef = useRef<number | null>(null);
@@ -122,8 +123,13 @@ function usePinEntry(onComplete: (pin: string) => void | Promise<void>) {
       clearTimer();
       busyRef.current = true;
       setBusy(true);
+      setError(false);
       try {
         await onCompleteRef.current(candidate);
+      } catch {
+        setError(true);
+        pinRef.current = '';
+        setPin('');
       } finally {
         busyRef.current = false;
         setBusy(false);
@@ -168,7 +174,7 @@ function usePinEntry(onComplete: (pin: string) => void | Promise<void>) {
 
   useEffect(() => () => clearTimer(), [clearTimer]);
 
-  return { pin, busy, add, remove, reset, submit };
+  return { pin, busy, error, add, remove, reset, submit };
 }
 
 type PinEntry = ReturnType<typeof usePinEntry>;
@@ -238,7 +244,7 @@ export function PinLockScreen({ expectedHash, onUnlocked, onCancel, demo = false
 
   const entry = usePinEntry(async (pin) => {
     if (await verifyPin(pin, expectedHash)) {
-      if (!demo) markSessionUnlocked();
+      if (!demo) markSessionUnlocked(expectedHash);
       onUnlocked();
     } else {
       setWrong(true);
@@ -267,11 +273,7 @@ export function PinLockScreen({ expectedHash, onUnlocked, onCancel, demo = false
     setRecoveryError(false);
     try {
       await clearAllData();
-      try {
-        sessionStorage.removeItem(PIN_SESSION_KEY);
-      } catch {
-        // De database is al gewist; een niet-beschikbare sessieopslag is niet blokkerend.
-      }
+      clearSessionUnlock();
       onUnlocked();
     } catch {
       setRecoveryError(true);
@@ -316,6 +318,8 @@ export function PinLockScreen({ expectedHash, onUnlocked, onCancel, demo = false
           <div className="mt-2 min-h-[28px] text-center" aria-live="polite">
             {entry.busy ? (
               <p className="text-xs font-bold text-ink-soft">Pincode controleren…</p>
+            ) : entry.error ? (
+              <p className="text-xs font-bold text-ap-deep" role="alert">Pincode controleren lukte niet. Probeer het opnieuw.</p>
             ) : wrong ? (
               <p className="inline-block rounded-full bg-apricot-soft px-3 py-1 text-xs font-extrabold text-ap-deep">
                 Dat klopt niet helemaal — probeer het rustig opnieuw.
@@ -417,14 +421,14 @@ export function PinLockScreen({ expectedHash, onUnlocked, onCancel, demo = false
 /** App-gate: wrap om de app (zie integratie-instructie bovenaan). */
 export function PinGate({ children }: { children: ReactNode }) {
   const { ready, get } = useSettings();
-  const [unlockedNow, setUnlockedNow] = useState(false);
+  const [unlockedNow, setUnlockedNow] = useState('');
 
   if (!ready) return null; // settings laden nog: toon niets (voorkomt flits van content)
   const hash = get(PIN_HASH_KEY);
-  const locked = isValidHash(hash) && !isSessionUnlocked() && !unlockedNow;
+  const locked = isValidHash(hash) && !isSessionUnlocked(hash) && unlockedNow !== hash;
 
   if (locked) {
-    return <PinLockScreen expectedHash={hash} onUnlocked={() => setUnlockedNow(true)} />;
+    return <PinLockScreen key={hash} expectedHash={hash} onUnlocked={() => setUnlockedNow(hash)} />;
   }
   return <>{children}</>;
 }
@@ -457,12 +461,7 @@ export function PinSetup({ onSaved, onCancel }: PinSetupProps) {
       return;
     }
     if (pin === first) {
-      const pinHash = await hashPin(pin);
-      // Zet de sessievlag vóór Dexie de nieuwe instelling publiceert. Anders
-      // kan PinGate precies tussen de database-write en deze vlag renderen en
-      // de gebruiker direct na het instellen onbedoeld vergrendelen.
-      markSessionUnlocked();
-      await set(PIN_HASH_KEY, pinHash);
+      await savePin(pin, (pinHash) => set(PIN_HASH_KEY, pinHash));
       onSaved();
     } else {
       setMismatch(true);
@@ -501,6 +500,8 @@ export function PinSetup({ onSaved, onCancel }: PinSetupProps) {
           <p className="inline-block rounded-full bg-eucatint px-3 py-1 text-xs font-extrabold text-euca-deep">
             Pincode bewaren…
           </p>
+        ) : entry.error ? (
+          <p className="text-xs font-bold text-ap-deep" role="alert">Pincode bewaren lukte niet. Probeer het opnieuw.</p>
         ) : mismatch ? (
           <p className="inline-block rounded-full bg-apricot-soft px-3 py-1 text-xs font-extrabold text-ap-deep">
             Die twee waren niet hetzelfde — we beginnen gewoon opnieuw.

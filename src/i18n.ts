@@ -8,7 +8,41 @@ export const LANGUAGE_STORAGE_KEY = 'koers-language';
 const TRANSLATABLE_ATTRIBUTES = ['aria-label', 'aria-description', 'placeholder', 'title', 'alt'] as const;
 const SKIP_TEXT_WITHIN = 'script, style, textarea, [contenteditable="true"], [data-no-translate]';
 let englishTranslations: Readonly<Record<string, string>> = {};
+let runtimeLanguage: AppLanguage | undefined;
 const MANUAL_TRANSLATIONS: Readonly<Record<string, string>> = {
+  "Een G-schema helpt je een moeilijke gedachte rustig onder de loep te nemen, stap voor stap. Je oude schema's blijven bewaard, zodat je altijd kunt terugkijken.":
+    'A thought record helps you examine a difficult thought calmly, step by step. Your earlier records are saved so you can look back at them.',
+  'G-schema opslaan': 'Save thought record',
+  "Eerdere G-schema's": 'Previous thought records',
+  "Nog geen G-schema's — je eerste vind je hier straks terug.": 'No thought records yet. Your first one will appear here.',
+  'Je G-schema wordt opgeslagen. Je kunt intussen veilig doorgaan met typen.': 'Your thought record is being saved. You can keep typing while it saves.',
+  "✓ Opgeslagen — je vindt het hieronder terug bij je eerdere G-schema's.": '✓ Saved — you can find it below with your earlier thought records.',
+  'Pan 1: Rustig': 'Pan 1: Calm',
+  'Pan 2: Rimpelt': 'Pan 2: Rippling',
+  'Kleine rimpels horen erbij. Hier vang je ze vroeg op.': 'Small ripples are normal. This is where you notice them early.',
+  'We sturen alleen een neutrale melding: “Tijd voor je dagelijkse check-in”. Niks over hoe jij je voelt — er verschijnt nooit iets gevoeligs op je scherm.':
+    'We only send a neutral notification: “Time for your daily check-in”. It says nothing about how you feel and shows no sensitive information.',
+  'Extra privacy voor gedeelde telefoons. Een pincode houdt mensen die meekijken tegen, maar versleutelt je gegevens niet.':
+    'Extra privacy on shared phones. A PIN helps prevent casual viewing, but does not encrypt your data.',
+  van: 'of',
+  'Open deze vaardigheid': 'Open this skill',
+  'Bijwerken lukte niet. Probeer het later opnieuw.': 'Updating failed. Please try again later.',
+  'Koers toont bij de eerste opening van de dag automatisch de korte check-in. Na opslaan sluit de pop-up. De handmatige check-in brengt je terug naar Vandaag. Hier kun je de check-in altijd handmatig openen.':
+    'Koers automatically shows the quick check-in the first time you open the app each day. After saving, the pop-up closes. The manual check-in returns you to Today. You can always open the check-in manually here.',
+  'De download is gestart. Controleer of het bestand is opgeslagen en bewaar het op een plek die alleen jij kunt openen.':
+    'The download has started. Check that the file was saved and keep it somewhere only you can access.',
+  'Exporteren lukte niet. Je gegevens zijn niet gewijzigd. Probeer het opnieuw.':
+    'Export failed. Your data has not changed. Please try again.',
+  'Verwijderen lukte niet. Je gegevens zijn behouden. Probeer het opnieuw.':
+    'Deletion failed. Your data has been kept. Please try again.',
+  'Opslaan lukte niet. Probeer het opnieuw.': 'Saving failed. Please try again.',
+  'Laden lukte niet. Probeer het opnieuw.': 'Loading failed. Please try again.',
+  'Je tekst is nog niet opgeslagen. Probeer opnieuw voordat je deze pagina verlaat.':
+    'Your text has not been saved yet. Try again before leaving this page.',
+  'Je plan kon niet worden geopend. Probeer het opnieuw.': 'Your plan could not be opened. Please try again.',
+  'Een nieuw plan starten lukte niet. Je huidige plan blijft staan.': 'Starting a new plan failed. Your current plan is still here.',
+  'Pincode controleren lukte niet. Probeer het opnieuw.': 'Checking your PIN failed. Please try again.',
+  'Pincode bewaren lukte niet. Probeer het opnieuw.': 'Saving your PIN failed. Please try again.',
   Instellingen: 'Settings',
   Oefenen: 'Practice',
   Oefening: 'Exercise',
@@ -95,6 +129,7 @@ function normalize(value: string): string {
 }
 
 export function getLanguage(): AppLanguage {
+  if (runtimeLanguage) return runtimeLanguage;
   try {
     return localStorage.getItem(LANGUAGE_STORAGE_KEY) === 'en' ? 'en' : 'nl';
   } catch {
@@ -107,6 +142,7 @@ export function getLocale(): 'nl-NL' | 'en-GB' {
 }
 
 export function storeLanguage(language: AppLanguage): void {
+  runtimeLanguage = language;
   try {
     localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
   } catch {
@@ -181,6 +217,7 @@ function translateTextNode(node: Text): void {
 }
 
 function translateElement(element: Element): void {
+  if (element.closest('[data-no-translate]')) return;
   for (const attribute of TRANSLATABLE_ATTRIBUTES) {
     const source = element.getAttribute(attribute);
     if (!source) continue;

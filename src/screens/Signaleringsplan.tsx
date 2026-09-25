@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ChangeEvent } from 'react';
 import { Link } from 'react-router';
 import type { SignaleringsplanRow } from '../db/db';
+import { createQueuedAutosave, type AutosaveStatus } from '../lib/queuedAutosave';
 import {
   SIGNALERINGSPLAN_SECTIONS,
   ensureHuidigSignaleringsplan,
@@ -28,18 +29,27 @@ export default function Signaleringsplan() {
   const plan = useHuidigSignaleringsplan();
   const plannen = useSignaleringsplannen();
 
-  // Het plan-id wordt één keer bij mount opgehaald (en een leeg plan
-  // aangemaakt als er nog geen is), zodat de editor altijd kan opslaan.
-  const [planId, setPlanId] = useState<number | null>(null);
+  const [loadError, setLoadError] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const [creating, setCreating] = useState(false);
+  const creatingRef = useRef(false);
+  const [createError, setCreateError] = useState(false);
+  const pendingFields = useRef(new Map<string, () => Promise<void>>());
+  const registerFlush = useCallback((key: string, flush: (() => Promise<void>) | null) => {
+    if (flush) pendingFields.current.set(key, flush);
+    else pendingFields.current.delete(key);
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
-    void ensureHuidigSignaleringsplan().then((id) => {
-      if (!cancelled) setPlanId(id);
+    setLoadError(false);
+    void ensureHuidigSignaleringsplan().catch(() => {
+      if (!cancelled) setLoadError(true);
     });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [loadAttempt]);
 
   const [savedTick, setSavedTick] = useState(0);
   const [showSaved, setShowSaved] = useState(false);
@@ -52,21 +62,32 @@ export default function Signaleringsplan() {
   }, [savedTick]);
 
   const handleSave = useCallback(
-    async (key: string, content: string) => {
-      if (planId === null) return;
-      await saveSignaleringsplanVeld(planId, key, content);
+    async (id: number, key: string, content: string) => {
+      await saveSignaleringsplanVeld(id, key, content);
       setSavedTick((t) => t + 1);
     },
-    [planId]
+    []
   );
 
   async function handleNieuwPlan() {
+    if (creatingRef.current || !plan) return;
     const ok = window.confirm(
       'Je start een nieuw, leeg signaleringsplan. Je huidige plan blijft bewaard bij de eerdere plannen hieronder — er gaat niets verloren.'
     );
     if (!ok) return;
-    const id = await startNieuwSignaleringsplan();
-    setPlanId(id);
+    creatingRef.current = true;
+    setCreating(true);
+    setCreateError(false);
+    try {
+      // A new editor is opened only after every change to the old plan is saved.
+      await Promise.all([...pendingFields.current.values()].map((flush) => flush()));
+      await startNieuwSignaleringsplan();
+    } catch {
+      setCreateError(true);
+    } finally {
+      creatingRef.current = false;
+      setCreating(false);
+    }
   }
 
   const ouderePlannen = plannen && plannen.length > 1 ? plannen.slice(1) : [];
@@ -93,8 +114,15 @@ export default function Signaleringsplan() {
 
       {/* Huidig plan — editor */}
       <h2 className="card-title px-1">Huidig signaleringsplan</h2>
-      {plan && planId !== null ? (
-        <PlanEditor key={plan.id} plan={plan} showSaved={showSaved} onSave={handleSave} />
+      {plan && plan.id !== undefined ? (
+        <fieldset disabled={creating} className="min-w-0">
+          <PlanEditor key={plan.id} plan={plan} showSaved={showSaved} onSave={handleSave} registerFlush={registerFlush} />
+        </fieldset>
+      ) : loadError ? (
+        <div className="card">
+          <p className="sub" role="alert">Je plan kon niet worden geopend. Probeer het opnieuw.</p>
+          <button type="button" className="btn-secondary mt-3" onClick={() => setLoadAttempt((attempt) => attempt + 1)}>Probeer opnieuw</button>
+        </div>
       ) : (
         <p className="sub px-1" aria-live="polite">
           Je plan wordt geladen …
@@ -102,9 +130,10 @@ export default function Signaleringsplan() {
       )}
 
       {/* Nieuw plan starten */}
-      <button type="button" className="btn-secondary w-full" onClick={() => void handleNieuwPlan()}>
+      <button type="button" className="btn-secondary w-full" disabled={creating || !plan} onClick={() => void handleNieuwPlan()}>
         Nieuw signaleringsplan starten
       </button>
+      {createError && <p className="sub" role="alert">Een nieuw plan starten lukte niet. Je huidige plan blijft staan.</p>}
 
       {/* Records: eerdere plannen */}
       <section className="flex flex-col gap-3" aria-label="Eerdere signaleringsplannen">
@@ -131,10 +160,13 @@ export default function Signaleringsplan() {
 interface PlanEditorProps {
   plan: SignaleringsplanRow;
   showSaved: boolean;
-  onSave: (key: string, content: string) => Promise<void>;
+  onSave: (id: number, key: string, content: string) => Promise<void>;
+  registerFlush: (key: string, flush: (() => Promise<void>) | null) => void;
 }
 
-function PlanEditor({ plan, showSaved, onSave }: PlanEditorProps) {
+function PlanEditor({ plan, showSaved, onSave, registerFlush }: PlanEditorProps) {
+  // Bind writes to this editor's plan, including its final unmount flush.
+  const saveField = useCallback((key: string, content: string) => onSave(plan.id!, key, content), [onSave, plan.id]);
   return (
     <div className="flex flex-col gap-3">
       <p className="px-1 text-[12.5px] font-semibold text-ink-soft" aria-live="polite">
@@ -143,7 +175,7 @@ function PlanEditor({ plan, showSaved, onSave }: PlanEditorProps) {
           : 'Je antwoorden worden automatisch opgeslagen, alleen op dit apparaat.'}
       </p>
       {SIGNALERINGSPLAN_SECTIONS.map((def) => (
-        <PlanSectieKaart key={def.key} def={def} fields={plan.fields} onSave={onSave} />
+        <PlanSectieKaart key={def.key} def={def} fields={plan.fields} onSave={saveField} registerFlush={registerFlush} />
       ))}
     </div>
   );
@@ -155,9 +187,10 @@ interface PlanSectieKaartProps {
   def: SignaleringsplanSectionDef;
   fields: Record<string, string> | undefined;
   onSave: (key: string, content: string) => Promise<void>;
+  registerFlush: PlanEditorProps['registerFlush'];
 }
 
-function PlanSectieKaart({ def, fields, onSave }: PlanSectieKaartProps) {
+function PlanSectieKaart({ def, fields, onSave, registerFlush }: PlanSectieKaartProps) {
   // Pan-kaarten krijgen hun pannummer als badge, 'Professionele hulp' een plus.
   const badge = def.key.startsWith('pan') ? def.key.replace('pan', '') : '✚';
 
@@ -177,7 +210,7 @@ function PlanSectieKaart({ def, fields, onSave }: PlanSectieKaartProps) {
       </div>
       <div className="mt-3 flex flex-col gap-4">
         {def.fields.map((field) => (
-          <PlanVeldEditor key={field.key} field={field} initial={planVeldContent(field, fields)} onSave={onSave} />
+          <PlanVeldEditor key={field.key} field={field} initial={planVeldContent(field, fields)} onSave={onSave} registerFlush={registerFlush} />
         ))}
       </div>
     </section>
@@ -191,12 +224,17 @@ interface PlanVeldEditorProps {
   /** Beginwaarde (opgeslagen tekst, of de prefill). Latere live-updates worden genegeerd. */
   initial: string;
   onSave: (key: string, content: string) => Promise<void>;
+  registerFlush: PlanEditorProps['registerFlush'];
 }
 
-function PlanVeldEditor({ field, initial, onSave }: PlanVeldEditorProps) {
+function PlanVeldEditor({ field, initial, onSave, registerFlush }: PlanVeldEditorProps) {
   const [value, setValue] = useState(initial);
-  const dirty = useRef(false);
-  const latest = useRef(initial);
+  const [status, setStatus] = useState<AutosaveStatus>('idle');
+  const mounted = useRef(true);
+  const [autosave] = useState(() => createQueuedAutosave(
+    (content: string) => onSave(field.key, content),
+    (nextStatus) => { if (mounted.current) setStatus(nextStatus); }
+  ));
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const flush = useCallback(() => {
@@ -204,27 +242,32 @@ function PlanVeldEditor({ field, initial, onSave }: PlanVeldEditorProps) {
       clearTimeout(timer.current);
       timer.current = null;
     }
-    if (dirty.current) {
-      dirty.current = false;
-      void onSave(field.key, latest.current);
-    }
-  }, [field.key, onSave]);
-
-  const flushRef = useRef(flush);
-  flushRef.current = flush;
+    return autosave.flush();
+  }, [autosave]);
 
   // Ook bij unmount (bv. routewissel of een nieuw plan) nog netjes opslaan.
   useEffect(() => {
-    return () => flushRef.current();
-  }, []);
+    mounted.current = true;
+    registerFlush(field.key, flush);
+    const safelyFlush = () => { void flush().catch(() => undefined); };
+    const onVisibility = () => { if (document.visibilityState === 'hidden') safelyFlush(); };
+    window.addEventListener('pagehide', safelyFlush);
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => {
+      mounted.current = false;
+      registerFlush(field.key, null);
+      window.removeEventListener('pagehide', safelyFlush);
+      document.removeEventListener('visibilitychange', onVisibility);
+      safelyFlush();
+    };
+  }, [field.key, flush, registerFlush]);
 
   function handleChange(e: ChangeEvent<HTMLTextAreaElement>) {
     const next = e.target.value;
-    latest.current = next;
-    dirty.current = true;
+    autosave.change(next);
     setValue(next);
     if (timer.current) clearTimeout(timer.current);
-    timer.current = setTimeout(() => flushRef.current(), 700);
+    timer.current = setTimeout(() => { void flush().catch(() => undefined); }, 700);
   }
 
   const fieldId = `signaleringsplan-${field.key}`;
@@ -241,8 +284,14 @@ function PlanVeldEditor({ field, initial, onSave }: PlanVeldEditorProps) {
         placeholder={field.placeholder}
         value={value}
         onChange={handleChange}
-        onBlur={flush}
+        onBlur={() => { void flush().catch(() => undefined); }}
       />
+      {status === 'error' && (
+        <div className="mt-2">
+          <p className="sub" role="alert">Je tekst is nog niet opgeslagen. Probeer opnieuw voordat je deze pagina verlaat.</p>
+          <button type="button" className="btn-secondary mt-2" onClick={() => { void flush().catch(() => undefined); }}>Probeer opnieuw</button>
+        </div>
+      )}
     </div>
   );
 }
@@ -315,7 +364,7 @@ function OudPlanSectie({
         {ingevuld.map(({ field, content }) => (
           <div key={field.key}>
             <p className="text-[13px] font-bold text-euca-deep">{field.prompt}</p>
-            <p className="sub mt-1 whitespace-pre-wrap">{content}</p>
+            <p className="sub mt-1 whitespace-pre-wrap" data-no-translate>{content}</p>
           </div>
         ))}
       </div>

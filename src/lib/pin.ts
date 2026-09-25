@@ -16,6 +16,7 @@ export const PIN_HASH_KEY = 'pin-hash';
 
 /** sessionStorage key: pincode is deze sessie al een keer goed ingevoerd. */
 export const PIN_SESSION_KEY = 'vv-pin-ok';
+let unlockedHash = '';
 
 /** Exact 4 cijfers. */
 export function isValidPin(pin: string): boolean {
@@ -38,18 +39,44 @@ export async function verifyPin(pin: string, storedHash: string): Promise<boolea
 }
 
 /** Markeer deze sessie als ontgrendeld (overleeft SPA-navigatie en reload, niet een nieuwe sessie). */
-export function markSessionUnlocked(): void {
+export function markSessionUnlocked(hash: string): void {
+  if (!/^[a-f0-9]{64}$/.test(hash)) return;
+  unlockedHash = hash;
   try {
-    sessionStorage.setItem(PIN_SESSION_KEY, '1');
+    sessionStorage.setItem(PIN_SESSION_KEY, hash);
   } catch {
     // private mode zonder storage: dan blijft de gate per-mount werken
   }
 }
 
-export function isSessionUnlocked(): boolean {
+export function isSessionUnlocked(hash: string): boolean {
+  if (!/^[a-f0-9]{64}$/.test(hash)) return false;
+  if (unlockedHash === hash) return true;
   try {
-    return sessionStorage.getItem(PIN_SESSION_KEY) === '1';
+    return sessionStorage.getItem(PIN_SESSION_KEY) === hash;
   } catch {
     return false;
+  }
+}
+
+export function clearSessionUnlock(): void {
+  unlockedHash = '';
+  try {
+    sessionStorage.removeItem(PIN_SESSION_KEY);
+  } catch {
+    // The in-memory session also works when browser storage is unavailable.
+  }
+}
+
+/** Publish the unlock before reactive settings update, but undo it on a failed save. */
+export async function savePin(pin: string, writeHash: (hash: string) => Promise<void>): Promise<void> {
+  if (!isValidPin(pin)) throw new Error('Kies precies vier cijfers.');
+  const hash = await hashPin(pin);
+  markSessionUnlocked(hash);
+  try {
+    await writeHash(hash);
+  } catch (error) {
+    clearSessionUnlock();
+    throw error;
   }
 }

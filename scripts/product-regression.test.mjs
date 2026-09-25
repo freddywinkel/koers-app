@@ -107,7 +107,8 @@ test('toetsenbordfocus en bewegingsvoorkeur hebben een globaal vangnet', async (
   assert.match(css, /prefers-reduced-motion:\s*reduce/);
   assert.match(shell, /<Suspense/);
   assert.match(shell, /querySelector<HTMLHeadingElement>\('h1'\)/);
-  assert.match(shell, /heading === lastHeadingRef\.current/);
+  assert.match(shell, /<Suspense\s+key=\{pathname\}/);
+  assert.doesNotMatch(shell, /heading === lastHeadingRef\.current/);
   assert.match(shell, /document\.title/);
   assert.match(updatePrompt, /role="alertdialog"/);
   assert.match(updatePrompt, /registration\.waiting\) setNeedRefresh\(true\)/);
@@ -168,9 +169,7 @@ test('deep-link terugknoppen blijven binnen de app', async () => {
 
 test('een nieuwe pincode vergrendelt de huidige sessie niet tussentijds', async () => {
   const pinLock = await read('src/components/PinLock.tsx');
-  const sessionIndex = pinLock.indexOf('markSessionUnlocked();', pinLock.indexOf('const pinHash = await hashPin(pin)'));
-  const writeIndex = pinLock.indexOf('await set(PIN_HASH_KEY, pinHash);', sessionIndex);
-  assert.ok(sessionIndex >= 0 && writeIndex > sessionIndex);
+  assert.match(pinLock, /await savePin\(pin, \(pinHash\) => set\(PIN_HASH_KEY, pinHash\)\)/);
 });
 
 test('de volledige Engelse taalstand blijft offline en het profiel is duidelijk zichtbaar', async () => {

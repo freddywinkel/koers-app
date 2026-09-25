@@ -132,7 +132,7 @@ export default function Vandaag() {
             {naam && (
               <>
                 <br />
-                {naam}
+                <span data-no-translate>{naam}</span>
               </>
             )}
           </h1>
@@ -253,7 +253,7 @@ export default function Vandaag() {
                   <span className="chip chip-warm">Pan {row.pan} · {PAN_LABELS[row.pan]}</span>
                 </div>
                 {row.note?.trim() && (
-                  <p className="mt-1.5 whitespace-pre-wrap text-sm leading-body text-ink">{row.note}</p>
+                  <p className="mt-1.5 whitespace-pre-wrap text-sm leading-body text-ink" data-no-translate>{row.note}</p>
                 )}
               </li>
             ))}

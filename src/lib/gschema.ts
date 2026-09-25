@@ -1,5 +1,6 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db, type GSchemaRow } from '../db/db';
+import { getLocale } from '../i18n';
 
 /**
  * G-schema (gedachtenschema) — velddefinities en datahooks
@@ -112,8 +113,20 @@ export interface GSchemaDraft {
   updatedAt: number;
 }
 
-const GSCHEMA_DRAFT_KEY = 'concept-gschema';
-const GSCHEMA_DRAFT_RECOVERY_KEY = 'koers-concept-gschema-recovery';
+/** Restore untouched fields without replacing edits made while loading. */
+export function mergeLoadedGSchemaDraft(
+  draft: GSchemaDraft,
+  editedFields: Record<string, string>,
+  editedPercentages: Record<string, number>
+): Pick<GSchemaDraft, 'fields' | 'percentages'> {
+  return {
+    fields: { ...draft.fields, ...editedFields },
+    percentages: { ...draft.percentages, ...editedPercentages }
+  };
+}
+
+export const GSCHEMA_DRAFT_KEY = 'concept-gschema';
+export const GSCHEMA_DRAFT_RECOVERY_KEY = 'koers-concept-gschema-recovery';
 
 function parseGSchemaDraft(value: string | null | undefined): GSchemaDraft | null {
   if (!value) return null;
@@ -156,13 +169,19 @@ export function cacheGSchemaDraftForRecovery(
 
 /** Lees een tussentijds opgeslagen concept; ongeldige oude data wordt genegeerd. */
 export async function loadGSchemaDraft(): Promise<GSchemaDraft | null> {
-  const row = await db.settings.get(GSCHEMA_DRAFT_KEY);
-  const indexedDraft = parseGSchemaDraft(row?.value);
   let recoveryDraft: GSchemaDraft | null = null;
   try {
     recoveryDraft = parseGSchemaDraft(localStorage.getItem(GSCHEMA_DRAFT_RECOVERY_KEY));
   } catch {
     // Alleen de IndexedDB-versie gebruiken als localStorage niet mag.
+  }
+  let indexedDraft: GSchemaDraft | null;
+  try {
+    const row = await db.settings.get(GSCHEMA_DRAFT_KEY);
+    indexedDraft = parseGSchemaDraft(row?.value);
+  } catch (error) {
+    if (recoveryDraft) return recoveryDraft;
+    throw error;
   }
   if (!indexedDraft) return recoveryDraft;
   if (!recoveryDraft) return indexedDraft;
@@ -190,6 +209,5 @@ export async function clearGSchemaDraft(): Promise<void> {
 
 /** Datumnotatie voor records, bv. "12 mei 2026". */
 export function formatGSchemaDate(ts: number): string {
-  const locale = localStorage.getItem('koers-language') === 'en' ? 'en-GB' : 'nl-NL';
-  return new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(ts));
+  return new Intl.DateTimeFormat(getLocale(), { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(ts));
 }

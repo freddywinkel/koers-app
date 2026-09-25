@@ -1,5 +1,6 @@
 import Dexie, { type Table } from 'dexie';
 import type { PanValue } from '../content/types';
+import { legacyEhpPlan } from './migrations';
 
 /**
  * Koers — local-first datalaag (Dexie / IndexedDB)
@@ -133,15 +134,8 @@ export class VVDatabase extends Dexie {
       })
       .upgrade(async (tx) => {
         const ehpRows = await tx.table('ehpSections').toArray();
-        const fields: Record<string, string> = {};
-        for (const row of ehpRows) {
-          if (typeof row?.key === 'string' && typeof row?.content === 'string' && row.content.trim() !== '') {
-            fields[row.key] = row.content;
-          }
-        }
-        if (Object.keys(fields).length === 0) return; // niets ingevuld → geen migratie nodig
-        const now = Date.now();
-        await tx.table('signaleringsplannen').add({ createdAt: now, updatedAt: now, fields });
+        const plan = legacyEhpPlan(ehpRows, Date.now());
+        if (plan) await tx.table('signaleringsplannen').add(plan);
       });
   }
 }

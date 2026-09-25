@@ -17,6 +17,9 @@ import type { PanValue } from '../content/types';
 import { isIOS, isStandalone } from '../lib/install';
 import { addLocalDays, startOfLocalDay } from '../lib/calendar';
 import { DAILY_CHECKIN_PROMPT_KEY } from '../lib/dailyCheckinPrompt';
+import { GSCHEMA_DRAFT_KEY, GSCHEMA_DRAFT_RECOVERY_KEY, loadGSchemaDraft } from '../lib/gschema';
+import { legacyEhpPlan } from './migrations';
+import { clearSessionUnlock } from '../lib/pin';
 
 /**
  * Koers — datahooks en helpers
@@ -160,20 +163,19 @@ export function useSettings() {
       const appearanceChanged =
         (key === 'theme' && (map.get(key) ?? 'systeem') !== value) ||
         (key === 'design' && (map.get(key) ?? 'noordzeemist') !== value);
-      if (key === 'theme' || key === 'design' || key === 'language') {
-        try {
-          localStorage.setItem(`koers-${key}`, value);
-        } catch {
-          // IndexedDB blijft de bron van waarheid als localStorage niet mag.
-        }
-      }
-      await db.settings.put({ key, value });
+      await saveSetting(key, value);
       // WebKit op iOS/iPadOS 26 ververst de PWA-statusbalk niet betrouwbaar
       // na een live kleurwissel. Eenmalig herladen laat de vroege head-script
       // de opgeslagen appkleur toepassen voordat iOS de bovenbalk vastlegt.
       if (appearanceChanged && isIOS() && isStandalone()) window.location.reload();
     }
   };
+}
+
+/** Update the startup cache only after the authoritative database write succeeds. */
+export async function saveSetting(key: string, value: string): Promise<void> {
+  await db.settings.put({ key, value });
+  syncAppearanceCache([{ key, value }], 'merge');
 }
 
 export type ThemeSetting = 'systeem' | 'licht' | 'donker';
@@ -247,6 +249,7 @@ export type ImportMode = 'merge' | 'replace';
 
 export interface ImportSummary {
   mode: ImportMode;
+  language: 'nl' | 'en';
   totalRows: number;
   exportedAt: string;
   tableCounts: Record<BackupTableName, number>;
@@ -278,8 +281,12 @@ function isFiniteNumber(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value);
 }
 
+function isTimestamp(value: unknown): value is number {
+  return isFiniteNumber(value) && value >= 0 && Number.isFinite(new Date(value).getTime());
+}
+
 function isOptionalId(value: unknown): boolean {
-  return value === undefined || (typeof value === 'number' && Number.isInteger(value) && value > 0);
+  return value === undefined || (typeof value === 'number' && Number.isSafeInteger(value) && value > 0);
 }
 
 function isOptionalString(value: unknown): boolean {
@@ -306,9 +313,7 @@ function isCheckinRow(value: unknown): value is CheckinRow {
   if (!isRecord(value) || !hasOnlyKeys(value, ['id', 'ts', 'pan', 'emotion', 'note'])) return false;
   return (
     isOptionalId(value.id) &&
-    isFiniteNumber(value.ts) &&
-    value.ts >= 0 &&
-    Number.isFinite(new Date(value.ts).getTime()) &&
+    isTimestamp(value.ts) &&
     [1, 2, 3, 4, 5].includes(value.pan as number) &&
     typeof value.emotion === 'string' &&
     isOptionalString(value.note)
@@ -321,7 +326,7 @@ function isLessonProgressRow(value: unknown): value is LessonProgressRow {
     typeof value.lessonId === 'string' &&
     value.lessonId.length > 0 &&
     (value.status === 'open' || value.status === 'done') &&
-    (value.completedAt === undefined || (isFiniteNumber(value.completedAt) && value.completedAt >= 0))
+    (value.completedAt === undefined || isTimestamp(value.completedAt))
   );
 }
 
@@ -330,8 +335,7 @@ function isFlashcardStateRow(value: unknown): value is FlashcardStateRow {
   return (
     typeof value.flashcardId === 'string' &&
     value.flashcardId.length > 0 &&
-    isFiniteNumber(value.due) &&
-    value.due >= 0 &&
+    isTimestamp(value.due) &&
     isFiniteNumber(value.interval) &&
     value.interval >= 0 &&
     isFiniteNumber(value.ease) &&
@@ -346,8 +350,7 @@ function isPracticeLogRow(value: unknown): value is PracticeLogRow {
   if (!isRecord(value) || !hasOnlyKeys(value, ['id', 'ts', 'skillId', 'note'])) return false;
   return (
     isOptionalId(value.id) &&
-    isFiniteNumber(value.ts) &&
-    value.ts >= 0 &&
+    isTimestamp(value.ts) &&
     typeof value.skillId === 'string' &&
     value.skillId.length > 0 &&
     isOptionalString(value.note)
@@ -375,8 +378,7 @@ function isMeasureResultRow(value: unknown): value is MeasureResultRow {
     isOptionalId(value.id) &&
     typeof value.instrument === 'string' &&
     value.instrument.length > 0 &&
-    isFiniteNumber(value.ts) &&
-    value.ts >= 0 &&
+    isTimestamp(value.ts) &&
     isFiniteNumber(value.score) &&
     Array.isArray(value.answers) &&
     value.answers.every(isFiniteNumber)
@@ -387,10 +389,8 @@ function isSignaleringsplanRow(value: unknown): value is SignaleringsplanRow {
   if (!isRecord(value) || !hasOnlyKeys(value, ['id', 'createdAt', 'updatedAt', 'fields'])) return false;
   return (
     isOptionalId(value.id) &&
-    isFiniteNumber(value.createdAt) &&
-    value.createdAt >= 0 &&
-    isFiniteNumber(value.updatedAt) &&
-    value.updatedAt >= 0 &&
+    isTimestamp(value.createdAt) &&
+    isTimestamp(value.updatedAt) &&
     isStringRecord(value.fields)
   );
 }
@@ -399,10 +399,8 @@ function isGSchemaRow(value: unknown): value is GSchemaRow {
   if (!isRecord(value) || !hasOnlyKeys(value, ['id', 'createdAt', 'updatedAt', 'fields', 'percentages'])) return false;
   return (
     isOptionalId(value.id) &&
-    isFiniteNumber(value.createdAt) &&
-    value.createdAt >= 0 &&
-    isFiniteNumber(value.updatedAt) &&
-    value.updatedAt >= 0 &&
+    isTimestamp(value.createdAt) &&
+    isTimestamp(value.updatedAt) &&
     isStringRecord(value.fields) &&
     isPercentageRecord(value.percentages)
   );
@@ -450,7 +448,7 @@ function validateBackup(json: string): ValidatedBackup {
   if (!isRecord(parsed)) throw new Error('Dit bestand is geen geldige Koers-export.');
   if (parsed.app !== 'koers') throw new Error('Dit bestand is niet door Koers gemaakt.');
   if (parsed.version !== BACKUP_VERSION) throw new Error('Deze versie van het exportbestand wordt niet ondersteund.');
-  if (typeof parsed.exportedAt !== 'string' || Number.isNaN(Date.parse(parsed.exportedAt))) {
+  if (typeof parsed.exportedAt !== 'string' || !isTimestamp(Date.parse(parsed.exportedAt))) {
     throw new Error('De exportdatum ontbreekt of is ongeldig.');
   }
 
@@ -484,7 +482,27 @@ function validateBackup(json: string): ValidatedBackup {
   assertUniqueKeys(backup.gSchemas, 'gSchemas', (row) => row.id);
   backup.settings = backup.settings.filter((setting) => !DEVICE_ONLY_SETTING_KEYS.has(setting.key));
 
+  // Importing an old export does not trigger a database schema upgrade again.
+  // Make its safety plan visible in the current records model as well.
+  if (!presentTables.has('signaleringsplannen')) {
+    const plan = legacyEhpPlan(backup.ehpSections, Date.parse(backup.exportedAt));
+    if (plan) {
+      backup.signaleringsplannen.push(plan);
+      presentTables.add('signaleringsplannen');
+    }
+  }
+
   return backup;
+}
+
+function syncDraftRecoveryCache(settings: SettingRow[], mode: ImportMode): void {
+  const draft = settings.find((setting) => setting.key === GSCHEMA_DRAFT_KEY);
+  try {
+    if (draft) localStorage.setItem(GSCHEMA_DRAFT_RECOVERY_KEY, draft.value);
+    else if (mode === 'replace') localStorage.removeItem(GSCHEMA_DRAFT_RECOVERY_KEY);
+  } catch {
+    // The committed IndexedDB record is still available without this cache.
+  }
 }
 
 function syncAppearanceCache(settings: SettingRow[], mode: ImportMode): void {
@@ -530,13 +548,24 @@ export async function exportAllData(): Promise<string> {
     app: 'koers',
     version: BACKUP_VERSION
   };
-  for (const table of db.tables) {
-    const rows = await table.toArray();
-    dump[table.name] =
-      table.name === 'settings'
-        ? rows.filter((row) => !DEVICE_ONLY_SETTING_KEYS.has((row as { key?: unknown }).key as string))
-        : rows;
-  }
+  await db.transaction('r', db.tables, async () => {
+    for (const table of db.tables) {
+      const rows = await table.toArray();
+      dump[table.name] =
+        table.name === 'settings'
+          ? rows.filter((row) => !DEVICE_ONLY_SETTING_KEYS.has((row as { key?: unknown }).key as string))
+          : rows;
+    }
+    // A just-typed draft may still only exist in its synchronous recovery journal.
+    const draft = await loadGSchemaDraft();
+    if (draft) {
+      const settings = dump.settings as SettingRow[];
+      dump.settings = [
+        ...settings.filter((setting) => setting.key !== GSCHEMA_DRAFT_KEY),
+        { key: GSCHEMA_DRAFT_KEY, value: JSON.stringify(draft) }
+      ];
+    }
+  });
   return JSON.stringify(dump, null, 2);
 }
 
@@ -549,11 +578,8 @@ export async function exportAllData(): Promise<string> {
 export async function importAllData(json: string, mode: ImportMode): Promise<ImportSummary> {
   if (mode !== 'merge' && mode !== 'replace') throw new Error('Onbekende importmodus.');
   const backup = validateBackup(json);
-  const deviceOnlySettings = (
-    await Promise.all([...DEVICE_ONLY_SETTING_KEYS].map((key) => db.settings.get(key)))
-  ).filter((row): row is SettingRow => row !== undefined);
 
-  await db.transaction(
+  const language = await db.transaction(
     'rw',
     [
       db.checkins,
@@ -567,6 +593,11 @@ export async function importAllData(json: string, mode: ImportMode): Promise<Imp
       db.gSchemas
     ],
     async () => {
+      // Read device settings inside the same transaction, so another tab cannot
+      // change the PIN between taking a copy and replacing the portable data.
+      const deviceOnlySettings = mode === 'replace'
+        ? (await db.settings.bulkGet([...DEVICE_ONLY_SETTING_KEYS])).filter((row): row is SettingRow => row !== undefined)
+        : [];
       if (mode === 'replace') {
         for (const table of db.tables) await table.clear();
       }
@@ -590,16 +621,19 @@ export async function importAllData(json: string, mode: ImportMode): Promise<Imp
       if (backup.presentTables.has('gSchemas')) {
         await importAutoIncrementRows(db.gSchemas, backup.gSchemas, mode);
       }
+      return (await db.settings.get('language'))?.value === 'en' ? 'en' as const : 'nl' as const;
     }
   );
 
   syncAppearanceCache(backup.settings, mode);
+  syncDraftRecoveryCache(backup.settings, mode);
   const tableCounts = Object.fromEntries(BACKUP_TABLES.map((name) => [name, backup[name].length])) as Record<
     BackupTableName,
     number
   >;
   return {
     mode,
+    language,
     tableCounts,
     totalRows: Object.values(tableCounts).reduce((total, count) => total + count, 0),
     exportedAt: backup.exportedAt
@@ -608,13 +642,16 @@ export async function importAllData(json: string, mode: ImportMode): Promise<Imp
 
 /** Wis álle lokale gegevens (na bevestiging op Profiel). */
 export async function clearAllData(): Promise<void> {
-  await Promise.all(db.tables.map((t) => t.clear()));
+  await db.transaction('rw', db.tables, async () => {
+    for (const table of db.tables) await table.clear();
+  });
+  clearSessionUnlock();
   try {
     localStorage.removeItem('koers-theme');
     localStorage.removeItem('koers-design');
     localStorage.removeItem('koers-language');
     localStorage.removeItem('koers-reminder-last-fired');
-    localStorage.removeItem('koers-concept-gschema-recovery');
+    localStorage.removeItem(GSCHEMA_DRAFT_RECOVERY_KEY);
   } catch {
     // Geen extra actie nodig als localStorage niet beschikbaar is.
   }

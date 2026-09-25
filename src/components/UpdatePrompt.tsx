@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRegisterSW } from 'virtual:pwa-register/react';
+import { activateWaitingWorker } from '../lib/pwaUpdates';
 
 /**
  * Koers — updatemelding (Noordzeemist bottom sheet).
@@ -14,6 +15,9 @@ export default function UpdatePrompt({ suppressed = false }: { suppressed?: bool
   const dialogRef = useRef<HTMLDivElement | null>(null);
   const primaryActionRef = useRef<HTMLButtonElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const [updating, setUpdating] = useState(false);
+  const updatingRef = useRef(false);
+  const [updateFailed, setUpdateFailed] = useState(false);
   const {
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker
@@ -25,6 +29,8 @@ export default function UpdatePrompt({ suppressed = false }: { suppressed?: bool
       // terugkeer in de app (visibility/focus) én elk uur.
       if (!registration) return;
       registrationRef.current = registration;
+      // Een eerder gedownloade update kan ook zonder netwerk worden toegepast.
+      if (registration.waiting) setNeedRefresh(true);
       void registration.update().then(
         () => {
           // Workbox vuurt bij een nieuwe mount niet in elke browser opnieuw
@@ -42,6 +48,7 @@ export default function UpdatePrompt({ suppressed = false }: { suppressed?: bool
     const check = async (): Promise<void> => {
       const registration = registrationRef.current;
       if (!registration) return;
+      if (registration.waiting) setNeedRefresh(true);
       try {
         await registration.update();
         // 'Later' verbergt alleen de kaart. De worker blijft wachten; toon hem
@@ -84,7 +91,7 @@ export default function UpdatePrompt({ suppressed = false }: { suppressed?: bool
       if (!dialog) return;
       if (event.key === 'Escape') {
         event.preventDefault();
-        setNeedRefresh(false);
+        if (!updatingRef.current) setNeedRefresh(false);
         return;
       }
       if (event.key !== 'Tab') return;
@@ -123,14 +130,25 @@ export default function UpdatePrompt({ suppressed = false }: { suppressed?: bool
   }, [needRefresh, setNeedRefresh, suppressed]);
 
   const activateUpdate = async (): Promise<void> => {
-    const waitingWorker = registrationRef.current?.waiting;
-    if (waitingWorker) {
-      navigator.serviceWorker.addEventListener('controllerchange', () => window.location.reload(), { once: true });
-      waitingWorker.postMessage({ type: 'SKIP_WAITING' });
-      return;
+    if (updatingRef.current) return;
+    updatingRef.current = true;
+    setUpdating(true);
+    setUpdateFailed(false);
+    try {
+      const waitingWorker = registrationRef.current?.waiting;
+      if (waitingWorker) {
+        await activateWaitingWorker(waitingWorker);
+        window.location.reload();
+        return;
+      }
+      // Normale Workbox-route voor een worker die tijdens deze mount gevonden is.
+      await updateServiceWorker(true);
+    } catch {
+      setUpdateFailed(true);
+    } finally {
+      updatingRef.current = false;
+      setUpdating(false);
     }
-    // Normale Workbox-route voor een worker die tijdens deze mount gevonden is.
-    await updateServiceWorker(true);
   };
 
   if (!needRefresh || suppressed) return null;
@@ -138,34 +156,30 @@ export default function UpdatePrompt({ suppressed = false }: { suppressed?: bool
   return (
     <div
       ref={dialogRef}
-      className="fixed inset-x-0 bottom-[calc(76px+env(safe-area-inset-bottom)+12px)] z-[70] mx-auto max-h-[calc(100dvh-110px)] w-full max-w-2xl overflow-y-auto px-[18px] pb-[max(1.25rem,env(safe-area-inset-bottom))] md:px-8"
+      className="fixed inset-0 z-[70] flex items-end justify-center bg-ink/10 px-[18px] pb-[calc(88px+env(safe-area-inset-bottom))] md:px-8"
       role="alertdialog"
       aria-modal="true"
       aria-labelledby="koers-update-title"
       aria-describedby="koers-update-description"
       tabIndex={-1}
     >
-      <div className="card shadow-lift">
+      <div className="card max-h-[calc(100dvh-110px)] w-full max-w-2xl overflow-y-auto shadow-lift">
         <p id="koers-update-title" className="font-display text-[17px] font-semibold tracking-[-0.01em] text-ink">
           Er is een nieuwe versie van Koers.
         </p>
         <p id="koers-update-description" className="sub mt-1">Je gegevens blijven gewoon op dit apparaat.</p>
+        {updateFailed && <p className="sub mt-2" role="alert">Bijwerken lukte niet. Probeer het later opnieuw.</p>}
         <div className="mt-3 flex flex-col gap-2">
           <button
             ref={primaryActionRef}
             type="button"
             className="btn-primary"
-            onClick={() => {
-              const previousFocus = previousFocusRef.current;
-              previousFocusRef.current = null;
-              if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
-              setNeedRefresh(false);
-              void activateUpdate();
-            }}
+            disabled={updating}
+            onClick={() => void activateUpdate()}
           >
             Vernieuwen
           </button>
-          <button type="button" className="btn-secondary w-full" onClick={() => setNeedRefresh(false)}>
+          <button type="button" className="btn-secondary w-full" disabled={updating} onClick={() => setNeedRefresh(false)}>
             Later
           </button>
         </div>

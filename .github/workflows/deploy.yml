@@ -24,14 +24,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Node.js 22.22
+      - name: Node.js 22 LTS
         uses: actions/setup-node@v6
         with:
-          node-version: 22.22.0
+          node-version: '22'
           cache: npm
 
       - name: Dependencies
         run: npm ci
+
+      - name: Dependencybeveiliging
+        run: npm audit --audit-level=moderate
 
       - name: Productchecks, typecheck en Pages-build
         run: npm run build:pages

@@ -94,7 +94,7 @@ function rememberFiredDay(value: string): void {
 }
 
 /** Toon de melding: via de service worker als die er is (beter op mobiel), anders klassiek. */
-async function showReminder(): Promise<void> {
+async function showReminder(canShow: () => boolean): Promise<boolean> {
   const appBase = new URL(import.meta.env.BASE_URL, window.location.origin);
   const appUrl = new URL('#/check-in?manual=1', appBase).href;
   const iconUrl = new URL('icons/icon-192.png', appBase).href;
@@ -109,13 +109,15 @@ async function showReminder(): Promise<void> {
   };
   try {
     const reg = await navigator.serviceWorker?.getRegistration();
+    if (!canShow()) return false;
     if (reg) {
       await reg.showNotification(REMINDER_TITLE, options);
-      return;
+      return true;
     }
   } catch {
     // val terug op de klassieke Notification hieronder
   }
+  if (!canShow()) return false;
   try {
     const notification = new Notification(REMINDER_TITLE, options);
     notification.onclick = () => {
@@ -123,8 +125,10 @@ async function showReminder(): Promise<void> {
       window.focus();
       window.location.assign(appUrl);
     };
+    return true;
   } catch {
     // sommige mobiele browsers staan alleen SW-meldingen toe; dan laten we het rustig
+    return false;
   }
 }
 
@@ -133,15 +137,14 @@ async function showReminder(): Promise<void> {
  * @param getTime leest de actuele 'HH:MM' (mag async, bv. uit Dexie settings).
  * @returns cleanup-functie (stopt timer + listeners).
  *
- * Gebruik in Profiel (tijdelijk, tot integratie):
- *   useEffect(() => startReminderScheduler(async () =>
- *     (await db.settings.get('herinnering-tijd'))?.value || '19:00'), []);
- * Integrator: verplaats deze eenmalige call naar App.tsx zodat hij app-breed loopt.
+ * App.tsx start één planner voor de geopende app.
  */
 export function startReminderScheduler(getTime: () => string | Promise<string>): () => void {
   let timer: number | undefined;
   let lastFiredDay = readLastFiredDay();
   let stopped = false;
+  let delivering = false;
+  let scheduleVersion = 0;
 
   async function currentTime(): Promise<string> {
     try {
@@ -153,19 +156,38 @@ export function startReminderScheduler(getTime: () => string | Promise<string>):
   }
 
   async function fireAndReschedule(): Promise<void> {
-    if (stopped) return;
-    lastFiredDay = dayKey();
-    rememberFiredDay(lastFiredDay);
-    await showReminder();
-    void schedule();
+    if (stopped || delivering || getPermissionState() !== 'granted') return;
+    delivering = true;
+    const deliver = async (): Promise<void> => {
+      const today = dayKey();
+      // Lees opnieuw: een andere geopende Koers-tab kan al gemeld hebben.
+      if (stopped || lastFiredDay === today || readLastFiredDay() === today) return;
+      if (await showReminder(() => !stopped && getPermissionState() === 'granted')) {
+        lastFiredDay = today;
+        rememberFiredDay(today);
+      }
+    };
+    try {
+      // Ook gelijktijdige focus-events in meerdere tabs mogen maar één melding
+      // maken. Zonder Web Locks blijft de lokale in-flight-beveiliging werken.
+      if (navigator.locks) await navigator.locks.request(LAST_FIRED_KEY, deliver);
+      else await deliver();
+    } catch {
+      // De volgende terugkeer probeert opnieuw; een mislukking is geen melding.
+    } finally {
+      delivering = false;
+      void schedule();
+    }
   }
 
   async function schedule(): Promise<void> {
     if (stopped) return;
     if (timer !== undefined) window.clearTimeout(timer);
     timer = undefined;
+    const version = ++scheduleVersion;
     if (getPermissionState() !== 'granted') return;
     const delay = msUntilNext(await currentTime());
+    if (stopped || version !== scheduleVersion || getPermissionState() !== 'granted') return;
     if (delay === null) return;
     timer = window.setTimeout(() => void fireAndReschedule(), delay);
   }
@@ -174,12 +196,14 @@ export function startReminderScheduler(getTime: () => string | Promise<string>):
   async function checkOnFocus(): Promise<void> {
     if (stopped || getPermissionState() !== 'granted') return;
     const time = await currentTime();
+    if (stopped || getPermissionState() !== 'granted') return;
     const now = new Date();
     const todayAt = parseTime(time);
     if (!todayAt) return;
     const scheduledToday = new Date(now);
     scheduledToday.setHours(todayAt.h, todayAt.m, 0, 0);
-    const missed = now.getTime() >= scheduledToday.getTime() && lastFiredDay !== dayKey(now);
+    const missed = now.getTime() >= scheduledToday.getTime()
+      && lastFiredDay !== dayKey(now) && readLastFiredDay() !== dayKey(now);
     if (missed) {
       await fireAndReschedule();
     } else {
@@ -200,6 +224,7 @@ export function startReminderScheduler(getTime: () => string | Promise<string>):
 
   return () => {
     stopped = true;
+    scheduleVersion += 1;
     if (timer !== undefined) window.clearTimeout(timer);
     window.removeEventListener('focus', onFocus);
     document.removeEventListener('visibilitychange', onVisibility);
